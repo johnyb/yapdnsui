@@ -27,3 +27,6 @@ node_modules
 # Bower public vendor
 bower_components
 
+# the databases
+*.sqlite3
+
