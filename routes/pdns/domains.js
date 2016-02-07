@@ -78,7 +78,7 @@ router.get('/servers/:id/del/:zone_id', function (req, res) {
 });
 
 /* Add a domain */
-router.post('/servers/:id/add', function (req, res) {
+router.post('/servers/:id/domains/add', function (req, res) {
     console.log('Add a domain');
     console.log(req.db);
     console.log(req.params.id);
