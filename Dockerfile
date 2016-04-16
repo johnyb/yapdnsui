@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:5.5
 MAINTAINER Francois Lacroix <xbgmsharp@gmail.com>
 
 # Add app directory
