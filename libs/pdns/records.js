@@ -14,7 +14,7 @@ exports.list = function (req, res, callback) {
             dataType: 'json',
             method: 'GET',
             url: req.server.url + '/servers/localhost/zones/' + req.params.zone_id,
-            headers: { 'X-API-Key' : req.server.password }
+            headers: { 'X-API-Key': req.server.password }
         }, function (error, response, body) {
             callback(error, response, body);
         });
@@ -37,7 +37,7 @@ exports['delete'] = function (req, res, record, callback) {
                 }]
             },
             headers: {
-                'X-API-Key' : req.server.password,
+                'X-API-Key': req.server.password,
                 'Content-Type': 'application/json'
             }
         }, function (error, response, body) {
@@ -64,7 +64,7 @@ exports.add = function (req, res, record, callback) {
             url: req.server.url + '/servers/localhost/zones/' + req.params.zone_id,
             json: json,
             headers: {
-                'X-API-Key' : req.server.password,
+                'X-API-Key': req.server.password,
                 'Content-Type': 'application/json'
             }
         }, function (error, response, body) {

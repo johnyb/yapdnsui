@@ -10,7 +10,7 @@ exports.search = function (req, res, callback) {
             method: 'GET',
             url: req.server.url + '/servers/localhost/search-log?q=' + req.params.search_term,
             headers: {
-                'X-API-Key' : req.server.password
+                'X-API-Key': req.server.password
             }
         }, function (error, response, body) {
             callback(error, response, body);

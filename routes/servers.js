@@ -17,7 +17,7 @@ router.param('id', function (req, res, next, id) {
                 return next(new Error('failed to load server'));
             }
             req.server = server;
-            database.list(req, res, function (req, res, rows) {
+            database.list(req, res, function (_req, _res, rows) {
                 if (!rows) {
                     return next(new Error('failed to load servers'));
                 }
@@ -33,7 +33,7 @@ router.param('id', function (req, res, next, id) {
 /* GET servers page, when no servers in the list */
 router.get('/', function (req, res) {
     if (!req.db) { res.redirect('/'); }
-    database.list(req, res, function (req, res, rows) {
+    database.list(req, res, function (_req, _res, rows) {
         res.render('servers', { 'serverlist': rows, 'navmenu': '' });
     });
 });
@@ -47,7 +47,7 @@ router.post('/add', function (req, res) {
     //if (!req.db || !req.body.url || !req.body.password) { res.redirect('/servers'); }
     // Do the job
     console.log('Add entry in db');
-    database.add(req, res, function (req, res) {
+    database.add(req, res, function () {
         res.redirect('/servers');
     });
 });

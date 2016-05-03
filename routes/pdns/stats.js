@@ -16,7 +16,7 @@ router.param('id', function (req, res, next, id) {
                 return next(new Error('failed to load server'));
             }
             req.server = server;
-            database.list(req, res, function (req, res, rows) {
+            database.list(req, res, function (_req, _res, rows) {
                 if (!rows) {
                     return next(new Error('failed to load servers'));
                 }

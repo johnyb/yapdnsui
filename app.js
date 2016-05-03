@@ -1,4 +1,4 @@
-var package = require('./package.json');
+var pkg = require('./package.json');
 var express = require('express');
 var path = require('path');
 //var favicon = require('serve-favicon');
@@ -27,7 +27,7 @@ app.use(function (req, res, next) {
 });
 
 // Set global package.json details for use in the webgui
-app.set('package', package);
+app.set('package', pkg);
 app.set('title', 'Yet Another PDNS UI');
 
 // view engine setup

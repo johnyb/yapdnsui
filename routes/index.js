@@ -5,7 +5,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function (req, res) {
     if (!req.db) { res.render('', {}); }
-    database.list(req, res, function (req, res, rows) {
+    database.list(req, res, function (_req, _res, rows) {
         res.render('', { 'serverlist': rows, 'navmenu': '' });
     });
 });
