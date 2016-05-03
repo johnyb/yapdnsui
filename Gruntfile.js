@@ -13,13 +13,13 @@ module.exports = function (grunt) {
         watch: {
             code: {
                 files: ['Gruntfile.js', 'app.js', 'routes/**/*.js', 'libs/**/*.js'],
-                tasks: ['eslint']
+                tasks: ['default']
             }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-eslint');
-    grunt.registerTask('default', ['eslint', 'watch']);
+    grunt.registerTask('default', ['eslint']);
 
 };
