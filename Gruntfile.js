@@ -1,6 +1,17 @@
 module.exports = function (grunt) {
 
     grunt.initConfig({
+        copy: {
+            ui: {
+                files: [{
+                    expand: true,
+                    src: ['*/*.*'],
+                    filter: 'isFile',
+                    cwd: 'ui/',
+                    dest: 'public/'
+                }]
+            }
+        },
         eslint: {
             all: {
                 files: [{
@@ -18,8 +29,9 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-eslint');
-    grunt.registerTask('default', ['eslint']);
+    grunt.registerTask('default', ['eslint', 'copy']);
 
 };

@@ -3,6 +3,7 @@ logs
 *.log
 
 # Runtime data
+public/
 pids
 *.pid
 *.seed
