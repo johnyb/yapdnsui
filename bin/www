@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var debug = require('debug')('yapdnsui');
-var app = require('../app');
+var app = require('../middleware/app');
 
 var port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000
 var host = process.env.OPENSHIFT_NODEJS_IP || process.env.HOST

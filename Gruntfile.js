@@ -13,17 +13,25 @@ module.exports = function (grunt) {
             }
         },
         eslint: {
-            all: {
+            middleware: {
                 files: [{
                     expand: true,
-                    src: ['Gruntfile.js', 'app.js', 'routes/**/*.js', 'libs/**/*.js'],
+                    src: ['**/*.js'],
+                    cwd: 'middleware/',
+                    filter: 'isFile'
+                }]
+            },
+            build: {
+                files: [{
+                    expand: true,
+                    src: ['Gruntfile.js'],
                     filter: 'isFile'
                 }]
             }
         },
         watch: {
             code: {
-                files: ['Gruntfile.js', 'app.js', 'routes/**/*.js', 'libs/**/*.js'],
+                files: ['Gruntfile.js', 'middleware/**/*', 'ui/**/*'],
                 tasks: ['default']
             }
         }

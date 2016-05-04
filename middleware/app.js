@@ -1,4 +1,4 @@
-var pkg = require('./package.json');
+var pkg = require('../package.json');
 var express = require('express');
 var path = require('path');
 //var favicon = require('serve-favicon');
@@ -35,15 +35,15 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+//app.use(favicon(path.join(__dirname, '../public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 // Add my own public content
-app.use(express['static'](path.join(__dirname, 'public')));
+app.use(express['static'](path.join(__dirname, '../public')));
 // Add vendor content from bower
-app.use(express['static'](path.join(__dirname, 'bower_components')));
+app.use(express['static'](path.join(__dirname, '../bower_components')));
 
 // Route the page
 app.use('/', index);
