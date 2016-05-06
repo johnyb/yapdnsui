@@ -41,8 +41,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 // Add my own public content
 app.use(express['static'](path.join(__dirname, '../public')));
-// Add vendor content from bower
-app.use(express['static'](path.join(__dirname, '../bower_components')));
 
 // Route the page
 app.use('/about', about);
