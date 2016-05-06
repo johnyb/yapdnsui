@@ -5,9 +5,9 @@ module.exports = function (grunt) {
             ui: {
                 files: [{
                     expand: true,
-                    src: ['*/*.*'],
-                    filter: 'isFile',
+                    src: ['index.html'],
                     cwd: 'ui/',
+                    filter: 'isFile',
                     dest: 'public/'
                 }]
             }
@@ -31,15 +31,19 @@ module.exports = function (grunt) {
         },
         watch: {
             code: {
-                files: ['Gruntfile.js', 'middleware/**/*', 'ui/**/*'],
+                files: ['Gruntfile.js', 'middleware/**/*', 'ui/**/*', 'webpack.config.js'],
                 tasks: ['default']
             }
+        },
+        webpack: {
+            ui: require('./webpack.config.js')
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-eslint');
-    grunt.registerTask('default', ['eslint', 'copy']);
+    grunt.loadNpmTasks('grunt-webpack');
+    grunt.registerTask('default', ['eslint', 'copy', 'webpack']);
 
 };
