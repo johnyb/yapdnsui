@@ -4,7 +4,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-        main: 'javascripts/main.js'
+        main: ['bootstrap-loader', 'javascripts/main.js']
     },
     output: {
         path: __dirname + '/public/',
@@ -20,13 +20,39 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin()
+        new webpack.ProvidePlugin({
+            jQuery: 'jquery'
+        })
+        //new webpack.optimize.UglifyJsPlugin()
     ],
     devtool: '#source-map',
     module: {
         loaders: [{
+            test: /\.jade$/,
+            loader: 'jade-loader'
+        },
+        { test: /\.(woff2?|svg)$/, loader: 'url?limit=10000' },
+        { test: /\.(ttf|eot)$/, loader: 'file' },
+        {
+            test: /\.css$/,
+            loaders: [
+                'style',
+                'css?modules&importLoaders=1&localIdentName=[name]__[local]__[hash:base64:5]',
+                'postcss'
+            ]
+        },
+        {
+            test: /\.scss$/,
+            loaders: [
+                'style',
+                'css?modules&importLoaders=2&localIdentName=[name]__[local]__[hash:base64:5]',
+                'postcss',
+                'sass'
+            ]
+        },
+        {
             test: /\.js$/,
-            exclude: /(node_modules|bower_components)/,
+            exclude: /node_modules/,
             loader: 'babel',
             query: {
                 presets: ['es2015']
@@ -38,10 +64,6 @@ module.exports = {
                 _: 'underscore',
                 Backbone: 'backbone'
             }
-        }, {
-            test: /backbone\.marionette\.js/,
-            loader: 'exports-loader',
-            query: 'Marionette'
         }],
         preLoaders: [{
             test: /\.js$/,

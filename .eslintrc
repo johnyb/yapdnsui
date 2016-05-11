@@ -480,7 +480,7 @@
         'quote-props': 0, // NEEDS CODE REFACTORING (478) //[2, 'consistent-as-needed'],
 
         // specify whether double or single quotes should be used
-        'quotes': [2, 'single', 'avoid-escape'],
+        'quotes': [2, 'single', {'avoidEscape': true, 'allowTemplateLiterals': true}],
 
         // Require JSDoc comment
         'require-jsdoc': 0,

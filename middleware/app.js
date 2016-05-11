@@ -7,7 +7,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 // Load our routes
-var about = require('./routes/about');
 var pdns = require('./routes/pdns');
 var servers = require('./routes/servers');
 
@@ -43,7 +42,6 @@ app.use(cookieParser());
 app.use(express['static'](path.join(__dirname, '../public')));
 
 // Route the page
-app.use('/about', about);
 app.use('/servers', servers);
 app.use('/', pdns.config);
 app.use('/', pdns.domains);

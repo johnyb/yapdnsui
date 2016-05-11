@@ -1,0 +1,12 @@
+.container-fluid
+    header.navbar-header
+        a.navbar-brand(href='#') Yet Another PDNS UI
+    .main
+    menu.nav.navbar-nav.navbar-right
+        li.server-selection.dropdown
+            - if (serverselected)
+                a.dropdown-toggle(href="/servers/#{serverselected.id}", class="dropdown-toggle", data-toggle="dropdown") PDNS servers
+                b.caret
+            - else
+                a.dropdown-toggle(href="/servers", class="dropdown-toggle", data-toggle="dropdown") PDNS servers
+                b.caret
