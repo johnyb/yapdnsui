@@ -43,7 +43,7 @@ let MenuView = Marionette.LayoutView.extend({
             this.triggerMethod('load:content', '');
         }
     },
-    className: 'navbar navbar-default navbar-fixed-top navbar-inverse',
+    className: '.container-fluid',
     template: menu,
     regions: {
         main: '.main',
@@ -72,7 +72,7 @@ let Layout = Marionette.LayoutView.extend({
     el: '#app-hook',
     template: layout,
     regions: {
-        menu: 'section.main-menu',
+        menu: 'nav.main-menu',
         content: 'section.content'
     },
     onShow: function () {
