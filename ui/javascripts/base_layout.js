@@ -27,9 +27,9 @@ let MainMenuView = Marionette.CollectionView.extend({
         template: _.template('<a href="#" data-target="<%- target %>"><%- text %></a>')
     }),
     onSetActiveTarget: function (target) {
-        this.$('a').removeClass('active');
+        this.$el.removeClass('active');
         if (!target) return;
-        this.$(`a[data-target=${ target }]`).addClass('active');
+        this.$(`a[data-target=${ target }]`).parent().addClass('active');
     }
 });
 
