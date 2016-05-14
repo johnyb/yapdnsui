@@ -4,7 +4,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-        main: ['bootstrap-loader', 'javascripts/main.js']
+        main: ['bootstrap-loader', 'stylesheets/main.scss', 'javascripts/main.js']
     },
     output: {
         path: __dirname + '/public/',
@@ -34,19 +34,10 @@ module.exports = {
         { test: /\.(woff2?|svg)$/, loader: 'url?limit=10000' },
         { test: /\.(ttf|eot)$/, loader: 'file' },
         {
-            test: /\.css$/,
-            loaders: [
-                'style',
-                'css?modules&importLoaders=1&localIdentName=[name]__[local]__[hash:base64:5]',
-                'postcss'
-            ]
-        },
-        {
             test: /\.scss$/,
             loaders: [
                 'style',
-                'css?modules&importLoaders=2&localIdentName=[name]__[local]__[hash:base64:5]',
-                'postcss',
+                'css',
                 'sass'
             ]
         },
