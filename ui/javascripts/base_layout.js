@@ -22,7 +22,7 @@ let MainMenuView = Marionette.CollectionView.extend({
             this.triggerMethod('set:active:target', $(e.target).attr('data-target'));
         }
     },
-    childView: Marionette.LayoutView.extend({
+    childView: Marionette.ItemView.extend({
         tagName: 'li',
         template: _.template('<a href="#" data-target="<%- target %>"><%- text %></a>')
     }),
@@ -31,6 +31,17 @@ let MainMenuView = Marionette.CollectionView.extend({
         if (!target) return;
         this.$(`a[data-target=${ target }]`).parent().addClass('active');
     }
+});
+
+let ServerSelectionView = Marionette.CompositeView.extend({
+    tagName: 'li',
+    className: 'server-selection dropdown',
+    template: _.template('<a href="#" data-toggle="dropdown" class="dropdown">PDNS Servers <span class="caret" /></a><ul class="dropdown-menu" />'),
+    childView: Marionette.ItemView.extend({
+        tagName: 'li',
+        template: _.template('<a href="#" data-target="<%- target %>"><%- text %></a>')
+    }),
+    childViewContainer: 'ul.dropdown-menu'
 });
 
 let MenuView = Marionette.LayoutView.extend({
@@ -47,13 +58,23 @@ let MenuView = Marionette.LayoutView.extend({
     template: menu,
     regions: {
         main: '.main',
-        server_selection: '.server-selection'
+        server_selection: '.navbar-right'
     },
     onShow: function () {
         this.showChildView(
             'main',
             new MainMenuView({
-                collection: new Backbone.Collection([{ target: 'about', text: 'About' }])
+                collection: new Backbone.Collection([
+                    { target: 'about', text: 'About' }
+                ])
+            })
+        );
+        this.showChildView(
+            'server_selection',
+            new ServerSelectionView({
+                collection: new Backbone.Collection([
+                    { target: '#', text: 'Add …' }
+                ])
             })
         );
     },
