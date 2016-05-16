@@ -6,12 +6,6 @@ import Backbone from 'backbone';
 import Marionette from 'backbone.marionette';
 import layout from 'templates/layout.jade';
 import menu from 'templates/menu.jade';
-import about from 'templates/about.jade';
-
-let templates = {
-    index: about,
-    about: about
-};
 
 let MainMenuView = Marionette.CollectionView.extend({
     tagName: 'menu',
@@ -102,12 +96,11 @@ let Layout = Marionette.LayoutView.extend({
             new MenuView({})
         );
     },
-    onLoadContent: function (target) {
-        if (target === '') target = 'index';
+    onLoadContent: function (template) {
         this.showChildView(
             'content',
             new (Marionette.LayoutView.extend({
-                template: templates[target]
+                template: template
             }))()
         );
     },

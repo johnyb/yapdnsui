@@ -3,17 +3,19 @@
 import Marionette from 'backbone.marionette';
 import BaseLayout from 'javascripts/base_layout';
 
+import about from 'templates/about.jade';
+
 let Controller = Marionette.Object.extend({
     initialize: function () {
         this.options.layout = new BaseLayout().render();
     },
     index: function () {
         this.getOption('layout').triggerMethod('show');
-        this.getOption('layout').triggerMethod('load:content', 'index');
+        this.getOption('layout').triggerMethod('load:content', about);
     },
     about: function () {
         this.getOption('layout').triggerMethod('show');
-        this.getOption('layout').triggerMethod('load:content', 'about');
+        this.getOption('layout').triggerMethod('load:content', about);
     }
 });
 
