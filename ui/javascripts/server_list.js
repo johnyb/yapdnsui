@@ -12,7 +12,7 @@ let template = _.template(`
         PDNS Servers <span class="caret" />
     </a>
     <ul class="dropdown-menu">
-        <li><a href="#" data-target="servers/edit">Configure …</a></li>
+        <li><a href="#" data-target="servers/">Configure …</a></li>
         <li role="separator" class="divider" />
     </ul>
 `);
@@ -36,6 +36,12 @@ let ServerSelectionView = Marionette.CompositeView.extend({
         template: _.template('<a href="#" data-target="servers/<%- id %>"><%- name %></a>')
     }),
     childViewContainer: 'ul.dropdown-menu'
+});
+
+import serverList from 'templates/servers.jade';
+
+export let ServerListView = Marionette.LayoutView.extend({
+    template: serverList
 });
 
 export default ServerSelectionView;
