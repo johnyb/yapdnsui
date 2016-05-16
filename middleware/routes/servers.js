@@ -34,7 +34,7 @@ router.param('id', function (req, res, next, id) {
 router.get('/', function (req, res) {
     if (!req.db) { res.redirect('/'); }
     database.list(req, res, function (_req, _res, rows) {
-        res.render('servers', { 'serverlist': rows, 'navmenu': '' });
+        res.send(rows);
     });
 });
 

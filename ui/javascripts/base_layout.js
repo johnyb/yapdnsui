@@ -5,6 +5,7 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 import Marionette from 'backbone.marionette';
 import layout from 'templates/layout.jade';
+import ServerSelectionView from './server_list.js';
 import menu from 'templates/menu.jade';
 
 let MainMenuView = Marionette.CollectionView.extend({
@@ -25,17 +26,6 @@ let MainMenuView = Marionette.CollectionView.extend({
         if (!target) return;
         this.$(`a[data-target=${ target }]`).parent().addClass('active');
     }
-});
-
-let ServerSelectionView = Marionette.CompositeView.extend({
-    tagName: 'li',
-    className: 'server-selection dropdown',
-    template: _.template('<a href="#" data-toggle="dropdown" class="dropdown">PDNS Servers <span class="caret" /></a><ul class="dropdown-menu" />'),
-    childView: Marionette.ItemView.extend({
-        tagName: 'li',
-        template: _.template('<a href="#" data-target="<%- target %>"><%- text %></a>')
-    }),
-    childViewContainer: 'ul.dropdown-menu'
 });
 
 let MenuView = Marionette.LayoutView.extend({
@@ -65,11 +55,7 @@ let MenuView = Marionette.LayoutView.extend({
         );
         this.showChildView(
             'server_selection',
-            new ServerSelectionView({
-                collection: new Backbone.Collection([
-                    { target: '#', text: 'Add …' }
-                ])
-            })
+            new ServerSelectionView()
         );
     },
     onLoadContent: function (target) {
