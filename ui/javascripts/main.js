@@ -10,4 +10,8 @@ app.router = new Router();
 
 app.on('start', () => Backbone.history.start({ pushState: true }));
 
+app.router.controller.listenTo(app.router.controller.options.layout, 'navigate:to', function (target) {
+    app.router.navigate(target, { trigger: true });
+});
+
 app.start();

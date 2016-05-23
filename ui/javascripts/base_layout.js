@@ -82,15 +82,14 @@ let Layout = Marionette.LayoutView.extend({
             new MenuView({})
         );
     },
-    onLoadContent: function (View) {
+    onLoadContent: function (view) {
         this.showChildView(
             'content',
-            new View()
+            view
         );
     },
     onChildviewLoadContent: function (view, target) {
         this.triggerMethod('navigate:to', target);
-        Backbone.history.navigate(target);
     }
 });
 

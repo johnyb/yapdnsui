@@ -23,22 +23,20 @@ function viewFor(target) {
 let Controller = Marionette.Object.extend({
     initialize: function () {
         this.options.layout = new BaseLayout().render();
-        this.listenTo(this.options.layout, 'navigate:to', (target) => {
-            if (target === '') target = 'index';
-            this.getOption('layout').triggerMethod('load:content', viewFor(target));
-        });
     },
     index: function () {
         this.getOption('layout').triggerMethod('show');
-        this.getOption('layout').triggerMethod('load:content', viewFor('index'));
+        this.getOption('layout').triggerMethod('load:content', new (viewFor('index'))());
     },
     about: function () {
         this.getOption('layout').triggerMethod('show');
-        this.getOption('layout').triggerMethod('load:content', viewFor('about'));
+        this.getOption('layout').triggerMethod('load:content', new (viewFor('about'))());
     },
-    listServers: function () {
+    listServers: function (id) {
         this.getOption('layout').triggerMethod('show');
-        this.getOption('layout').triggerMethod('load:content', viewFor('servers/'));
+        this.getOption('layout').triggerMethod('load:content', new (viewFor('servers/'))({
+            selected: id
+        }));
     }
 });
 
@@ -46,7 +44,7 @@ let Router = Marionette.AppRouter.extend({
     appRoutes: {
         '': 'index',
         'about': 'about',
-        'server/': 'listServers'
+        'servers/:id': 'listServers'
     },
     controller: new Controller()
 });
