@@ -3,9 +3,23 @@ import Marionette from 'backbone.marionette';
 import $ from 'jquery';
 import _ from 'underscore';
 
-let ServerCollection = Backbone.Collection.extend({
+let Server = Backbone.Model.extend({
+    defaults: {
+        name: '',
+        url: '',
+        daemon_type: '',
+        version: ''
+    },
+    url: function () {
+        return '/servers/' + this.id;
+    }
+});
+let Servers = Backbone.Collection.extend({
+    model: Server,
     url: '/servers'
 });
+
+let servers = new Servers();
 
 let template = _.template(`
     <a href="#" data-toggle="dropdown" class="dropdown">
@@ -27,7 +41,7 @@ let ServerSelectionView = Marionette.CompositeView.extend({
         }
     },
     template: template,
-    collection: new ServerCollection(),
+    collection: servers,
     onShow: function () {
         this.collection.fetch();
     },
@@ -40,8 +54,21 @@ let ServerSelectionView = Marionette.CompositeView.extend({
 
 import serverList from 'templates/servers.jade';
 
-export let ServerListView = Marionette.LayoutView.extend({
-    template: serverList
+export let ServerListView = Marionette.CompositeView.extend({
+    template: serverList,
+    collection: servers,
+    childView: Marionette.ItemView.extend({
+        initialize: function () {
+            this.model.fetch();
+            this.listenTo(this.model, 'change', this.render);
+        },
+        tagName: 'tr',
+        template: _.template('<td><%- name %></td><td><%- url %></td><td><%- daemon_type %></td><td><%- version %></td>')
+    }),
+    childViewContainer: 'table#servers-table > tbody'
+});
+
+export let ServerView = Marionette.LayoutView.extend({
 });
 
 export default ServerSelectionView;

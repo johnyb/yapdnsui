@@ -5,7 +5,7 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 import Marionette from 'backbone.marionette';
 import layout from 'templates/layout.jade';
-import ServerSelectionView from './server_list.js';
+import ServerSelectionView from 'javascripts/server';
 import menu from 'templates/menu.jade';
 
 let MainMenuView = Marionette.CollectionView.extend({
