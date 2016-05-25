@@ -43,7 +43,7 @@ app.use(express['static'](path.join(__dirname, '../public')));
 
 // Route the page
 app.use('/about', (req, res) => res.sendFile('index.html', {
-    root: path.join(__dirname, '../ui/')
+    root: path.join(__dirname, '../public/')
 }));
 app.use('/servers', servers);
 app.use('/', pdns.config);
