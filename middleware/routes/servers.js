@@ -88,20 +88,14 @@ router.get('/:id', function (req, res) {
             res.msg['class'] = 'alert-warning';
             res.msg.title = 'Error!';
             res.msg.msg = 'Connection failed to ' + req.server.name;
+            res.send(res.msg);
         } else {
             var json = JSON.parse(body);
-            console.log(json[0].type);
             database.refresh(req, res, json[0], function () {
-                console.log('db refresh');
+                res.send({ pdns: json[0] });
             });
-
-            res.msg = json[0];
-            res.msg['class'] = 'alert-success';
-            res.msg.title = 'Success!';
-            res.msg.msg = 'Connected to ' + req.server.name + ' ' + json[0].type + ' ' + json[0].daemon_type + ' Version ' + json[0].version;
         }
 
-        res.send(res.msg);
     });
 });
 

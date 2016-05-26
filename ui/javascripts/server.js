@@ -7,8 +7,10 @@ let Server = Backbone.Model.extend({
     defaults: {
         name: '',
         url: '',
-        daemon_type: '',
-        version: ''
+        pdns: {
+            daemon_type: '',
+            version: ''
+        }
     },
     url: function () {
         return '/servers/' + this.id;
@@ -63,7 +65,38 @@ export let ServerListView = Marionette.CompositeView.extend({
             this.listenTo(this.model, 'change', this.render);
         },
         tagName: 'tr',
-        template: _.template('<td><%- name %></td><td><%- url %></td><td><%- daemon_type %></td><td><%- version %></td>')
+        events: {
+            'click .server-action button': function (e) {
+                e.preventDefault();
+                const action = $(e.currentTarget).data('action');
+                const id = $(e.currentTarget).data('id');
+                this.triggerMethod(action, id);
+            }
+        },
+        onFetch: function () {
+            this.model.fetch();
+        },
+        template: _.template(`
+        <td><%- name %></td>
+        <td><%- url %></td>
+        <td><%- pdns.daemon_type %></td>
+        <td><%- pdns.version %></td>
+        <td class="server-action">
+            <div class="btn-group">
+                  <button class="btn btn-default btn-xs" href="#" data-id="<%- id %>" data-action="zones" rel="tooltip" title="View zones for server">
+                      <span class="glyphicon glyphicon-eye-open" />
+                  </button>
+                  <button class="btn btn-default btn-xs" href="#" data-id="<%- id %>" data-action="fetch" rel="tooltip" title="Refresh server information">
+                    <span class="glyphicon glyphicon-retweet" />
+                  </button>
+                  <button class="btn btn-default btn-xs" href="#" data-id="<%- id %>" data-action="edit" rel="tooltip" title="Edit server">
+                    <span class="glyphicon glyphicon-pencil" />
+                  </button>
+                  <button class="btn btn-danger btn-xs" href="#" data-id="<%- id %>" data-action="delete" rel="tooltip" title="Delete server">
+                    <span class="glyphicon glyphicon-trash" />
+                  </button>
+            </div>
+        </td>`)
     }),
     childViewContainer: 'table#servers-table > tbody'
 });
