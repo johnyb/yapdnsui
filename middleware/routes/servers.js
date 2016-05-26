@@ -47,7 +47,7 @@ router.get('/', function (req, res) {
 });
 
 /* POST to add server Service */
-router.post('/add', function (req, res) {
+router.post('/', function (req, res) {
     console.log('Server add');
     console.log(req.db);
     console.log(req.body);
@@ -105,7 +105,7 @@ router.get('/:id', function (req, res) {
     });
 });
 
-router.get('/:id/del', function (req, res) {
+router['delete']('/:id', function (req, res) {
     console.log('Server delete');
     console.log(req.params);
     console.log(req.server);
@@ -118,7 +118,7 @@ router.get('/:id/del', function (req, res) {
     });
 });
 
-router.post('/:id/update', function (req, res) {
+router.put('/:id', function (req, res) {
     console.log('Server update');
     console.log(req.params);
     console.log(req.server);
@@ -128,22 +128,6 @@ router.post('/:id/update', function (req, res) {
 
     database.update(req, res, function () {
         res.redirect('/servers');
-    });
-});
-
-router.get('/:id/refresh', function (req, res) {
-    console.log('Server refresh');
-    console.log(req.params);
-    console.log(req.server);
-    console.log(req.db);
-
-    if (!req.db || !req.params.id) { res.redirect('/servers'); }
-
-    pdnsapi.config.servers(req, res, function (error, response, body) {
-        var json = JSON.parse(body);
-        database.refresh(req, res, json[0], function () {
-            res.redirect('/servers');
-        });
     });
 });
 
