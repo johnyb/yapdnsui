@@ -153,6 +153,10 @@ export let ServerListView = Marionette.CompositeView.extend({
 });
 
 export let ServerView = Marionette.LayoutView.extend({
+    initialize: function (options) {
+        this.selectedServer = options.selectedServer;
+    },
+    template: _.template('Hallo Welt')
 });
 
 export default ServerSelectionView;

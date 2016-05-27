@@ -40,7 +40,7 @@ let Controller = Marionette.Object.extend({
     editServer: function (id) {
         this.getOption('layout').triggerMethod('show');
         this.getOption('layout').triggerMethod('load:content', new (viewFor('editServer'))({
-            selected: id
+            selectedServer: id
         }));
     }
 });

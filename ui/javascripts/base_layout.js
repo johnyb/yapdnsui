@@ -22,9 +22,9 @@ let MainMenuView = Marionette.CollectionView.extend({
         template: _.template('<a href="#" data-target="<%- target %>"><%- text %></a>')
     }),
     onSetActiveTarget: function (target) {
-        this.$el.removeClass('active');
+        this.$('li.active').removeClass('active');
         if (!target) return;
-        this.$(`a[data-target=${ target }]`).parent().addClass('active');
+        this.$(`a[data-target="${ target }"]`).parent().addClass('active');
     }
 });
 
@@ -63,6 +63,13 @@ let MenuView = Marionette.LayoutView.extend({
             this.getChildView('main').triggerMethod('set:active:target');
         }
     },
+    onShowServer: function (id) {
+        this.getChildView('main').collection.add([
+            { target: `servers/${id}/config`, text: 'Configuration' },
+            { target: `servers/${id}/zones`, text: 'Zones' },
+            { target: `servers/${id}/statistics`, text: 'Statistics' }
+        ], { at: 0 });
+    },
     onChildviewSetActiveTarget: function (view, target) {
         if (typeof target === 'undefined') return;
         this.triggerMethod('load:content', target);
@@ -83,6 +90,9 @@ let Layout = Marionette.LayoutView.extend({
         );
     },
     onLoadContent: function (view) {
+        if (view.selectedServer) {
+            this.getChildView('menu').triggerMethod('show:server', view.selectedServer);
+        }
         this.showChildView(
             'content',
             view
