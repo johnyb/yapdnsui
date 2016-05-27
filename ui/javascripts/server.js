@@ -121,6 +121,9 @@ export let ServerListView = Marionette.CompositeView.extend({
                 model: this.model
             }).render().$el.appendTo($('body section.content'));
         },
+        onZones: function (id) {
+            this.triggerMethod('load:content', `/servers/${id}`);
+        },
         onDelete: function () {
             this.model.destroy();
         },
