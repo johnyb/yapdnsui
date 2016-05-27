@@ -1,7 +1,13 @@
 div.container
     .page-header
         h2
-        | Servers
+            | Servers
+        .btn-toolbar(style='margin-bottom: 10px;')
+            .btn-group.pull-right
+                button.btn.btn-default.add-server
+                    span.glyphicon.glyphicon-plus
+                    | &nbsp;Add server
+
     table.table.table-striped.table-condensed.table-hover#servers-table(width="100%", name="servers-table")
         thead
             tr

@@ -6,14 +6,15 @@ import _ from 'underscore';
 let Server = Backbone.Model.extend({
     defaults: {
         name: '',
-        url: '',
+        url: 'http://localhost:8053',
+        password: 'changeme',
         pdns: {
             daemon_type: '',
             version: ''
         }
     },
     url: function () {
-        return '/servers/' + this.id;
+        return this.isNew() ? '/servers' : '/servers/' + this.id;
     }
 });
 let Servers = Backbone.Collection.extend({
@@ -54,11 +55,50 @@ let ServerSelectionView = Marionette.CompositeView.extend({
     childViewContainer: 'ul.dropdown-menu'
 });
 
-import serverList from 'templates/servers.jade';
+import ServerEditTemplate from 'templates/server/edit.jade';
+
+let ServerEditView = Marionette.ItemView.extend({
+    initialize: function () {
+    },
+    className: 'server-edit',
+    template: ServerEditTemplate,
+    events: {
+        'click [data-action="submit"]': 'onSubmit'
+    },
+    onSubmit: function () {
+        this.model.set('url', this.$('#mod-edit-url').val());
+        this.model.set('password', this.$('#mod-edit-api-key').val());
+        if (this.model.isNew()) {
+            this.trigger('create:model', this.model);
+        } else {
+            this.model.save();
+        }
+        this.$('.modal').modal('hide');
+    },
+    onRender: function () {
+        this.$('.modal')
+            .modal()
+            .one('hidden.bs.modal', () => this.remove());
+    }
+});
+
+import serverList from 'templates/server/list.jade';
 
 export let ServerListView = Marionette.CompositeView.extend({
     template: serverList,
     collection: servers,
+    events: {
+        'click .add-server': 'onAddServer'
+    },
+    onAddServer: function () {
+        this.serverEdit = new ServerEditView({
+            model: new Server()
+        });
+        this.serverEdit.render().$el.appendTo($('section.content'));
+        this.listenTo(this.serverEdit, 'create:model', function (model) {
+            this.collection.create(model, { wait: true });
+        });
+    },
     childView: Marionette.ItemView.extend({
         initialize: function () {
             this.model.fetch();
@@ -75,6 +115,14 @@ export let ServerListView = Marionette.CompositeView.extend({
         },
         onFetch: function () {
             this.model.fetch();
+        },
+        onEdit: function () {
+            new ServerEditView({
+                model: this.model
+            }).render().$el.appendTo($('body section.content'));
+        },
+        onDelete: function () {
+            this.model.destroy();
         },
         template: _.template(`
         <td><%- name %></td>

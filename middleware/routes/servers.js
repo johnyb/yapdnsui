@@ -48,15 +48,18 @@ router.get('/', function (req, res) {
 
 /* POST to add server Service */
 router.post('/', function (req, res) {
-    console.log('Server add');
-    console.log(req.db);
-    console.log(req.body);
-    // Redirect to index if missing value from the form
-    //if (!req.db || !req.body.url || !req.body.password) { res.redirect('/servers'); }
-    // Do the job
-    console.log('Add entry in db');
-    database.add(req, res, function () {
-        res.redirect('/servers');
+    database.add(req, res, function (err, id) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        database.get(req, res, id, function (err2, row) {
+            if (err2) {
+                console.log(err2);
+                return;
+            }
+            res.send(row);
+        });
     });
 });
 
@@ -108,7 +111,7 @@ router['delete']('/:id', function (req, res) {
     if (!req.db || !req.params.id) { res.redirect('/servers'); }
 
     database['delete'](req, res, function () {
-        res.redirect('/servers');
+        res.send({ result: true });
     });
 });
 
@@ -121,7 +124,7 @@ router.put('/:id', function (req, res) {
     if (!req.db || !req.params.id) { res.redirect('/servers'); }
 
     database.update(req, res, function () {
-        res.redirect('/servers');
+        res.send({ result: true });
     });
 });
 

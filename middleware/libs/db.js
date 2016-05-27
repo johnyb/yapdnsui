@@ -38,9 +38,9 @@ exports.list = function (req, res, callback) {
 exports.add = function (req, res, callback) {
     if (req.db && req.body.url && req.body.password) {
         var obj = url.parse(req.body.url);
-        req.db.get('INSERT INTO servers VALUES (?,?,?,?,?,?,?,?,?,?,?)', [null, obj.host, req.body.url, req.body.password, null, null, null, null, null, null, null], function (err) {
+        req.db.run('INSERT INTO servers VALUES (?,?,?,?,?,?,?,?,?,?,?)', [null, obj.host, req.body.url, req.body.password, null, null, null, null, null, null, null], function (err) {
             console.log('db.add');
-            callback(req, res, err);
+            callback(err, this.lastID);
         });
     }
 };
@@ -49,7 +49,7 @@ exports.update = function (req, res, callback) {
     if (req.db && req.params.id && req.body.url && req.body.password) {
         var obj = url.parse(req.body.url);
         req.db.run('UPDATE servers SET name=?,url=?,password=? WHERE id=?', [obj.host, req.body.url, req.body.password, req.params.id], function (err, row) {
-            console.log('db.update', this);
+            console.log('db.update', this, row);
             callback(req, res, row);
         });
     }
