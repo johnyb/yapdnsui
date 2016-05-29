@@ -18,7 +18,8 @@
   "license": "GPL-3.0+",
   "private": true,
   "scripts": {
-    "start": "DEBUG=yapdnsui node ./bin/www"
+    "start": "DEBUG=yapdnsui node ./bin/www",
+    "test": "grunt"
   },
   "main": "bin/www",
   "engines": {
