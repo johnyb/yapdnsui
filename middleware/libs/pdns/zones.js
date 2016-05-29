@@ -46,11 +46,18 @@ exports['delete'] = function (req, res, callback) {
 // Handle Zones add/update
 exports.add = function (req, res, callback) {
     if (req.server.url && req.server.password && req.body.name && req.body.kind) {
+        var json = {
+            name: req.body.name,
+            kind: req.body.kind,
+            masters: [],
+            nameservers: []
+        };
+        if (req.body.master) json.masters.push(req.body.master);
         request({
             dataType: 'json',
             method: 'POST',
             url: req.server.url + '/servers/localhost/zones',
-            json: { 'kind': req.body.kind, 'name': req.body.name, 'masters': [req.body.master], 'nameservers': [], 'records': [] },
+            json: json,
             headers: getHeaders(req)
         }, function (error, response, body) {
             callback(error, response, body);

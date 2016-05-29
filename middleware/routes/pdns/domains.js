@@ -85,13 +85,13 @@ router.post('/servers/:id/zones', function (req, res) {
     // If missing value redirect to index or to an error page!!!
     if (!req.db && !req.server) { res.redirect('/'); }
 
-    pdnsapi.zones.add(req, res, function (error, response) {
+    pdnsapi.zones.add(req, res, function (error, response, body) {
         // If any error redirect to index
         if (error && response.statusCode !== 204) {
             console.log(error);
             res.send({ result: false, msg: error });
         } else {
-            res.send({ result: true });
+            res.send(body);
         }
     });
 });
