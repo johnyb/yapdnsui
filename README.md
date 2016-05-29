@@ -11,81 +11,19 @@ statistics and list/update configuration items **LIVE** from one or multiple Pow
 
 In addition, the application should let you manage DNSSEC zones and zone metadata.
 
-It is not just another PowerDNS UI, it is the first to use the [PowerDNS API](https://github.com/PowerDNS/pdnsapi), therefor to be backend-agnostic and DNSSEC aware.
-
-Currently, you can list the configuration and see live statistics in a graph and list all the domains and records for demonstration purpose.
-
-You can checkout the web interface using the [live demo](http://yapdnsui-xbgmsharp.rhcloud.com/) running on OpenShift cloud.
+This project started out as a fork of [xbgmsharp's yapdnsui](https://github.com/xbgmsharp/yapdnsui) in order to help
+development there, but soon ended up as a complete rewrite.
+For the moment, I'll stick to the name, but it might change before a 1.0 release.
+I'll keep the complete history and still have the orignial master branch for reference.
 
 You are welcome to contribute.
-
-![yapdnsui_livestats]
-(https://github.com/xbgmsharp/yapdnsui/raw/master/misc/screenshot_livestats.png)
-
-![yapdnsui_config]
-(https://github.com/xbgmsharp/yapdnsui/raw/master/misc/screenshot_config.png)
-
-![yapdnsui_domains]
-(https://github.com/xbgmsharp/yapdnsui/raw/master/misc/screenshot_domains.png)
-
-![yapdnsui_records]
-(https://github.com/xbgmsharp/pdnsui/raw/master/misc/screenshot_records.png)
 
 yapdnsui Prereqs
 ----------------
 
-You need [NodeJS](http://nodejs.org) v0.10.x+ for this application to work.
-
-It might work with lower requirements but I didn't test.
-
-PowerDNS Prereqs
-----------------
-Yes, you need a [PowerDNS](http://www.powerdns.com/) server.
-
-It can be either an [Authoritative](https://doc.powerdns.com/md/authoritative/) or a [Recursor](https://doc.powerdns.com/md/recursor/) to try this application out.
-
-You need to enable the [PowerDNS API](https://doc.powerdns.com/md/httpapi/README/) on your PowerDNS instances.
-
-For an Authoritative instance, configure as follows:
-```
-# Allow webserver
-webserver=yes
-# IP Address of web server to listen on
-webserver-address=127.0.0.1
-# Port of web server to listen on
-webserver-port=8081
-# Web server access is only allowed from these subnets
-webserver-allow-from=0.0.0.0/0,::/0
-# Enable JSON and API
-experimental-json-interface=yes
-experimental-api-key=changeme
-```
-
-In addition, you might want to configure the default domain value:
-```
-# default-soa-mail      mail address to insert in the SOA record if none set in the backend
-default-soa-mail=
-# default-soa-name      name to insert in the SOA record if none set in the backend
-default-soa-name=a.misconfigured.powerdns.server
-# default-ttl   Seconds a result is valid if not set otherwise
-default-ttl=3600
-# soa-expire-default	Default SOA expire
-soa-expire-default=604800
-# soa-refresh-default	Default SOA refresh
-soa-refresh-default=10800
-# soa-retry-default	Default SOA retry
-soa-retry-default=3600
-```
-
-* Restart
-```bash
-$ /etc/init.d/pdns restart
-```
-
-* Test
-```bash
-$ curl -v -H 'X-API-Key: changeme' http://localhost:8081/
-```
+The middleware is tested with latest [NodeJS](http://nodejs.org), so until a first real release, no older versions
+are supported.
+Of course, it might still work, but I strongly suggest using a current version.
 
 Installing
 ----------
@@ -93,7 +31,7 @@ Installing
 * Clone the repository
 
 ```bash
-git clone https://github.com/xbgmsharp/yapdnsui
+git clone https://github.com/johnyb/yapdnsui
 cd yapdnsui
 ```
 
@@ -103,18 +41,15 @@ cd yapdnsui
 $ npm install
 ```
 
-```bash
-$ bower install
-```
-
-* Start the application 
+* Start the application
 
 ```bash
-$ npm start
+$ docker-compose up
 ```
+
 Or manually, you can define an IP and the PORT by using environment variables.
 ```bash
-$ HOST=127.0.0.1 PORT=8080 DEBUG=yapdnsui node bin/www
+$ HOST=127.0.0.1 PORT=8080 DEBUG=yapdnsui node ./bin/www
 ```
 
 * Point your browser to: [http://localhost:8080/](http://localhost:8080/)
@@ -126,33 +61,34 @@ You can access the PowerDNS server manage interface using the menu on the right.
 Test using Docker
 -----------------
 
-You can try yaPDNSui using Docker. Please refer to [Docker.md](Docker.md)
+For more details regarding docker, please refer to [Docker.md](Docker.md)
 
+Development
+-----------
 
-Secure yapdnsui
----------------
+Currently, I have two commands running in two different terminal sessions.
+One is to start the docker environment as described above:
 
-For security reasons, you may want to run a webserver (like Apache or Nginx) in front of your PowerDNS webserver as a reverse proxy using SSL.
-As a best pratice, it is recommended to apply use SSL for the traffic between the end-user and the application.
+```
+$ docker-compose up
+```
 
-You can read this [HOWTO Monitoring.md](Monitoring.md) for further details.
+This also logs debug messages of the middleware.
+Then I track changes in the frontend code, running webpack if needed:
 
-For security reasons, you probably want to use the same webserver for authentication purpose.
+```
+$ grunt watch
+```
 
-You can read this [mod_auth_ldap - Apache HTTP Server](httpd.apache.org/docs/2.0/mod/mod_auth_ldap.html)
-
-You might want to use a SSL connection and authenticate your co-workers using the internal LDAP or database server of your company intranet.
+I promise to simplify this a little more, soon :D
 
 Contributing to yapdnsui
 ------------------------
 
-* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
-* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
-* Fork the project
-* Use a specific branch for your changes (one bonus point if it's prefixed with 'feature/') 
-* _write tests_, doc, commit and push until you are happy with your contribution
-* Send a pull request
-* Please try not to mess with the package, version, or history
+Please beware, at the moment, this code base is in heavy flux.
+This repository is organised using [git flow](http://nvie.com/posts/a-successful-git-branching-model/).
+Please create merge requests against the develop branch.
+Please also open merge requests against unfinished branches, once the purpose/goal of your feature/fix/enhancement is clear.
 
 License
 -------
@@ -164,14 +100,14 @@ This program comes without any warranty.
 Credits
 -------
 
-* yaPDNSui is built with the awesome [NodeJS](http://nodejs.org) and [Express](http://expressjs.com) and [Bower](http://bower.io/).
+* yaPDNSui is built with the awesome [NodeJS](http://nodejs.org) and [Express](http://expressjs.com).
 
 * PowerDNS [http://www.powerdns.com/](http://www.powerdns.com/)
 
 * Layout & CSS: [http://twitter.github.com/bootstrap/](http://twitter.github.com/bootstrap/)
 
-* Tables: [http://datatables.net/](http://datatables.net/)
+* [BackboneJS](http://backbonejs.org/)
 
-* Charts: [http://www.highcharts.com/](http://www.highcharts.com/)
+* [MarionetteJS](http://marionettejs.com/)
 
-* Thanks to PDNSui [https://github.com/leucos/pdnsui/](https://github.com/leucos/pdnsui/)
+* Thanks to [yaPDNSui](https://github.com/xbgmsharp/yapdnsui/)
