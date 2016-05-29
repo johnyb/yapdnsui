@@ -2,40 +2,40 @@ div.container-fluid
     // Page header
     .page-header
         h2
-            | Domains
+            | Zones
             | &nbsp;
             small
                 span.zone-counter= zones.length
-                | &nbsp;domains in backend
+                | &nbsp;zones in backend
         .btn-toolbar(style='margin-bottom: 10px;')
             .btn-group.pull-right
                 button.btn.btn-default.add-zone
                     span.glyphicon.glyphicon-plus
-                    | &nbsp;Add domain
+                    | &nbsp;Create zone
                 button.btn.btn-default.import-zone.disabled(id="import-zone", data-toggle="modal", data-target="#import-zone-modal")
                     span.glyphicon.glyphicon-import
                     | &nbsp;Import zone
 
-      .modal.fade.in(id="del-domain-modal", tabindex="-1", role="dialog", aria-labelledby="del-domain-label", aria-hidden="true")
+      .modal.fade.in(id="del-zone-modal", tabindex="-1", role="dialog", aria-labelledby="del-zone-label", aria-hidden="true")
        .modal-dialog
         .modal-content
          .modal-header
           button(type="button", class="close", data-dismiss="modal", aria-hidden="true") &times;
-          h4(class="modal-title", id="del-domain-label")
+          h4(class="modal-title", id="del-zone-label")
             #mod-delete-operation
          .modal-body
           .alert.alert-warning
             p
               strong Warning!
-            | This operation will delete the domain and all associated records for
+            | This operation will delete the zone and all associated records for
             strong#mod-delete-text-name
-            | <br>Are you sure you want to do this ?
+            | <br>Are you sure you want to do this?
          .modal-footer
           a.btn.btn-default(href='#', data-dismiss='modal', aria-hidden="true") Cancel
-          a.btn.btn-danger#mod-delete-submit(href='') Delete domain
+          a.btn.btn-danger#mod-delete-submit(href='') Delete zone
 
       div
-        table.table.table-striped.table-condensed.table-hover#domains-table(width="100%", name="domains-table")
+        table.table.table-striped.table-condensed.table-hover#zones-table(width="100%", name="zones-table")
           thead
             tr
               th Name

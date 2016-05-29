@@ -1,14 +1,12 @@
 td
     a(data-action="view" href='/servers/#{serverId}/zones/#{id}')= name
 td= kind
-td= masters
+td.masters= masters
 td
     -if (dnssec == true)
-        span.fa.fa-lock.fa-lg
+        i.fa.fa-lock.fa-lg(aria-label="dnssec enabled" title="dnssec enabled")
     -else
-        span.fa.fa-unlock.fa-lg
-            | &nbsp;
-            = dnssec
+        i.fa.fa-unlock.fa-lg(aria-label="dnssec disabled" title="dnssec disabled")
 td= serial
 td
     .btn-group.actions
@@ -22,9 +20,9 @@ td
             span.glyphicon.glyphicon-export
         button.btn.btn.btn-default.btn-xs.disabled.verify-zone(rel="tooltip", title="Verify zone contents/configuration", href="#")
             span.glyphicon.glyphicon-ok
-        a.btn.btn.btn-default.btn-xs.view-domain(data-action="view" rel="tooltip", title="View records in zone", href="/servers/#{serverId}/zones/#{id}")
+        a.btn.btn.btn-default.btn-xs.view-zone(data-action="view" rel="tooltip", title="View records in zone", href="/servers/#{serverId}/zones/#{id}")
             span.glyphicon.glyphicon-eye-open
-        button.btn.btn-default.btn-xs.edit-domain(data-action="edit", rel="tooltip", title="Edit domain")
+        button.btn.btn-default.btn-xs.edit-zone(data-action="edit", rel="tooltip", title="Edit zone")
             span.glyphicon.glyphicon-pencil
-        button.btn.btn-danger.btn-xs.delete-domain(data-action="delete" rel="tooltip", title="Delete domain")
+        button.btn.btn-danger.btn-xs.delete-zone(data-action="delete" rel="tooltip", title="Delete zone")
             span.glyphicon.glyphicon-trash

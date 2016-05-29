@@ -47,7 +47,7 @@ app.use('/about', (req, res) => res.sendFile('index.html', {
 }));
 app.use('/servers', servers);
 app.use('/', pdns.config);
-app.use('/', pdns.domains);
+app.use('/', pdns.zones);
 app.use('/', pdns.records);
 app.use('/', pdns.stats);
 
