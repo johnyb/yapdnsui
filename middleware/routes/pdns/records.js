@@ -64,8 +64,8 @@ router.get('/servers/:id/zones/:zone_id/records', function (req, res) {
 
 var fs = require('fs');
 router.get('/servers/:id/zones/:id/:file', function (req, res, next) {
-    fs.exists(path.join(__dirname, '../../../public/', req.params.file), (exists) => {
-        if (!exists) return next();
+    fs.stat(path.join(__dirname, '../../../public/', req.params.file), (err, stats) => {
+        if (err || !stats.isFile()) return next();
         res.location('/');
         res.sendFile(req.params.file, {
             root: path.join(__dirname, '../../../public/')
