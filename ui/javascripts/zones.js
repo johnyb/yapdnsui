@@ -61,6 +61,11 @@ export let ZoneListView = Marionette.CompositeView.extend({
         this.collection = new ZoneCollection(null, {
             serverId: options.serverId
         });
+        this.listenTo(this.collection, 'add remove reset', () => {
+            this.$('.zone-counter').text(
+                this.collection.length
+            );
+        });
     },
     template: ZoneListTemplate,
     templateHelpers: function () {

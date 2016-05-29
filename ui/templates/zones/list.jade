@@ -4,7 +4,8 @@ div.container-fluid
         h2
             | Domains
             | &nbsp;
-            small= zones.length
+            small
+                span.zone-counter= zones.length
                 | &nbsp;domains in backend
         .btn-toolbar(style='margin-bottom: 10px;')
             .btn-group.pull-right
