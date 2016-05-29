@@ -70,6 +70,12 @@ let MenuView = Marionette.LayoutView.extend({
             { target: `servers/${id}/statistics`, text: 'Statistics' }
         ], { at: 0 });
     },
+    onShowRecords: function (serverId, zoneId) {
+        this.getChildView('main').collection.add({
+            target: `servers/${serverId}/zones/${zoneId}`,
+            text: 'Records'
+        }, { at: 2 });
+    },
     onChildviewSetActiveTarget: function (view, target) {
         if (typeof target === 'undefined') return;
         this.triggerMethod('load:content', target);
@@ -92,6 +98,9 @@ let Layout = Marionette.LayoutView.extend({
     onLoadContent: function (view) {
         if (view.selectedServer) {
             this.getChildView('menu').triggerMethod('show:server', view.selectedServer);
+        }
+        if (view.selectedZone) {
+            this.getChildView('menu').triggerMethod('show:records', view.selectedServer, view.selectedZone);
         }
         this.showChildView(
             'content',

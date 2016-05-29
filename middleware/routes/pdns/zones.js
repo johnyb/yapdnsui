@@ -65,6 +65,15 @@ router.get('/servers/:id/:file', function (req, res, next) {
         });
     });
 });
+router.get('/servers/:id/zones/:file', function (req, res, next) {
+    fs.exists(path.join(__dirname, '../../../public/', req.params.file), (exists) => {
+        if (!exists) return next();
+        res.location('/');
+        res.sendFile(req.params.file, {
+            root: path.join(__dirname, '../../../public/')
+        });
+    });
+});
 
 /* Delete a domain */
 router['delete']('/servers/:id/zones/:zone_id', function (req, res) {

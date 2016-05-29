@@ -6,6 +6,7 @@ import BaseLayout from 'javascripts/base_layout';
 import about from 'templates/about.jade';
 import { ServerListView, ServerView } from 'javascripts/server';
 import { ZoneListView } from 'javascripts/zones';
+import { RecordListView } from 'javascripts/records';
 
 let IndexView = Marionette.LayoutView.extend({
     template: about
@@ -16,7 +17,8 @@ const views = {
     about: IndexView,
     listServers: ServerListView,
     editServer: ServerView,
-    listZones: ZoneListView
+    listZones: ZoneListView,
+    listRecords: RecordListView
 };
 
 function viewFor(target) {
@@ -50,6 +52,13 @@ let Controller = Marionette.Object.extend({
         this.getOption('layout').triggerMethod('load:content', new (viewFor('listZones'))({
             serverId: serverId
         }));
+    },
+    listRecords: function (serverId, zoneId) {
+        this.getOption('layout').triggerMethod('show');
+        this.getOption('layout').triggerMethod('load:content', new (viewFor('listRecords'))({
+            serverId: serverId,
+            zoneId: zoneId
+        }));
     }
 });
 
@@ -59,7 +68,8 @@ let Router = Marionette.AppRouter.extend({
         'about': 'about',
         'servers/': 'listServers',
         'servers/:id': 'editServer',
-        'servers/:id/zones': 'listZones'
+        'servers/:id/zones': 'listZones',
+        'servers/:id/zones/:zone': 'listRecords'
     },
     controller: new Controller()
 });

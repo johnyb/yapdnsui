@@ -1,4 +1,5 @@
 var express = require('express');
+var path = require('path');
 var database = require('../../libs/db');
 var pdnsapi = require('../../libs/pdnsapi');
 var router = express.Router();
@@ -33,7 +34,15 @@ router.param('id', function (req, res, next, id) {
 /* RECORDS */
 
 /* Get records of a domain */
-router.get('/servers/:id/domains/:zone_id', function (req, res) {
+router.get('/servers/:id/zones/:zone_id', function (req, res) {
+    if (/text\/html/.test(req.headers.accept)) {
+        res.location('/');
+        res.sendFile('index.html', {
+            root: path.join(__dirname, '../../../public/')
+        });
+        return;
+    }
+
     console.log('Get records of a domain');
     console.log(req.db);
     console.log(req.params.id);
@@ -45,18 +54,10 @@ router.get('/servers/:id/domains/:zone_id', function (req, res) {
         console.log(body);
         // If any http error redirect to index
         if (error && response.statusCode !== 200) {
-            console.log(error);
-            res.redirect('/servers');
+            res.send(error);
         } else {
-            console.log(body);
             var json = JSON.parse(body);
-            console.log(json);
-            res.render('records', {
-                'data': json,
-                'serverlist': req.serverlist,
-                'navmenu': 'domains',
-                'serverselected': req.server
-            });
+            res.send(json);
         }
     });
 });
@@ -86,7 +87,7 @@ router.get('/servers/:id/records/del/:zone_id/:record_name/:record_type', functi
 });
 
 /* Add/Update a record */
-router.post('/servers/:id/records/save/:zone_id', function (req, res) {
+router.post('/servers/:id/zones/:zone_id', function (req, res) {
     console.log('Add/Update a record');
     console.log(req.db);
     console.log(req.params.id);
