@@ -34,7 +34,7 @@ router.param('id', function (req, res, next, id) {
 /* RECORDS */
 
 /* Get records of a domain */
-router.get('/servers/:id/zones/:zone_id', function (req, res) {
+router.get('/servers/:id/zones/:zone_id/records', function (req, res) {
     if (/text\/html/.test(req.headers.accept)) {
         res.location('/');
         res.sendFile('index.html', {
@@ -57,8 +57,19 @@ router.get('/servers/:id/zones/:zone_id', function (req, res) {
             res.send(error);
         } else {
             var json = JSON.parse(body);
-            res.send(json);
+            res.send(json.rrsets);
         }
+    });
+});
+
+var fs = require('fs');
+router.get('/servers/:id/zones/:id/:file', function (req, res, next) {
+    fs.exists(path.join(__dirname, '../../../public/', req.params.file), (exists) => {
+        if (!exists) return next();
+        res.location('/');
+        res.sendFile(req.params.file, {
+            root: path.join(__dirname, '../../../public/')
+        });
     });
 });
 
@@ -86,9 +97,9 @@ router.get('/servers/:id/records/del/:zone_id/:record_name/:record_type', functi
     });
 });
 
-/* Add/Update a record */
-router.post('/servers/:id/zones/:zone_id', function (req, res) {
-    console.log('Add/Update a record');
+/* Add a record */
+router.post('/servers/:id/zones/:zone_id/records', function (req, res) {
+    console.log('Add a record');
     console.log(req.db);
     console.log(req.params.id);
     console.log(req.params.zone_id);
@@ -127,6 +138,18 @@ router.post('/servers/:id/zones/:zone_id', function (req, res) {
             }
             res.redirect('/servers/' + req.params.id + '/domains/' + req.params.zone_id);
         }
+    });
+});
+
+router.put('/servers/:id/zones/:zone_id/records/:record_name', function (req, res) {
+    var record = req.body;
+    console.log('update:', record);
+    pdnsapi.records.update(req, res, record, function (error, response, body) {
+        if (response.statusCode !== 200) {
+            res.status(response.statusCode).send({ msg: body });
+            return;
+        }
+        res.send(body.rrsets);
     });
 });
 

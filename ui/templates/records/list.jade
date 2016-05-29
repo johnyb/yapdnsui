@@ -1,0 +1,77 @@
+div.container-fluid
+    // Page header
+    .page-header
+        h2
+            | Zone&nbsp;/&nbsp;
+            span.zone-name= zone.id
+            | &nbsp;
+            small
+                span.record-counter= records.length
+                | &nbsp;records
+    .btn-toolbar(style='margin-bottom: 10px;')
+        .btn-group.pull-right
+            button.btn.btn-default.create-record
+                span.glyphicon.glyphicon-plus
+                | &nbsp;Create record
+            button.btn.btn-default.dropdown-toggle(href="#", data-toggle="dropdown", id="dropdownActions", aria-haspopup="true", aria-expanded="true")
+                | &nbsp;Zone actions&nbsp;
+                span.caret
+            ul.dropdown-menu(role="menu")
+                li
+                    a(data-action="delete", data-zone=records.zoneId, data-server=records.serverId, href="#", rel="tooltip", title="Delete zone")
+                        span.glyphicon.glyphicon-trash
+                        | &nbsp; Delete
+                li
+                    a(data-action="notify", data-zone=records.zoneId, data-server=records.serverId, href="#", rel="tooltip", title="Send a DNS NOTIFY to all slaves")
+                        span.glyphicon.glyphicon-retweet
+                        | &nbsp; Notify
+                li
+                    a(data-action="retrieve", data-zone=records.zoneId, data-server=records.serverId, href="#", rel="tooltip", title="Retrieves the zone from the master")
+                        span.glyphicon.glyphicon-random
+                        | &nbsp; AXFR Retrieve
+                li
+                    a(href='/servers/#{records.serverId}/zones/#{records.zoneId}.axfr', rel="tooltip", title="Returns the zone in AXFR format")
+                        span.glyphicon.glyphicon-export
+                        | &nbsp; Export
+                li
+                    a(data-action="verify", data-zone=records.zoneId, data-server=records.serverId, href="#", rel="tooltip", title="Verify zone contents/configuration")
+                        span.glyphicon.glyphicon-ok
+                        | &nbsp; Verify
+                li.divider
+                li
+                    a(href='#', rel="tooltip", title="View metadata")
+                        span.glyphicon.glyphicon-eye-open
+                        | &nbsp; Zone Metadata
+                li
+                    a(href='#', rel="tooltip", title="Manage Keys")
+                        span.glyphicon.glyphicon-lock
+                        | &nbsp; CryptoKeys
+
+    .modal.fade.in(id="del-record-modal", tabindex="-1", role="dialog", aria-labelledby="del-record-label", aria-hidden="true")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button(type="button", class="close", data-dismiss="modal", aria-hidden="true") &times;
+                    h4(class="modal-title", id="del-record-label")
+                    #mod-delete-operation
+                .modal-body
+                    p.alert.alert-warning
+                        strong Warning!
+                        | This operation will delete the
+                        strong#mod-delete-text-name
+                        | &nbsp; record.<br> Are you sure you want to do this?
+                .modal-footer
+                    a.btn.btn-default(href='#', data-dismiss='modal', aria-hidden="true") Cancel
+                    a.btn.btn-danger#mod-delete-submit(href='') Delete record
+
+    table.table.table-striped.table-condensed.table-hover.records#records-table(width="100%", name="records-table")
+        thead
+            tr
+            th Name
+            th Type
+            th Prio
+            th Content
+            th TTL
+            th State
+            th
+        tbody.records-list

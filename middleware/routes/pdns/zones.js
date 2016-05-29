@@ -55,6 +55,28 @@ router.get('/servers/:id/zones', function (req, res) {
         }
     });
 });
+router.get('/servers/:id/zones/:zone_id', function (req, res) {
+    if (/text\/html/.test(req.headers.accept)) {
+        res.location('/');
+        res.sendFile('index.html', {
+            root: path.join(__dirname, '../../../public/')
+        });
+        return;
+    }
+    // If missing value redirect to index or to an error page!!!
+    if (!req.db && !req.server) { res.redirect('/'); }
+    pdnsapi.zones.get(req, res, function (error, response, body) {
+        // If any error redirect to index
+        if (body === 'Not Found') {
+            res.status(404).send({ msg: body });
+        } else {
+            var json = JSON.parse(body);
+            if (json.rrsets) delete json.rrsets;
+            res.send(json);
+        }
+    });
+});
+
 var fs = require('fs');
 router.get('/servers/:id/:file', function (req, res, next) {
     fs.exists(path.join(__dirname, '../../../public/', req.params.file), (exists) => {

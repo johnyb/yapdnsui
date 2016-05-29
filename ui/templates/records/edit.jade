@@ -1,0 +1,39 @@
+.modal.fade.in(id="add-record-modal", tabindex="-1", role="dialog", aria-labelledby="add-record-label", aria-hidden="true")
+    .modal-dialog
+        .modal-content
+            .modal-header
+                button(type="button", class="close", data-dismiss="modal", aria-hidden="true") &times;
+                h4(class="modal-title", id="add-record-label")
+                #mod-edit-operation
+            .modal-body
+                form.modal-form(id="form-add-record", method='POST', enctype='application/json', action="/servers/#{serverId}/zones/#{zoneId}/#{id}", role="form")
+                    fieldset
+                    .form-group
+                        label.control-label(for='name') Name:
+                        .controls
+                        input.form-control(name="name", id="mod-edit-record-name", type="text", placeholder="eg. full FQDN or leave empty" value=name)
+                    .form-group
+                        label.control-label(for='type') Type:
+                        select.form-control.selectpicker(name="type", id="mod-edit-record-type")
+                            - var DNSTYPE = ['A', 'AAAA', 'CERT', 'CNAME', 'HINFO', 'KEY', 'LOC', 'MX', 'NAPTR', 'NS', 'PTR', 'RP', 'SOA', 'SPF', 'SSHFP', 'SRV', 'TXT']
+                            - each item in DNSTYPE
+                                option(value="#{item}", selected=item === type)= item
+                    .form-group
+                        label.control-label(for='priority') Priority:
+                        .controls
+                        input.form-control(name="priority", id="mod-edit-record-prio", type="text", placeholder="0", value=priority ? priority : "0")
+                    .form-group
+                        label.control-label(for='content') Content:
+                        .controls
+                        input.form-control(name="content", id="mod-edit-record-content", type="text", placeholder="eg. 192.0.43.10, web01.#{name}", value=records[0].content)
+                    .form-group
+                        label.control-label(for='ttl') TTL:
+                        .controls
+                        input.form-control(name="ttl", id="mod-edit-record-ttl", type="text", placeholder="86400", value=ttl ? ttl : "3600")
+                    .form-group
+                        label.control-label(for='disabled') Disabled:
+                        | &nbsp;
+                        input(name="disabled", id="mod-edit-record-disabled", type="checkbox", checked=records[0].disabled value="false", data-off-label="Visible", data-off-title="active", data-on-title="disabled", data-on-label="Hidden")
+                    .modal-footer
+                        a.btn.btn-default(href='#', data-dismiss='modal', aria-hidden="true") Cancel
+                        button.btn.btn-success(data-action="submit", type="submit")= name ? "Update" : "Create record"

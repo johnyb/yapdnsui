@@ -2,13 +2,17 @@ import $ from 'jquery';
 import Backbone from 'backbone';
 import Marionette from 'backbone.marionette';
 
-let Zone = Backbone.Model.extend({
+export let Zone = Backbone.Model.extend({
+    initialize: function (options) {
+        if (options.serverId) this.serverId = options.serverId;
+        if (this.collection) this.serverId = this.collection.serverId;
+    },
     url: function () {
-        return `/servers/${this.collection.serverId}/zones${this.isNew() ? '' : '/' + this.id}`;
+        return `/servers/${this.serverId}/zones${this.isNew() ? '' : '/' + this.id}`;
     }
 });
 
-let ZoneCollection = Backbone.Collection.extend({
+export let ZoneCollection = Backbone.Collection.extend({
     initialize: function (list, options) {
         this.serverId = options.serverId;
     },
@@ -97,7 +101,7 @@ export let ZoneListView = Marionette.CompositeView.extend({
             }
         },
         onView: function () {
-            this.triggerMethod('load:content', `servers/${this.model.collection.serverId}/zones/${this.model.id}`);
+            this.triggerMethod('load:content', `servers/${this.model.collection.serverId}/zones/${this.model.id}/records`);
         },
         onEdit: function () {
             new ZoneEditView({

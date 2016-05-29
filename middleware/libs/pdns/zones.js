@@ -28,6 +28,19 @@ exports.list = function (req, res, callback) {
     }
 };
 
+exports.get = function (req, res, callback) {
+    if (req.server.url && req.server.password) {
+        request({
+            dataType: 'json',
+            method: 'GET',
+            url: req.server.url + '/servers/localhost/zones/' + req.params.zone_id,
+            headers: getHeaders(req)
+        }, function (error, response, body) {
+            callback(error, response, body);
+        });
+    }
+};
+
 // Handle Zones delete
 exports['delete'] = function (req, res, callback) {
     if (req.server.url && req.server.password && req.params.zone_id) {

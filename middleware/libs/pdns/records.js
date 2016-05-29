@@ -47,14 +47,15 @@ exports['delete'] = function (req, res, record, callback) {
 };
 
 // Handle records update/add
-exports.add = function (req, res, record, callback) {
+exports.update = function (req, res, record, callback) {
     if (req.server.url && req.server.password && req.params.zone_id && record) {
         var json = {
             'rrsets': [{
-                'name': record.name,
-                'type': record.type,
-                'changetype': 'REPLACE',
-                'records': [record]
+                name: record.name,
+                type: record.type,
+                changetype: 'REPLACE',
+                records: record.records,
+                ttl: record.ttl
             }]
         };
         console.log(json);

@@ -69,7 +69,7 @@ let Router = Marionette.AppRouter.extend({
         'servers/': 'listServers',
         'servers/:id': 'editServer',
         'servers/:id/zones': 'listZones',
-        'servers/:id/zones/:zone': 'listRecords'
+        'servers/:id/zones/:zone/records': 'listRecords'
     },
     controller: new Controller()
 });
