@@ -1,4 +1,5 @@
 var express = require('express');
+var path = require('path');
 var database = require('../../libs/db');
 var pdnsapi = require('../../libs/pdnsapi');
 var router = express.Router();
@@ -33,11 +34,14 @@ router.param('id', function (req, res, next, id) {
 /* DOMAINS */
 
 /* GET domains page. */
-router.get('/servers/:id/domains', function (req, res) {
-    console.log('Get domains');
-    console.log(req.db);
-    console.log(req.params.id);
-    console.log(req.server);
+router.get('/servers/:id/zones', function (req, res) {
+    if (/text\/html/.test(req.headers.accept)) {
+        res.location('/');
+        res.sendFile('index.html', {
+            root: path.join(__dirname, '../../../public/')
+        });
+        return;
+    }
     // If missing value redirect to index or to an error page!!!
     if (!req.db && !req.server) { res.redirect('/'); }
     pdnsapi.zones.list(req, res, function (error, response, body) {
@@ -47,53 +51,47 @@ router.get('/servers/:id/domains', function (req, res) {
             res.redirect('/');
         } else {
             var json = JSON.parse(body);
-            console.log(json);
-            res.render('domains', {
-                'data': json,
-                'serverlist': req.serverlist,
-                'navmenu': 'domains',
-                'serverselected': req.server
-            });
+            res.send(json);
         }
+    });
+});
+var fs = require('fs');
+router.get('/servers/:id/:file', function (req, res, next) {
+    fs.exists(path.join(__dirname, '../../../public/', req.params.file), (exists) => {
+        if (!exists) return next();
+        res.location('/');
+        res.sendFile(req.params.file, {
+            root: path.join(__dirname, '../../../public/')
+        });
     });
 });
 
 /* Delete a domain */
-router.get('/servers/:id/del/:zone_id', function (req, res) {
-    console.log('Delete a domain');
-    console.log(req.db);
-    console.log(req.params.id);
-    console.log(req.params.zone_id);
+router['delete']('/servers/:id/zones/:zone_id', function (req, res) {
     // If missing value redirect to index or to an error page!!!
     if (!req.db && !req.server) { res.redirect('/'); }
     pdnsapi.zones['delete'](req, res, function (error, response) {
         // If any error redirect to index
         if (error && response.statusCode !== 204) {
-            console.log(error);
-            res.redirect('/servers');
+            res.send({ result: false, msg: error });
         } else {
-            res.redirect('/servers/' + req.server.id + '/domains');
+            res.send({ result: true });
         }
     });
 });
 
 /* Add a domain */
-router.post('/servers/:id/domains/add', function (req, res) {
-    console.log('Add a domain');
-    console.log(req.db);
-    console.log(req.params.id);
-    console.log(req.body.name);
-    console.log(req.body.type);
-    console.log(req.body.master);
+router.post('/servers/:id/zones', function (req, res) {
     // If missing value redirect to index or to an error page!!!
     if (!req.db && !req.server) { res.redirect('/'); }
+
     pdnsapi.zones.add(req, res, function (error, response) {
         // If any error redirect to index
         if (error && response.statusCode !== 204) {
             console.log(error);
-            res.redirect('/servers');
+            res.send({ result: false, msg: error });
         } else {
-            res.redirect('/servers/' + req.server.id + '/domains');
+            res.send({ result: true });
         }
     });
 });

@@ -1,0 +1,38 @@
+.modal.fade.in(id="add-domain-modal", tabindex="-1", role="dialog", aria-labelledby="add-domain-label", aria-hidden="true")
+    .modal-dialog
+        .modal-content
+            .modal-header
+                button(type="button", class="close", data-dismiss="modal", aria-hidden="true") &times;
+                h4(class="modal-title", id="add-domain-label")
+                    = id ? "Edit zone" : "Add zone"
+            .modal-body
+                form.modal-form(id="form-add-domain", method='POST', action='/servers/#{serverId}/zones')
+                fieldset
+                    .form-group
+                        label.control-label(for='name') Zone/Domain name:
+                        .controls
+                            input.form-control(id='mod-edit-name', name='name', type='text', placeholder='eg: example.com' value=name ? name : '')
+                    .form-group
+                        label.control-label(for='kind') Zone Type:
+                        .controls
+                            label
+                                input#mod-edit-type-master(type='radio', name='kind', value='Master' checked=!kind || kind === 'Master')
+                                strong Master
+                                span.help-block Send out notifications about zone changes to slaves.
+                            label
+                                input#mod-edit-type-slave(type='radio', name='kind', value='Slave' checked=kind === 'Slave')
+                                strong Slave
+                                span.help-block Retrieve records from master, store in database.
+                            label
+                                input#mod-edit-type-native(type='radio', name='kind', value='Native' checked=kind === 'Native')
+                                strong Native
+                                span.help-block Rely on database replication, don't replicate via DNS.
+                    .form-group
+                        #mod-edit-master-box.hide
+                            label.control-label(for='mod-edit-master') Zone master:
+                                .controls
+                                    input.form-control(id='mod-edit-master', name='master', type='text', placeholder='1.2.3.4,9.8.7.6')
+                                    span.help-block IP Address of the master host, which PDNS should replicate with.
+                    .modal-footer
+                        button.btn.btn-default(href='#', data-dismiss='modal', aria-hidden="true") Cancel
+                        button.btn.btn-success(href='', type="submit", data-action="submit")= id ? "Save" : "Add domain"
