@@ -127,6 +127,22 @@ router.post('/servers/:id/zones', function (req, res) {
     });
 });
 
+router.put('/servers/:id/zones/:zone_id', function (req, res) {
+    // If missing value redirect to index or to an error page!!!
+    if (!req.db && !req.server) { res.redirect('/'); }
+
+    pdnsapi.zones.add(req, res, function (error, response, body) {
+        // If any error redirect to index
+        if (error || response.statusCode !== 200) {
+            console.log(error, response.statusCode, body);
+            res.send({ result: false, msg: error });
+        } else {
+            res.send(body);
+        }
+    });
+});
+
+
 /* Import a domain */
 router.post('/servers/:id/import', function (req, res) {
     console.log('Add a domain');

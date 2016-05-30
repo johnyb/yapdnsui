@@ -1,4 +1,5 @@
 var request = require('request');
+var _ = require('underscore');
 
 /* --------------------------------------------------------
 *
@@ -59,17 +60,20 @@ exports['delete'] = function (req, res, callback) {
 // Handle Zones add/update
 exports.add = function (req, res, callback) {
     if (req.server.url && req.server.password && req.body.name && req.body.kind) {
-        var json = {
+        var json = _.defaults({
             name: req.body.name,
             kind: req.body.kind,
             masters: [],
             nameservers: []
-        };
+        }, req.body);
         if (req.body.master) json.masters.push(req.body.master);
+        delete json.id;
+        delete json.url;
+        console.log(json);
         request({
             dataType: 'json',
-            method: 'POST',
-            url: req.server.url + '/servers/localhost/zones',
+            method: req.method,
+            url: req.server.url + '/servers/localhost/zones' + (req.method === 'PUT' ? '/' + req.body.id : ''),
             json: json,
             headers: getHeaders(req)
         }, function (error, response, body) {

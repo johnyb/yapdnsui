@@ -81,7 +81,9 @@ export let ZoneListView = Marionette.CompositeView.extend({
     onAddZone: function () {
         this.zoneEdit = new ZoneEditView({
             serverId: this.collection.serverId,
-            model: new Zone()
+            model: new Zone({
+                serverId: this.collection.serverId
+            })
         });
         this.zoneEdit.render().$el.appendTo($('section.content'));
         this.listenTo(this.zoneEdit, 'create:model', function (model) {
