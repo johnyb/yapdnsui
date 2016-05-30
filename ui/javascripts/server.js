@@ -197,4 +197,13 @@ export let ServerConfigView = Marionette.CompositeView.extend({
     childViewContainer: '.config-table'
 });
 
+import StatsTemplate from 'templates/server/stats.jade';
+
+export let ServerStatsView = Marionette.LayoutView.extend({
+    initialize: function (options) {
+        this.selectedServer = options.serverId;
+    },
+    template: StatsTemplate
+});
+
 export default ServerSelectionView;
