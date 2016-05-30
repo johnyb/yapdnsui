@@ -50,7 +50,7 @@ let ServerSelectionView = Marionette.CompositeView.extend({
     },
     childView: Marionette.ItemView.extend({
         tagName: 'li',
-        template: _.template('<a href="#" data-target="servers/<%- id %>"><%- name %></a>')
+        template: _.template('<a href="#" data-target="servers/<%- id %>/zones"><%- name %></a>')
     }),
     childViewContainer: 'ul.dropdown-menu'
 });
@@ -150,13 +150,6 @@ export let ServerListView = Marionette.CompositeView.extend({
         </td>`)
     }),
     childViewContainer: 'table#servers-table > tbody'
-});
-
-export let ServerView = Marionette.LayoutView.extend({
-    initialize: function (options) {
-        this.selectedServer = options.selectedServer;
-    },
-    template: _.template('Hallo Welt')
 });
 
 import ConfigTemplate from 'templates/server/config.jade';

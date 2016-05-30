@@ -4,7 +4,7 @@ import Marionette from 'backbone.marionette';
 import BaseLayout from 'javascripts/base_layout';
 
 import about from 'templates/about.jade';
-import { ServerListView, ServerView, ServerConfigView, ServerStatsView } from 'javascripts/server';
+import { ServerListView, ServerConfigView, ServerStatsView } from 'javascripts/server';
 import { ZoneListView } from 'javascripts/zones';
 import { RecordListView } from 'javascripts/records';
 
@@ -16,7 +16,6 @@ const views = {
     index: IndexView,
     about: IndexView,
     listServers: ServerListView,
-    editServer: ServerView,
     serverConfig: ServerConfigView,
     serverStats: ServerStatsView,
     listZones: ZoneListView,
@@ -42,12 +41,6 @@ let Controller = Marionette.Object.extend({
     listServers: function () {
         this.getOption('layout').triggerMethod('show');
         this.getOption('layout').triggerMethod('load:content', new (viewFor('listServers'))());
-    },
-    editServer: function (id) {
-        this.getOption('layout').triggerMethod('show');
-        this.getOption('layout').triggerMethod('load:content', new (viewFor('editServer'))({
-            selectedServer: id
-        }));
     },
     serverConfig: function (serverId) {
         this.getOption('layout').triggerMethod('show');
@@ -82,7 +75,6 @@ let Router = Marionette.AppRouter.extend({
         'about': 'about',
 
         'servers/': 'listServers',
-        'servers/:id': 'editServer',
 
         'servers/:id/configuration': 'serverConfig',
         'servers/:id/statistics': 'serverStats',
