@@ -12,7 +12,7 @@ RUN cd /app && \
 WORKDIR /app/yapdnsui
 
 RUN \
-  npm i --silent -g nodemon &&\
+  npm i --silent -g grunt-cli nodemon &&\
   npm install --silent --production --unsafe-perm
 
 COPY ["startup.sh", "/app/startup.sh"]
