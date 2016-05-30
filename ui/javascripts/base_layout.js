@@ -65,7 +65,7 @@ let MenuView = Marionette.LayoutView.extend({
     },
     onShowServer: function (id) {
         this.getChildView('main').collection.add([
-            { target: `servers/${id}/config`, text: 'Configuration' },
+            { target: `servers/${id}/configuration`, text: 'Configuration' },
             { target: `servers/${id}/zones`, text: 'Zones' },
             { target: `servers/${id}/statistics`, text: 'Statistics' }
         ], { at: 0 });

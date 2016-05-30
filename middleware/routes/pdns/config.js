@@ -1,4 +1,5 @@
 var express = require('express');
+var path = require('path');
 var database = require('../../libs/db');
 var pdnsapi = require('../../libs/pdnsapi');
 var router = express.Router();
@@ -32,25 +33,22 @@ router.param('id', function (req, res, next, id) {
 /* -------------------------------------------------*/
 /* GET configuration page. */
 router.get('/servers/:id/configuration', function (req, res) {
-    console.log(req.db);
-    console.log(req.params.id);
-    console.log(req.server);
-    // Redirect to index if missing value
+    if (/text\/html/.test(req.headers.accept)) {
+        res.location('/');
+        res.sendFile('index.html', {
+            root: path.join(__dirname, '../../../public/')
+        });
+        return;
+    }
+
     if (!req.db && !req.server) { res.redirect('/'); } // TODO warm user if missing a DB or a valid server
     pdnsapi.config.list(req, res, function (error, response, body) {
         // If any error redirect to index
         if (!body) {
-            console.log(error);
-            res.redirect('/');
+            res.send({ msg: error });
         } else {
             var json = JSON.parse(body);
-            console.log(json);
-            res.render('configuration', {
-                'data': json,
-                'serverlist': req.serverlist,
-                'navmenu': 'configuration',
-                'serverselected': req.server
-            });
+            res.send(json);
         }
     });
 });

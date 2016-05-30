@@ -159,4 +159,42 @@ export let ServerView = Marionette.LayoutView.extend({
     template: _.template('Hallo Welt')
 });
 
+import ConfigTemplate from 'templates/server/config.jade';
+
+let ServerConfigCollection = Backbone.Collection.extend({
+    initialize: function (list, options) {
+        this.serverId = options.serverId;
+    },
+    url: function () {
+        return `/servers/${this.serverId}/configuration`;
+    }
+});
+
+export let ServerConfigView = Marionette.CompositeView.extend({
+    initialize: function (options) {
+        this.selectedServer = options.serverId;
+        this.collection = new ServerConfigCollection([], {
+            serverId: this.selectedServer
+        });
+        this.collection.fetch();
+        this.listenTo(this.collection, 'add remove reset', () => {
+            this.$('.config-counter').text(
+                this.collection.length
+            );
+        });
+
+    },
+    template: ConfigTemplate,
+    templateHelpers: function () {
+        return {
+            config: this.collection
+        };
+    },
+    childView: Marionette.ItemView.extend({
+        tagName: 'tr',
+        template: _.template(`<td><%- name %></td><td><%- value %></td>`)
+    }),
+    childViewContainer: '.config-table'
+});
+
 export default ServerSelectionView;

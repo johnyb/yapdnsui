@@ -1,0 +1,14 @@
+div.container-fluid
+    // Page header
+    .page-header
+        h2
+            | Configuration
+            | &nbsp;
+            small.config-counter= config.length
+            | &nbsp;config items
+    div
+        table.table.table-striped.table-condensed
+            thead
+                th Name
+                th Value
+            tbody.config-table
