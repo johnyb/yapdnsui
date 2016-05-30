@@ -19,6 +19,7 @@
   "private": true,
   "scripts": {
     "start": "DEBUG=yapdnsui node ./bin/www",
+    "dev": "grunt watch",
     "test": "grunt"
   },
   "main": "bin/www",

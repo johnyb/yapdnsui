@@ -1,20 +1,19 @@
-FROM node:5.5
-MAINTAINER Francois Lacroix <xbgmsharp@gmail.com>
+FROM node:6
+MAINTAINER Julian Bäume <julian@svg4all.de>
 
 # Add app directory
 RUN mkdir /app
 
 # Install `yapdnsui` from git
 RUN cd /app && \
-  git clone https://github.com/xbgmsharp/yapdnsui
+  git clone https://github.com/johnyb/yapdnsui
 
 # Define working directory.
 WORKDIR /app/yapdnsui
 
 RUN \
-  npm i --silent -g bower nodemon &&\
-  npm install --silent --production --unsafe-perm && \
-  bower --silent --allow-root install
+  npm i --silent -g nodemon &&\
+  npm install --silent --production --unsafe-perm
 
 COPY ["startup.sh", "/app/startup.sh"]
 RUN chmod +x /app/startup.sh

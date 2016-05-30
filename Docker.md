@@ -15,6 +15,7 @@
 There is an example setup including a pre-configured PowerDNS that can be launched by running
 
 ```bash
+docker-compose run --rm pdnsui npm i
 docker-compose up
 ```
 
@@ -22,7 +23,6 @@ docker-compose up
 
 ```bash
 $ docker-compose logs pdnsui
-  yapdnsui Express server listening on port 8080 +0ms
 ```
 
 * Point your browser to: [http://localhost:8080/](http://localhost:8080/)

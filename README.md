@@ -38,13 +38,13 @@ cd yapdnsui
 * Install dependencies
 
 ```bash
-$ npm install
+$ npm i
 ```
 
 * Start the application
 
 ```bash
-$ docker-compose up
+$ npm start
 ```
 
 Or manually, you can define an IP and the PORT by using environment variables.
@@ -70,7 +70,7 @@ Currently, I have two commands running in two different terminal sessions.
 One is to start the docker environment as described above:
 
 ```
-$ docker-compose up
+docker-compose up
 ```
 
 This also logs debug messages of the middleware.

@@ -5,6 +5,7 @@ services:
     image: johnyb/pdns-minimal
   pdnsui:
     build: .
+    image: johnyb/yapdnsui
     environment:
       - "PORT=8080"
       - "DEBUG=yapdnsui"
@@ -13,5 +14,10 @@ services:
     ports:
       - "8080:8080"
     command: "nodemon"
+    volumes:
+      - ".:/app/yapdnsui"
+  pdnsui_dev:
+    image: johnyb/yapdnsui
+    command: "npm run dev"
     volumes:
       - ".:/app/yapdnsui"
