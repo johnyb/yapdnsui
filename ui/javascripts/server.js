@@ -106,12 +106,14 @@ export let ServerListView = Marionette.CompositeView.extend({
         },
         tagName: 'tr',
         events: {
-            'click .server-action button': function (e) {
-                e.preventDefault();
-                const action = $(e.currentTarget).data('action');
-                const id = $(e.currentTarget).data('id');
-                this.triggerMethod(action, id);
-            }
+            'click .server-action button': 'onActionClick',
+            'click .server-action a': 'onActionClick'
+        },
+        onActionClick: function (e) {
+            e.preventDefault();
+            const action = $(e.currentTarget).data('action');
+            const id = $(e.currentTarget).data('id');
+            this.triggerMethod(action, id);
         },
         onFetch: function () {
             this.model.fetch();
@@ -128,7 +130,7 @@ export let ServerListView = Marionette.CompositeView.extend({
             this.model.destroy();
         },
         template: _.template(`
-        <td><%- name %></td>
+        <td class="server-action"><a href="#" data-action="zones" data-id="<%- id %>"><%- name %></a></td>
         <td><%- url %></td>
         <td><%- pdns.daemon_type %></td>
         <td><%- pdns.version %></td>
