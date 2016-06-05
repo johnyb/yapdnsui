@@ -1,4 +1,5 @@
 var request = require('request');
+var db = require('../db.js');
 var _ = require('underscore');
 
 /* --------------------------------------------------------
@@ -8,38 +9,44 @@ var _ = require('underscore');
 *
 */
 
-function getHeaders(req) {
+function getHeaders(server) {
     return {
         'Content-Type': 'application/json',
-        'X-API-Key': req.server.password
+        'X-API-Key': server.password
     };
 }
 
 // Handle Zones listing
-exports.list = function (req, res, callback) {
-    if (req.server.url && req.server.password) {
-        request({
-            dataType: 'json',
-            method: 'GET',
-            url: req.server.url + '/servers/localhost/zones',
-            headers: getHeaders(req)
-        }, function (error, response, body) {
-            callback(error, response, body);
+exports.list = function (serverId) {
+    return db.getServer(serverId).then((server) => {
+        return new Promise((resolve, reject) => {
+            request({
+                dataType: 'json',
+                method: 'GET',
+                url: server.url + '/servers/localhost/zones',
+                headers: getHeaders(server)
+            }, function (error, response, body) {
+                if (error) return reject();
+                resolve(response, body);
+            });
         });
-    }
+    });
 };
 
-exports.get = function (req, res, callback) {
-    if (req.server.url && req.server.password) {
-        request({
-            dataType: 'json',
-            method: 'GET',
-            url: req.server.url + '/servers/localhost/zones/' + req.params.zone_id,
-            headers: getHeaders(req)
-        }, function (error, response, body) {
-            callback(error, response, body);
+exports.get = function (serverId, zoneId) {
+    return db.getServer(serverId).then((server) => {
+        return new Promise((resolve, reject) => {
+            request({
+                dataType: 'json',
+                method: 'GET',
+                url: server.url + '/servers/localhost/zones/' + zoneId,
+                headers: getHeaders(server)
+            }, function (error, response, body) {
+                if (error) return reject(error);
+                resolve(body);
+            });
         });
-    }
+    });
 };
 
 // Handle Zones delete
@@ -58,30 +65,35 @@ exports['delete'] = function (req, res, callback) {
 };
 
 // Handle Zones add/update
-exports.add = function (req, res, callback) {
-    if (req.server.url && req.server.password && req.body.name && req.body.kind) {
-        var json = _.defaults({
-            name: req.body.name,
-            kind: req.body.kind,
-            masters: [],
-            nameservers: []
-        }, req.body);
-        if (req.body.master) json.masters.push(req.body.master);
-        delete json.id;
-        delete json.url;
-        console.log(json);
-        request({
-            dataType: 'json',
-            method: req.method,
-            url: req.server.url + '/servers/localhost/zones' + (req.method === 'PUT' ? '/' + req.body.id : ''),
-            json: json,
-            headers: getHeaders(req)
-        }, function (error, response, body) {
-            callback(error, response, body);
-        });
-    } else {
-        callback({ msg: 'Missing data' }, res);
+exports.add = function (serverId, zoneId, data) {
+    if (typeof data === 'undefined') {
+        data = zoneId;
+        zoneId = null;
     }
+    return db.getServer(serverId).then((server) => {
+        return new Promise((resolve, reject) => {
+            let json = _.defaults({
+                name: data.name,
+                kind: data.kind,
+                masters: [],
+                nameservers: []
+            }, data);
+            if (data.master) json.masters.push(data.master);
+            delete json.id;
+            delete json.url;
+            console.log(json);
+            request({
+                dataType: 'json',
+                method: zoneId === null ? 'POST' : 'PUT',
+                url: server.url + '/servers/localhost/zones' + (zoneId === null ? '' : '/' + zoneId),
+                json: json,
+                headers: getHeaders(server)
+            }, function (error, response) {
+                if (error) return reject(error);
+                resolve(response.body);
+            });
+        });
+    });
 };
 
 // Handle Zones import
@@ -114,17 +126,20 @@ exports['export'] = function (req, res, callback) {
 };
 
 // Handle Zone notify
-exports.notify = function (req, res, callback) {
-    if (req.server.url && req.server.password && req.params.zone_id) {
-        request({
-            dataType: 'json',
-            method: 'PUT',
-            url: req.server.url + '/servers/localhost/zones/' + req.params.zone_id + '/notify',
-            headers: getHeaders(req)
-        }, function (error, response, body) {
-            callback(error, response, body);
+exports.notify = function (serverId, zoneId) {
+    return db.getServer(serverId).then((server) => {
+        return new Promise((resolve, reject) => {
+            request({
+                dataType: 'json',
+                method: 'PUT',
+                url: server.url + '/servers/localhost/zones/' + zoneId + '/notify',
+                headers: getHeaders(server)
+            }, function (error, response) {
+                if (error) return reject(error);
+                resolve(response.body);
+            });
         });
-    }
+    });
 };
 
 // Handle Zone axfr-retrieve

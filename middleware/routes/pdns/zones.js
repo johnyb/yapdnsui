@@ -10,21 +10,12 @@ var router = express.Router();
 router.param('id', function (req, res, next, id) {
     console.log('pdns_domains.js server_id: [%s]', id);
     if (parseInt(id, 10)) {
-        database.get(req, res, id, function (err, server) {
-            if (err) {
-                return next(err);
-            } else if (!server) {
-                return next(new Error('failed to load server'));
-            }
+        database.getServer(id).then((server) => {
             req.server = server;
-            database.list(req, res, function (_req, _res, rows) {
-                if (!rows) {
-                    return next(new Error('failed to load servers'));
-                }
-                req.serverlist = rows;
-                next();
-            });
-        });
+            return database.list(id);
+        }).then((rows) => {
+            req.serverlist = rows;
+        }).then(next, next);
     } else {
         next();
     }
@@ -43,17 +34,10 @@ router.get('/servers/:id/zones', function (req, res) {
         return;
     }
     // If missing value redirect to index or to an error page!!!
-    if (!req.db && !req.server) { res.redirect('/'); }
-    pdnsapi.zones.list(req, res, function (error, response, body) {
-        // If any error redirect to index
-        if (!body) {
-            console.log(error);
-            res.redirect('/');
-        } else {
-            var json = JSON.parse(body);
-            res.send(json);
-        }
-    });
+    pdnsapi.zones.list(req.params.id).then((response) => {
+        var json = JSON.parse(response.body);
+        res.send(json);
+    }, (err) => { res.send(err); });
 });
 router.get('/servers/:id/zones/:zone_id', function (req, res) {
     if (/text\/html/.test(req.headers.accept)) {
@@ -63,17 +47,12 @@ router.get('/servers/:id/zones/:zone_id', function (req, res) {
         });
         return;
     }
-    // If missing value redirect to index or to an error page!!!
-    if (!req.db && !req.server) { res.redirect('/'); }
-    pdnsapi.zones.get(req, res, function (error, response, body) {
-        // If any error redirect to index
-        if (body === 'Not Found') {
-            res.status(404).send({ msg: body });
-        } else {
-            var json = JSON.parse(body);
-            if (json.rrsets) delete json.rrsets;
-            res.send(json);
-        }
+    pdnsapi.zones.get(req.params.id, req.params.zone_id).then((body) => {
+        let json = JSON.parse(body);
+        if (json.rrsets) delete json.rrsets;
+        res.send(json);
+    }, (error) => {
+        res.status(error.code).send({ msg: error.msg });
     });
 });
 
@@ -99,46 +78,27 @@ router.get('/servers/:id/zones/:file', function (req, res, next) {
 
 /* Delete a domain */
 router['delete']('/servers/:id/zones/:zone_id', function (req, res) {
-    // If missing value redirect to index or to an error page!!!
-    if (!req.db && !req.server) { res.redirect('/'); }
-    pdnsapi.zones['delete'](req, res, function (error, response) {
-        // If any error redirect to index
-        if (error && response.statusCode !== 204) {
-            res.send({ result: false, msg: error });
-        } else {
-            res.send({ result: true });
-        }
+    pdnsapi.zones['delete'](req.params.id, req.params.zone_id).then((result) => {
+        res.send(result);
+    }, (error) => {
+        res.send(error);
     });
 });
 
 /* Add a domain */
 router.post('/servers/:id/zones', function (req, res) {
-    // If missing value redirect to index or to an error page!!!
-    if (!req.db && !req.server) { res.redirect('/'); }
-
-    pdnsapi.zones.add(req, res, function (error, response, body) {
-        // If any error redirect to index
-        if (error && response.statusCode !== 204) {
-            console.log(error);
-            res.send({ result: false, msg: error });
-        } else {
-            res.send(body);
-        }
+    pdnsapi.zones.add(req.params.id, req.body).then((body) => {
+        res.send(body);
+    }, (error) => {
+        res.send(error);
     });
 });
 
 router.put('/servers/:id/zones/:zone_id', function (req, res) {
-    // If missing value redirect to index or to an error page!!!
-    if (!req.db && !req.server) { res.redirect('/'); }
-
-    pdnsapi.zones.add(req, res, function (error, response, body) {
-        // If any error redirect to index
-        if (error || response.statusCode !== 200) {
-            console.log(error, response.statusCode, body);
-            res.send({ result: false, msg: error });
-        } else {
-            res.send(body);
-        }
+    pdnsapi.zones.add(req.params.id, req.params.zone_id, req.body).then((body) => {
+        res.send(body);
+    }, (error) => {
+        res.send(error);
     });
 });
 
@@ -189,20 +149,11 @@ router.get('/servers/:id/export/:zone_id', function (req, res) {
 
 /* Notify a domain */
 router.get('/servers/:id/notify/:zone_id', function (req, res) {
-    console.log('Notify a domain');
-    console.log(req.db);
-    console.log(req.params.id);
-    console.log(req.params.zone_id);
-    // If missing value redirect to index or to an error page!!!
-    if (!req.db && !req.server) { res.redirect('/'); }
-    pdnsapi.zones.notify(req, res, function (error, response, body) {
-        console.log(body);
+    pdnsapi.zones.notify(req.params.id, req.params.zone_id).then((body) => {
         // If any error redirect to index
-        if (error && response.statusCode !== 200) {
-            console.log(error); res.send(error);
-        } else {
-            res.send(body);
-        }
+        res.send(body);
+    }, (error) => {
+        res.send(error);
     });
 });
 

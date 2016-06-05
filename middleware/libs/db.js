@@ -26,63 +26,61 @@ exports.create = function () {
     return db;
 };
 
-exports.list = function (req, res, callback) {
-    if (req.db) {
-        req.db.all('SELECT * FROM servers', function (err, rows) {
-            console.log('db.list', JSON.stringify(rows));
-            callback(req, res, rows);
+// Initiliaze the db
+var db = exports.create();
+
+exports.list = function () {
+    return new Promise((resolve, reject) => {
+        db.all('SELECT * FROM servers', (err, rows) => {
+            if (err) return reject(err);
+            resolve(rows);
         });
-    }
+    });
 };
 
-exports.add = function (req, res, callback) {
-    if (req.db && req.body.url && req.body.password) {
-        var obj = url.parse(req.body.url);
-        req.db.run('INSERT INTO servers VALUES (?,?,?,?,?,?,?,?,?,?,?)', [null, obj.host, req.body.url, req.body.password, null, null, null, null, null, null, null], function (err) {
-            console.log('db.add');
-            callback(err, this.lastID);
+exports.add = function (obj) {
+    return new Promise((resolve, reject) => {
+        let parsedUrl = url.parse(obj.url);
+        db.run('INSERT INTO servers VALUES (?,?,?,?,?,?,?,?,?,?,?)', [null, parsedUrl.host, obj.url, obj.password, null, null, null, null, null, null, null], function (err) {
+            if (err) return reject(err);
+            return resolve(this.lastID);
         });
-    }
+    });
 };
 
-exports.update = function (req, res, callback) {
-    if (req.db && req.params.id && req.body.url && req.body.password) {
-        var obj = url.parse(req.body.url);
-        req.db.run('UPDATE servers SET name=?,url=?,password=? WHERE id=?', [obj.host, req.body.url, req.body.password, req.params.id], function (err, row) {
-            console.log('db.update', this, row);
-            callback(req, res, row);
+exports.update = function (id, body) {
+    return new Promise((resolve, reject) => {
+        let obj = url.parse(body.url);
+        db.run('UPDATE servers SET name=?,url=?,password=? WHERE id=?', [obj.host, body.url, body.password, id], (err, row) => {
+            if (err) return reject(err);
+            resolve(row);
         });
-    }
+    });
 };
 
-
-exports.refresh = function (req, res, pdns, callback) {
-    if (req.db && req.params.id && pdns) {
-        req.db.run('UPDATE servers SET pdns_type=?, pdns_id=?, pdns_url=?, pdns_daemon_type=?, pdns_version=?, pdns_config_url=?, pdns_zones_url=? WHERE id=?', [pdns.type, pdns.id, pdns.url, pdns.daemon_type, pdns.version, pdns.config_url, pdns.zones_url, req.params.id], function (err, row) {
-            console.log('db.refresh', this);
-            callback(req, res, row);
+exports.refresh = function (id, pdns) {
+    return new Promise((resolve, reject) => {
+        db.run('UPDATE servers SET pdns_type=?, pdns_id=?, pdns_url=?, pdns_daemon_type=?, pdns_version=?, pdns_config_url=?, pdns_zones_url=? WHERE id=?', [pdns.type, pdns.id, pdns.url, pdns.daemon_type, pdns.version, pdns.config_url, pdns.zones_url, id], (err, row) => {
+            if (err) return reject(err);
+            resolve(row);
         });
-    }
+    });
 };
 
-exports.get = function (req, res, id, callback) {
-    if (req.db && id) {
-        req.db.get('SELECT * FROM servers WHERE id=? LIMIT 1', [id], function (err, row) {
-            if (!row) {
-                callback(req, res, err);
-            } else {
-                console.log('db.get', row);
-                callback(err, row);
-            }
+exports.getServer = function (id) {
+    return new Promise((resolve, reject) => {
+        db.get('SELECT * FROM servers WHERE id=? LIMIT 1', [id], (err, row) => {
+            if (err) return reject(err);
+            resolve(row);
         });
-    }
+    });
 };
 
-exports['delete'] = function (req, res, callback) {
-    if (req.db && req.params.id) {
-        req.db.run('DELETE FROM servers WHERE id=?', [req.params.id], function (err, row) {
-            console.log('db.del:' + err);
-            callback(req, res, row);
+exports['delete'] = function (id) {
+    return new Promise((resolve, reject) => {
+        db.run('DELETE FROM servers WHERE id=?', [id], (err, row) => {
+            if (err) return reject(err);
+            resolve(row);
         });
-    }
+    });
 };

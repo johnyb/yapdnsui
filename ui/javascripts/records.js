@@ -7,11 +7,13 @@ let Record = Backbone.Model.extend({
     initialize: function (options) {
         if (options.serverId) this.serverId = options.serverId;
         if (options.zoneId) this.zoneId = options.zoneId;
+        if (!!options.name && !!options.type) {
+            this.set('id', `${options.name}/${options.type}`);
+        }
     },
     defaults: {
         records: [{}]
     },
-    idAttribute: 'name',
     url: function () {
         return `/servers/${this.serverId || this.collection.serverId}/zones/${this.zoneId || this.collection.zoneId}/records${this.isNew() ? '' : '/' + this.id}`;
     }

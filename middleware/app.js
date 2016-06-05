@@ -10,19 +10,8 @@ var bodyParser = require('body-parser');
 var pdns = require('./routes/pdns');
 var servers = require('./routes/servers');
 
-// Load our DB library
-var database = require('./libs/db');
-// Initiliaze the db
-var db = database.create();
 // Initiliaze the app
 var app = express();
-
-// Make our db is accessible to our router
-// Will be execute for all events
-app.use(function (req, res, next) {
-    req.db = db;
-    next();
-});
 
 // Set global package.json details for use in the webgui
 app.set('package', pkg);

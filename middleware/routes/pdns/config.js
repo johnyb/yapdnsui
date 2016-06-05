@@ -10,21 +10,12 @@ var router = express.Router();
 router.param('id', function (req, res, next, id) {
     console.log('server_id: [%s]', id);
     if (parseInt(id, 10)) {
-        database.get(req, res, id, function (err, server) {
-            if (err) {
-                return next(err);
-            } else if (!server) {
-                return next(new Error('failed to load server'));
-            }
+        database.getServer(id).then((server) => {
             req.server = server;
-            database.list(req, res, function (_req, _res, rows) {
-                if (!rows) {
-                    return next(new Error('failed to load servers'));
-                }
-                req.serverlist = rows;
-                next();
-            });
-        });
+            return database.list(id);
+        }).then((rows) => {
+            req.serverlist = rows;
+        }).then(next, next);
     } else {
         next();
     }
@@ -41,15 +32,10 @@ router.get('/servers/:id/configuration', function (req, res) {
         return;
     }
 
-    if (!req.db && !req.server) { res.redirect('/'); } // TODO warm user if missing a DB or a valid server
-    pdnsapi.config.list(req, res, function (error, response, body) {
-        // If any error redirect to index
-        if (!body) {
-            res.send({ msg: error });
-        } else {
-            var json = JSON.parse(body);
-            res.send(json);
-        }
+    pdnsapi.config.list(req.params.id).then((json) => {
+        res.send(json);
+    }).then(null, (error) => {
+        res.send({ msg: error });
     });
 });
 

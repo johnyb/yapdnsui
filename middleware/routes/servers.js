@@ -8,24 +8,13 @@ var router = express.Router();
 // Execute for all request
 // It return the full server object from the DB
 router.param('id', function (req, res, next, id) {
-    console.log('server_id: [%s]', id);
-    console.log(parseInt(id, 10));
     if (parseInt(id, 10) && !/text\/html/.test(req.headers.accept)) {
-        database.get(req, res, id, function (err, server) {
-            if (err) {
-                return next(err);
-            } else if (!server) {
-                return next(new Error('failed to load server'));
-            }
+        database.getServer(id).then((server) => {
             req.server = server;
-            database.list(req, res, function (_req, _res, rows) {
-                if (!rows) {
-                    return next(new Error('failed to load servers'));
-                }
-                req.serverlist = rows;
-                next();
-            });
-        });
+            return database.list(id);
+        }).then((rows) => {
+            req.serverlist = rows;
+        }).then(next, next);
     } else {
         next();
     }
@@ -40,26 +29,19 @@ router.get('/', function (req, res) {
         });
         return;
     }
-    if (!req.db) { res.redirect('/'); }
-    database.list(req, res, function (_req, _res, rows) {
+    database.list().then((rows) => {
         res.send(rows);
+    }, (err) => {
+        res.status(400).send(err);
     });
 });
 
 /* POST to add server Service */
 router.post('/', function (req, res) {
-    database.add(req, res, function (err, id) {
-        if (err) {
-            console.error(err);
-            return;
-        }
-        database.get(req, res, id, function (err2, row) {
-            if (err2) {
-                console.log(err2);
-                return;
-            }
-            res.send(row);
-        });
+    database.add(req.body).then(function (id) {
+        return database.getServer(id);
+    }).then(function (row) {
+        res.send(row);
     });
 });
 
@@ -81,50 +63,36 @@ router.get('/:id', function (req, res) {
         });
         return;
     }
-    if (!req.db || !req.server || !req.params.id) { res.redirect('/'); }
 
-    pdnsapi.config.servers(req, res, function (error, response, body) {
+    pdnsapi.config.servers(req.params.id).then((response) => {
         // If any error redirect to index
         if (!response || response.statusCode !== 200) {
-            console.log('Error: connection failed');
-            res.msg = {};
-            res.msg['class'] = 'alert-warning';
-            res.msg.title = 'Error!';
-            res.msg.msg = 'Connection failed to ' + req.server.name;
-            res.send(res.msg);
+            res.send({
+                title: 'Error!',
+                msg: 'Connection failed to ' + req.server.name
+            });
         } else {
-            var json = JSON.parse(body);
-            database.refresh(req, res, json[0], function () {
+            var json = JSON.parse(response.body);
+            return database.refresh(req.params.id, json[0]).then(() => {
                 res.send({ pdns: json[0] });
             });
         }
-
-    });
+    }).then(null, (err) => res.send(err));
 });
 
 router['delete']('/:id', function (req, res) {
-    console.log('Server delete');
-    console.log(req.params);
-    console.log(req.server);
-    console.log(req.db);
-
-    if (!req.db || !req.params.id) { res.redirect('/servers'); }
-
-    database['delete'](req, res, function () {
-        res.send({ result: true });
+    database['delete'](req.params.id).then(() => {
+        res.send();
+    }, (err) => {
+        res.send(err);
     });
 });
 
 router.put('/:id', function (req, res) {
-    console.log('Server update');
-    console.log(req.params);
-    console.log(req.server);
-    console.log(req.db);
-
-    if (!req.db || !req.params.id) { res.redirect('/servers'); }
-
-    database.update(req, res, function () {
-        res.send({ result: true });
+    database.update(req.params.id, req.body).then((row) => {
+        res.send(row);
+    }, (err) => {
+        res.send(err);
     });
 });
 
