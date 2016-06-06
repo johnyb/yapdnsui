@@ -43,8 +43,12 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            code: {
-                files: ['Gruntfile.js', 'middleware/**/*', 'ui/**/*', 'webpack.config.js'],
+            middleware: {
+                files: ['Gruntfile.js', 'middleware/**/*', 'spec/middleware/**/*'],
+                tasks: ['eslint', 'mochaTest']
+            },
+            ui: {
+                files: ['Gruntfile.js', 'ui/**/*', 'webpack.config.js'],
                 tasks: ['default']
             }
         },
