@@ -1,24 +1,16 @@
 var express = require('express');
 var path = require('path');
-var database = require('../../libs/db');
-var pdnsapi = require('../../libs/pdnsapi');
+const PDNSAPI = require('../../libs/pdnsapi');
 var router = express.Router();
 
 // Route middleware to validate :id
 // Execute for all request
 // It return the full server object from the DB
 router.param('id', function (req, res, next, id) {
-    console.log('pdns_domains.js server_id: [%s]', id);
     if (parseInt(id, 10)) {
-        database.getServer(id).then((server) => {
-            req.server = server;
-            return database.list(id);
-        }).then((rows) => {
-            req.serverlist = rows;
-        }).then(next, next);
-    } else {
-        next();
+        req.api = new PDNSAPI(id);
     }
+    next();
 });
 
 /* -------------------------------------------------*/
@@ -34,7 +26,7 @@ router.get('/servers/:id/zones', function (req, res) {
         return;
     }
     // If missing value redirect to index or to an error page!!!
-    pdnsapi.zones.list(req.params.id).then((response) => {
+    req.api.zones.list(req.params.id).then((response) => {
         var json = JSON.parse(response.body);
         res.send(json);
     }, (err) => { res.send(err); });
@@ -47,7 +39,7 @@ router.get('/servers/:id/zones/:zone_id', function (req, res) {
         });
         return;
     }
-    pdnsapi.zones.get(req.params.id, req.params.zone_id).then((body) => {
+    req.api.zones.get(req.params.id, req.params.zone_id).then((body) => {
         let json = JSON.parse(body);
         if (json.rrsets) delete json.rrsets;
         res.send(json);
@@ -78,7 +70,7 @@ router.get('/servers/:id/zones/:file', function (req, res, next) {
 
 /* Delete a domain */
 router['delete']('/servers/:id/zones/:zone_id', function (req, res) {
-    pdnsapi.zones['delete'](req.params.id, req.params.zone_id).then((result) => {
+    req.api.zones['delete'](req.params.id, req.params.zone_id).then((result) => {
         res.send(result);
     }, (error) => {
         res.send(error);
@@ -87,7 +79,7 @@ router['delete']('/servers/:id/zones/:zone_id', function (req, res) {
 
 /* Add a domain */
 router.post('/servers/:id/zones', function (req, res) {
-    pdnsapi.zones.add(req.params.id, req.body).then((body) => {
+    req.api.zones.add(req.params.id, req.body).then((body) => {
         res.send(body);
     }, (error) => {
         res.send(error);
@@ -95,7 +87,7 @@ router.post('/servers/:id/zones', function (req, res) {
 });
 
 router.put('/servers/:id/zones/:zone_id', function (req, res) {
-    pdnsapi.zones.add(req.params.id, req.params.zone_id, req.body).then((body) => {
+    req.api.zones.add(req.params.id, req.params.zone_id, req.body).then((body) => {
         res.send(body);
     }, (error) => {
         res.send(error);
@@ -114,7 +106,7 @@ router.post('/servers/:id/import', function (req, res) {
     console.log(req.body.zone);
     // If missing value redirect to index or to an error page!!!
     if (!req.db && !req.server) { res.redirect('/'); }
-    pdnsapi.zones['import'](req, res, function (error, response) {
+    req.api.zones['import'](req, res, function (error, response) {
         // If any error redirect to index
         if (error && response.statusCode !== 204) {
             console.log(error);
@@ -133,7 +125,7 @@ router.get('/servers/:id/export/:zone_id', function (req, res) {
     console.log(req.params.zone_id);
     // If missing value redirect to index or to an error page!!!
     if (!req.db && !req.server) { res.redirect('/'); }
-    pdnsapi.zones['export'](req, res, function (error, response, body) {
+    req.api.zones['export'](req, res, function (error, response, body) {
         console.log(body);
         // If any error redirect to index
         if (error && response.statusCode !== 200) {
@@ -149,7 +141,7 @@ router.get('/servers/:id/export/:zone_id', function (req, res) {
 
 /* Notify a domain */
 router.get('/servers/:id/notify/:zone_id', function (req, res) {
-    pdnsapi.zones.notify(req.params.id, req.params.zone_id).then((body) => {
+    req.api.zones.notify(req.params.id, req.params.zone_id).then((body) => {
         // If any error redirect to index
         res.send(body);
     }, (error) => {
@@ -165,7 +157,7 @@ router.get('/retrieve/:zone_id', function (req, res) {
     console.log(req.params.zone_id);
     // If missing value redirect to index or to an error page!!!
     if (!req.db && !req.server) { res.redirect('/'); }
-    pdnsapi.zones.retrieve(req, res, function (error, response, body) {
+    req.api.zones.retrieve(req, res, function (error, response, body) {
         console.log(body);
         // If any error redirect to index
         if (error && response.statusCode !== 200) {

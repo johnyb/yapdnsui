@@ -1,24 +1,16 @@
 var express = require('express');
 var path = require('path');
-var database = require('../../libs/db');
-var pdnsapi = require('../../libs/pdnsapi');
+const PDNSAPI = require('../../libs/pdnsapi');
 var router = express.Router();
 
 // Route middleware to validate :id
 // Execute for all request
 // It return the full server object from the DB
 router.param('id', function (req, res, next, id) {
-    console.log('server_id: [%s]', id);
     if (parseInt(id, 10)) {
-        database.getServer(id).then((server) => {
-            req.server = server;
-            return database.list(id);
-        }).then((rows) => {
-            req.serverlist = rows;
-        }).then(next, next);
-    } else {
-        next();
+        req.api = new PDNSAPI(id);
     }
+    next();
 });
 
 /* -------------------------------------------------*/
@@ -34,7 +26,7 @@ router.get('/servers/:id/zones/:zone_id/records', function (req, res) {
         return;
     }
 
-    pdnsapi.records.list(req.params.id, req.params.zone_id).then((response) => {
+    req.api.records.list(req.params.id, req.params.zone_id).then((response) => {
         if (response.statusCode !== 200) {
             res.send(response.body);
         } else {
@@ -61,7 +53,7 @@ router.get('/servers/:id/zones/:id/:file', function (req, res, next) {
 router['delete']('/servers/:id/zones/:zone_id/records/:record_name/:record_type', function (req, res) {
     console.log(req.params, req.body);
     var record = { 'name': req.params.record_name, 'type': req.params.record_type };
-    pdnsapi.records['delete'](req.params.id, req.params.zone_id, record).then((body) => {
+    req.api.records['delete'](req.params.id, req.params.zone_id, record).then((body) => {
         res.send(body);
     }, (error) => {
         res.send(error);
@@ -70,7 +62,7 @@ router['delete']('/servers/:id/zones/:zone_id/records/:record_name/:record_type'
 
 /* Add a record */
 router.post('/servers/:id/zones/:zone_id/records', function (req, res) {
-    pdnsapi.records.update(req.params.id, req.params.zone_id, req.body).then((response) => {
+    req.api.records.update(req.params.id, req.params.zone_id, req.body).then((response) => {
         res.status(response.statusCode).send(response.body);
     }, (error) => {
         res.send(error);
@@ -78,7 +70,7 @@ router.post('/servers/:id/zones/:zone_id/records', function (req, res) {
 });
 
 router.put('/servers/:id/zones/:zone_id/records/:record_name/:record_type', function (req, res) {
-    pdnsapi.records.update(req.params.id, req.params.zone_id, req.body).then((response) => {
+    req.api.records.update(req.params.id, req.params.zone_id, req.body).then((response) => {
         if (response.statusCode !== 200) {
             res.status(response.statusCode).send({ msg: response.body });
         } else {

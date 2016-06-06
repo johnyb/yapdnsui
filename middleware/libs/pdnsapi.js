@@ -1,7 +1,16 @@
+'use strict';
+const db = require('./db.js');
 
-module.exports = {
-    'config': require('./pdns/config.js'),
-    'zones': require('./pdns/zones.js'),
-    'records': require('./pdns/records.js'),
-    'stats': require('./pdns/statistics.js')
-};
+class PDNSAPI {
+    constructor(serverId) {
+        this.serverId = serverId;
+        this.server = db.getServer(serverId);
+    }
+
+    get config() { return require('./pdns/config.js'); }
+    get zones() { return require('./pdns/zones.js'); }
+    get records() { return require('./pdns/records.js'); }
+    get stats() { return require('./pdns/statistics.js'); }
+}
+
+module.exports = PDNSAPI;
