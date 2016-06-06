@@ -34,6 +34,14 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        mochaTest: {
+            middleware: {
+                expand: true,
+                src: ['**/*_spec.js'],
+                cwd: 'spec/',
+                filter: 'isFile'
+            }
+        },
         watch: {
             code: {
                 files: ['Gruntfile.js', 'middleware/**/*', 'ui/**/*', 'webpack.config.js'],
@@ -49,6 +57,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-eslint');
+    grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-webpack');
     grunt.registerTask('default', ['eslint', 'copy', 'webpack']);
 
