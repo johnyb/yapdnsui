@@ -1,14 +1,12 @@
-var request = require('request');
-var db = require('../db.js');
+const request = require('request');
 
-// Handle servers description
-exports.servers = function (serverId) {
-    return db.getServer(serverId).then((server) => {
+function createRequest(url) {
+    return function (server) {
         return new Promise((resolve, reject) => {
             request({
                 dataType: 'json',
                 method: 'GET',
-                url: server.url + '/servers',
+                url: server.url + url,
                 headers: {
                     'X-API-Key': server.password
                 }
@@ -17,24 +15,15 @@ exports.servers = function (serverId) {
                 resolve(response.body);
             });
         });
-    });
-};
+    };
+}
 
-// Handle configuration listing
-exports.list = function (serverId) {
-    return db.getServer(serverId).then((server) => {
-        return new Promise((resolve, reject) => {
-            request({
-                dataType: 'json',
-                method: 'GET',
-                url: server.url + '/servers/localhost/config',
-                headers: {
-                    'X-API-Key': server.password
-                }
-            }, function (error, response) {
-                if (error) return reject(error);
-                resolve(response.body);
-            });
-        });
-    });
-};
+class Config {
+    constructor(server) {
+        this.server = server;
+    }
+    servers() { return this.server.then(createRequest('/servers')); }
+    list() { return this.server.then(createRequest('/servers/localhost/config')); }
+}
+
+module.exports = Config;
