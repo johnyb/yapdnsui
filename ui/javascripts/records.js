@@ -143,12 +143,12 @@ export let RecordListView = Marionette.CompositeView.extend({
             }
         },
         onView: function () {
-            this.triggerMethod('load:content', `servers/${this.model.collection.serverId}/zones/${this.model.collection.zoneId}/${this.model.id}`);
+            this.triggerMethod('load:content', `servers/${this.model.serverId}/zones/${this.model.zoneId}/${this.model.id}`);
         },
         onEdit: function () {
             new RecordEditView({
-                serverId: this.model.collection.serverId,
-                zoneId: this.model.collection.zoneId,
+                serverId: this.model.serverId,
+                zoneId: this.model.zoneId,
                 model: this.model
             }).render().$el.appendTo('body section.content');
         },
@@ -158,8 +158,8 @@ export let RecordListView = Marionette.CompositeView.extend({
         template: ListEntryTemplate,
         templateHelpers: function () {
             return {
-                serverId: this.model.collection.serverId,
-                zoneId: this.model.collection.zoneId
+                serverId: this.model.serverId,
+                zoneId: this.model.zoneId
             };
         }
     }),
