@@ -16,6 +16,7 @@ let Record = Backbone.Model.extend({
             let value = response.rrsets
                 .filter((set) => { return set.name === this.previous('name') && set.type === this.get('type'); })[0];
             this.set(value);
+            this.set('id', `${this.get('name')}/${this.get('type')}`);
         });
 
     },
