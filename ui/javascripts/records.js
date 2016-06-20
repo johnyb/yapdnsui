@@ -10,15 +10,6 @@ let Record = Backbone.Model.extend({
         if (!!options.name && !!options.type) {
             this.set('id', `${options.name}/${options.type}`);
         }
-        this.listenTo(this, 'sync', function (model, response) {
-            if (!response.rrsets) return;
-            // when creating a new record, the complete zone is returned, we only need to store the record
-            let value = response.rrsets
-                .filter((set) => { return set.name === this.previous('name') && set.type === this.get('type'); })[0];
-            this.set(value);
-            this.set('id', `${this.get('name')}/${this.get('type')}`);
-        });
-
     },
     defaults: {
         records: [{}]

@@ -63,7 +63,11 @@ router['delete']('/servers/:id/zones/:zone_id/records/:record_name/:record_type'
 /* Add a record */
 router.post('/servers/:id/zones/:zone_id/records', function (req, res) {
     req.api.records.update(req.params.id, req.params.zone_id, req.body).then((response) => {
-        res.status(response.statusCode).send(response.body);
+        let record = response.body.rrsets.filter((rrset) => {
+            return rrset.name === req.body.name && rrset.type === req.body.type;
+        })[0];
+        record.id = `${record.name}/${record.type}`;
+        res.status(response.statusCode).send(record);
     }, (error) => {
         res.send(error);
     });
@@ -74,7 +78,10 @@ router.put('/servers/:id/zones/:zone_id/records/:record_name/:record_type', func
         if (response.statusCode !== 200) {
             res.status(response.statusCode).send({ msg: response.body });
         } else {
-            res.send(response.body.rrsets);
+            let record = response.body.rrsets.filter((rrset) => {
+                return rrset.name === req.body.name && rrset.type === req.body.type;
+            })[0];
+            res.send(record);
         }
     }, (error) => {
         res.send(error);
