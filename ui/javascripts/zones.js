@@ -102,12 +102,15 @@ export let ZoneListView = Marionette.CompositeView.extend({
                 this.triggerMethod(action);
             }
         },
+        modelEvents: {
+            'change': 'render'
+        },
         onView: function () {
-            this.triggerMethod('load:content', `servers/${this.model.collection.serverId}/zones/${this.model.id}/records`);
+            this.triggerMethod('load:content', `servers/${this.model.serverId}/zones/${this.model.id}/records`);
         },
         onEdit: function () {
             new ZoneEditView({
-                serverId: this.model.collection.serverId,
+                serverId: this.model.serverId,
                 model: this.model
             }).render().$el.appendTo('body section.content');
         },
@@ -117,7 +120,7 @@ export let ZoneListView = Marionette.CompositeView.extend({
         template: ListEntryTemplate,
         templateHelpers: function () {
             return {
-                serverId: this.model.collection.serverId
+                serverId: this.model.serverId
             };
         }
     }),
