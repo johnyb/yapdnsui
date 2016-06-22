@@ -23,6 +23,7 @@ let Servers = Backbone.Collection.extend({
 });
 
 let servers = new Servers();
+servers.fetch();
 
 let template = _.template(`
     <a href="#" data-toggle="dropdown" class="dropdown">
@@ -45,8 +46,8 @@ let ServerSelectionView = Marionette.CompositeView.extend({
     },
     template: template,
     collection: servers,
-    onShow: function () {
-        this.collection.fetch();
+    onRefresh: function () {
+        servers.fetch();
     },
     childView: Marionette.ItemView.extend({
         tagName: 'li',
@@ -88,7 +89,8 @@ export let ServerListView = Marionette.CompositeView.extend({
     template: serverList,
     collection: servers,
     events: {
-        'click .add-server': 'onAddServer'
+        'click .add-server': 'onAddServer',
+        'click .refresh-server': () => servers.fetch()
     },
     onAddServer: function () {
         this.serverEdit = new ServerEditView({
