@@ -24,8 +24,8 @@ router.get('/servers/:id/configuration', function (req, res) {
         return;
     }
 
-    req.api.config.list().then((json) => {
-        res.send(json);
+    req.api.config.list().then((result) => {
+        res.status(result.statusCode).send(result.config);
     }).then(null, (error) => {
         res.send({ msg: error });
     });

@@ -63,13 +63,13 @@ router.get('/:id', function (req, res) {
         });
         return;
     }
-
-    pdnsapi.config.servers(req.params.id).then((response) => {
+    let api = new pdnsapi(req.params.id);
+    api.config.servers(req.params.id).then((response) => {
         // If any error redirect to index
-        if (!response || response.statusCode !== 200) {
-            res.send({
+        if (response.statusCode !== 200) {
+            res.status(response.statusCode).send({
                 title: 'Error!',
-                msg: 'Connection failed to ' + req.server.name
+                msg: 'Connection failed to ' + req.param.id
             });
         } else {
             var json = JSON.parse(response.body);

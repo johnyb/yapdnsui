@@ -31,11 +31,24 @@ describe('PDNSAPI', () => {
             expect(api.config.servers).to.be.a('function');
         });
 
+        describe('should provide a status code for the request like:', () => {
+            it('200 - ok', () => {
+                return api.config.servers().then((result) => {
+                    expect(result.statusCode).to.equal(200);
+                });
+            });
+        });
+        it('should provide a list of servers', () => {
+            return api.config.servers().then((result) => {
+                expect(result.servers).to.be.an('array');
+            });
+        });
+
         it('should provide list of configuration values', () => {
             return api.config.list()
-                .then(JSON.parse)
-                .then((result) => {
-                    expect(result).to.be.an('array');
+                .then((r) => r.config)
+                .then((config) => {
+                    expect(config).to.be.an('array');
                 });
         });
     });
