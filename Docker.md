@@ -15,7 +15,7 @@
 There is an example setup including a pre-configured PowerDNS that can be launched by running
 
 ```bash
-docker-compose run --rm pdnsui npm i
+docker-compose run --rm pdnsui yarn
 docker-compose up
 ```
 

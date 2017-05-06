@@ -18,6 +18,6 @@ services:
       - ".:/app/yapdnsui"
   pdnsui_dev:
     image: johnyb/yapdnsui
-    command: "npm run dev"
+    command: "yarn run dev"
     volumes:
       - ".:/app/yapdnsui"

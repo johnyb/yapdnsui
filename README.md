@@ -38,13 +38,13 @@ cd yapdnsui
 * Install dependencies
 
 ```bash
-$ npm i
+$ yarn
 ```
 
 * Start the application
 
 ```bash
-$ npm start
+$ yarn start
 ```
 
 Or manually, you can define an IP and the PORT by using environment variables.
