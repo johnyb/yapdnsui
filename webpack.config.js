@@ -11,12 +11,13 @@ module.exports = {
         filename: '[name].js'
     },
     resolve: {
-        root: [
+        modules: [
             path.resolve('./ui/'),
             path.resolve('./node_modules/jquery/dist/'),
             path.resolve('./node_modules/underscore/'),
             path.resolve('./node_modules/backbone/'),
-            path.resolve('./node_modules/backbone.marionette/lib/')
+            path.resolve('./node_modules/backbone.marionette/lib/'),
+            path.resolve('./node_modules')
         ]
     },
     plugins: [
@@ -27,38 +28,45 @@ module.exports = {
     ],
     devtool: '#source-map',
     module: {
-        loaders: [{
+        rules: [{
             test: /\.jade$/,
             loader: 'jade-loader'
-        },
-        { test: /\.(woff2?|svg)$/, loader: 'url?limit=10000' },
-        { test: /\.(ttf|eot)$/, loader: 'file' },
+        }, {
+            test: /\.(woff2?|svg)$/,
+            use: [{
+                loader: 'url-loader',
+                options: { limit: 10000 }
+            }]
+        }, { test: /\.(ttf|eot)$/, loader: 'file-loader' },
         {
             test: /\.scss$/,
-            loaders: [
-                'style',
-                'css',
-                'sass'
+            use: [
+                'style-loader',
+                'css-loader',
+                'sass-loader'
             ]
-        },
-        {
+        }, {
             test: /\.js$/,
             exclude: /node_modules/,
-            loader: 'babel',
-            query: {
-                presets: ['es2015']
-            }
+            use: [{
+                loader: 'babel-loader',
+                options: {
+                    presets: ['es2015']
+                }
+            }]
         }, {
             test: /backbone\.marionette\.js/,
-            loader: 'imports-loader',
-            query: {
-                _: 'underscore',
-                Backbone: 'backbone'
-            }
-        }],
-        preLoaders: [{
+            use: [{
+                loader: 'imports-loader',
+                options: {
+                    _: 'underscore',
+                    Backbone: 'backbone'
+                }
+            }]
+        }, {
             test: /\.js$/,
-            loaders: ['eslint-loader'],
+            loader: 'eslint-loader',
+            enforce: 'pre',
             exclude: /node_modules/
         }]
     }
