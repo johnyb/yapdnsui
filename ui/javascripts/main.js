@@ -1,17 +1,29 @@
 'use strict';
 
-import Backbone from 'backbone';
-import Marionette from 'backbone.marionette';
-import Router from 'javascripts/router';
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import About from 'templates/about.vue';
+import { ServerList } from 'javascripts/server';
+import Bootstrap from 'bootstrap-vue';
+import './icons';
 
-let app = new Marionette.Application();
+Vue.use(VueRouter);
+Vue.use(Bootstrap);
 
-app.router = new Router();
+const routes = [
+    { path: '/', component: About },
+    { path: '/about', component: About },
+    { path: '/servers', component: ServerList }
+];
 
-app.on('start', () => Backbone.history.start({ pushState: true }));
-
-app.router.controller.listenTo(app.router.controller.options.layout, 'navigate:to', function (target) {
-    app.router.navigate(target, { trigger: true });
+const router = new VueRouter({
+    routes
 });
 
-app.start();
+import App from 'templates/app.vue';
+
+new Vue({
+    el: 'app',
+    router,
+    render: h => h(App)
+});

@@ -5,10 +5,10 @@ set -eu
 
 case "$1" in
     "nodemon")
-        nodemon /app/yapdnsui/bin/www
+        yarn dev
         ;;
     "start")
-        node /app/yapdnsui/bin/www
+        yarn start
         ;;
     *)
         exec "$@"

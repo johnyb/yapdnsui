@@ -18,7 +18,10 @@ module.exports = {
             path.resolve('./node_modules/backbone/'),
             path.resolve('./node_modules/backbone.marionette/lib/'),
             path.resolve('./node_modules')
-        ]
+        ],
+        alias: {
+            'vue$': 'vue/dist/vue.esm.js'
+        }
     },
     plugins: [
         new webpack.ProvidePlugin({
@@ -31,6 +34,9 @@ module.exports = {
         rules: [{
             test: /\.jade$/,
             loader: 'jade-loader'
+        }, {
+            test: /\.vue$/,
+            loader: 'vue-loader'
         }, {
             test: /\.(woff2?|svg)$/,
             use: [{
@@ -51,7 +57,8 @@ module.exports = {
             use: [{
                 loader: 'babel-loader',
                 options: {
-                    presets: ['es2015']
+                    presets: ['es2017'],
+                    plugins: [require('babel-plugin-system-import-transformer')]
                 }
             }]
         }, {

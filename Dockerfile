@@ -4,14 +4,13 @@ MAINTAINER Julian Bäume <julian@svg4all.de>
 # Install `yapdnsui` from git
 RUN mkdir /app && \
   cd /app && \
-  git clone https://github.com/johnyb/yapdnsui
+  mkdir /app/yapdnsui
+  #git clone https://github.com/johnyb/yapdnsui
 
 # Define working directory.
 WORKDIR /app/yapdnsui
 
-RUN \
-  yarn global add grunt-cli nodemon &&\
-  yarn --production
+RUN yarn --production
 
 COPY ["startup.sh", "/app/startup.sh"]
 RUN chmod +x /app/startup.sh

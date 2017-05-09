@@ -18,6 +18,10 @@ services:
       - ".:/app/yapdnsui"
   pdnsui_dev:
     image: johnyb/yapdnsui
-    command: "yarn run dev"
+    command: "yarn dev"
+    links:
+      - "pdns:pdns"
+    ports:
+      - "8080:8080"
     volumes:
       - ".:/app/yapdnsui"

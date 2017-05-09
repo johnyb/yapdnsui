@@ -3,18 +3,11 @@
 import Marionette from 'backbone.marionette';
 import BaseLayout from 'javascripts/base_layout';
 
-import about from 'templates/about.jade';
 import { ServerListView, ServerConfigView, ServerStatsView } from 'javascripts/server';
 import { ZoneListView } from 'javascripts/zones';
 import { RecordListView } from 'javascripts/records';
 
-let IndexView = Marionette.LayoutView.extend({
-    template: about
-});
-
 const views = {
-    index: IndexView,
-    about: IndexView,
     listServers: ServerListView,
     serverConfig: ServerConfigView,
     serverStats: ServerStatsView,
@@ -32,11 +25,9 @@ let Controller = Marionette.Object.extend({
     },
     index: function () {
         this.getOption('layout').triggerMethod('show');
-        this.getOption('layout').triggerMethod('load:content', new (viewFor('index'))());
     },
     about: function () {
         this.getOption('layout').triggerMethod('show');
-        this.getOption('layout').triggerMethod('load:content', new (viewFor('about'))());
     },
     listServers: function () {
         this.getOption('layout').triggerMethod('show');
