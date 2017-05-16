@@ -3,7 +3,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import About from 'templates/about.vue';
-import { ServerList } from 'javascripts/server';
+import { ServerList } from './server';
+import { ZonesList, ZonesMenu, ZonesEdit } from './zones';
 import Bootstrap from 'bootstrap-vue';
 import './icons';
 
@@ -13,7 +14,35 @@ Vue.use(Bootstrap);
 const routes = [
     { path: '/', component: About },
     { path: '/about', component: About },
-    { path: '/servers', component: ServerList }
+    { path: '/servers', component: ServerList },
+    {
+        path: '/servers/:serverId/zones',
+        components: {
+            default: ZonesList,
+            mainMenu: ZonesMenu
+        }
+    },
+    {
+        path: '/servers/:serverId/config',
+        components: {
+            default: null,
+            mainMenu: ZonesMenu
+        }
+    },
+    {
+        path: '/servers/:serverId/stats',
+        components: {
+            default: null,
+            mainMenu: ZonesMenu
+        }
+    },
+    {
+        path: '/servers/:serverId/zones/edit/:zoneId?',
+        components: {
+            default: ZonesEdit,
+            mainMenu: ZonesMenu
+        }
+    }
 ];
 
 const router = new VueRouter({

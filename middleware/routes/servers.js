@@ -72,8 +72,12 @@ router.get('/:id', function (req, res) {
                 msg: 'Connection failed to ' + req.param.id
             });
         } else {
-            return database.refresh(req.params.id, response.servers[0]).then(() => {
-                res.send({ pdns: response.servers[0] });
+            return Promise.all([
+                database.getServer(req.params.id),
+                database.refresh(req.params.id, response.servers[0])
+            ]).then((servers) => {
+                servers[0].pdns = response.servers[0];
+                res.send(servers[0]);
             });
         }
     }).then(null, (err) => res.send(err));

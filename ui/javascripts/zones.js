@@ -1,128 +1,16 @@
-import $ from 'jquery';
-import Backbone from 'backbone';
-import Marionette from 'backbone.marionette';
+import Vue from 'vue';
 
-export let Zone = Backbone.Model.extend({
-    initialize: function (options) {
-        if (options.serverId) this.serverId = options.serverId;
-        if (this.collection) this.serverId = this.collection.serverId;
-    },
-    url: function () {
-        return `/servers/${this.serverId}/zones${this.isNew() ? '' : '/' + this.id}`;
-    }
+import ZonesListView from 'templates/zones/list.vue';
+export let ZonesList = Vue.component('zones-list', {
+    render: (h) => h(ZonesListView)
 });
 
-export let ZoneCollection = Backbone.Collection.extend({
-    initialize: function (list, options) {
-        this.serverId = options.serverId;
-    },
-    model: Zone,
-    url: function () {
-        return `/servers/${this.serverId}/zones`;
-    }
+import ZonesMenuView from 'templates/zones/menu.vue';
+export let ZonesMenu = Vue.component('zones-menu', {
+    render: (h) => h(ZonesMenuView)
 });
 
-import ZoneEditTemplate from 'templates/zones/edit.jade';
-
-let ZoneEditView = Marionette.ItemView.extend({
-    initialize: function (options) {
-        this.serverId = options.serverId;
-        this.selectedServer = options.serverId;
-    },
-    className: 'zone-edit',
-    template: ZoneEditTemplate,
-    templateHelpers: function () {
-        return {
-            serverId: this.serverId
-        };
-    },
-    events: {
-        'click [data-action="submit"]': 'onSubmit'
-    },
-    onSubmit: function () {
-        this.model.set('kind', this.$('input[name="kind"]:checked').val());
-        this.model.set('name', this.$('input[name="name"]').val());
-        if (this.model.isNew()) {
-            this.trigger('create:model', this.model);
-        } else {
-            this.model.save();
-        }
-        this.$('.modal').modal('hide');
-    },
-    onRender: function () {
-        this.$('.modal')
-            .modal()
-            .one('hidden.bs.modal', () => this.remove());
-    }
-});
-
-import ZoneListTemplate from 'templates/zones/list.jade';
-import ListEntryTemplate from 'templates/zones/list_entry.jade';
-
-export let ZoneListView = Marionette.CompositeView.extend({
-    initialize: function (options) {
-        this.selectedServer = options.serverId;
-        this.collection = new ZoneCollection(null, {
-            serverId: options.serverId
-        });
-        this.listenTo(this.collection, 'add remove reset', () => {
-            this.$('.zone-counter').text(
-                this.collection.length
-            );
-        });
-    },
-    template: ZoneListTemplate,
-    templateHelpers: function () {
-        return { zones: this.collection };
-    },
-    events: {
-        'click .add-zone': 'onAddZone'
-    },
-    onAddZone: function () {
-        this.zoneEdit = new ZoneEditView({
-            serverId: this.collection.serverId,
-            model: new Zone({
-                serverId: this.collection.serverId
-            })
-        });
-        this.zoneEdit.render().$el.appendTo($('section.content'));
-        this.listenTo(this.zoneEdit, 'create:model', function (model) {
-            this.collection.create(model, { wait: true });
-        });
-    },
-    onRender: function () {
-        this.collection.fetch();
-    },
-    childView: Marionette.ItemView.extend({
-        tagName: 'tr',
-        events: {
-            'click [data-action]': function (e) {
-                e.preventDefault();
-                const action = $(e.currentTarget).data('action');
-                this.triggerMethod(action);
-            }
-        },
-        modelEvents: {
-            'change': 'render'
-        },
-        onView: function () {
-            this.triggerMethod('load:content', `servers/${this.model.serverId}/zones/${this.model.id}/records`);
-        },
-        onEdit: function () {
-            new ZoneEditView({
-                serverId: this.model.serverId,
-                model: this.model
-            }).render().$el.appendTo('body section.content');
-        },
-        onDelete: function () {
-            this.model.destroy();
-        },
-        template: ListEntryTemplate,
-        templateHelpers: function () {
-            return {
-                serverId: this.model.serverId
-            };
-        }
-    }),
-    childViewContainer: 'tbody.zones-list'
+import ZonesEditView from 'templates/zones/edit.vue';
+export let ZonesEdit = Vue.component('zones-edit', {
+    render: (h) => h(ZonesEditView)
 });

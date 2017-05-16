@@ -4,7 +4,9 @@
         <b-nav-toggle target="nav_collapse" position="left"></b-nav-toggle>
         <b-link class="navbar-brand" to='/' exact>Yet Another PDNS UI</b-link>
         <b-collapse is-nav id="nav_collapse">
-            <b-nav class="main" is-nav-bar />
+            <b-nav class="main" is-nav-bar>
+                <router-view name="mainMenu" />
+            </b-nav>
             <b-nav is-nav-bar class="ml-auto">
                 <menu-server-list />
             </b-nav>
