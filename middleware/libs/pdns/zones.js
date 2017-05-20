@@ -50,18 +50,21 @@ exports.get = function (serverId, zoneId) {
 };
 
 // Handle Zones delete
-exports['delete'] = function (req, res, callback) {
-    if (req.server.url && req.server.password && req.params.zone_id) {
-        request({
-            dataType: 'json',
-            method: 'DELETE',
-            url: req.server.url + '/servers/localhost/zones/' + req.params.zone_id,
-            json: { 'rrsets': [{ 'name': req.params.zone_id, 'changetype': 'DELETE', 'records': [], 'comments': [] }] },
-            headers: getHeaders(req)
-        }, function (error, response, body) {
-            callback(error, response, body);
+exports['delete'] = function (serverId, zoneId) {
+    return db.getServer(serverId).then((server) => {
+        return new Promise((resolve, reject) => {
+            request({
+                dataType: 'json',
+                method: 'DELETE',
+                url: server.url + '/servers/localhost/zones/' + zoneId,
+                json: { 'rrsets': [{ 'name': zoneId, 'changetype': 'DELETE', 'records': [], 'comments': [] }] },
+                headers: getHeaders(server)
+            }, function (error, response, body) {
+                if (error) return reject(error);
+                resolve(body);
+            });
         });
-    }
+    });
 };
 
 // Handle Zones add/update
