@@ -7,14 +7,15 @@
 </template>
 
 <script>
-import { servers } from 'store/index';
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'menu-server-list',
-    data() {
-        return {
-            servers
-        };
+    computed: mapGetters({
+        servers: 'getServers'
+    }),
+    created () {
+        this.$store.dispatch('getServers');
     }
 }
 </script>

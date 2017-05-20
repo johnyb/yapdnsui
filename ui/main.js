@@ -87,10 +87,12 @@ const router = new VueRouter({
     routes
 });
 
+import store from 'store';
 import App from 'components/app.vue';
 
 new Vue({
     el: 'app',
     router,
+    store,
     render: h => h(App)
 });

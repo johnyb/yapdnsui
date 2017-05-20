@@ -19,7 +19,7 @@
         <template slot="actions" scope="row">
             <b-button-toolbar key-nav>
                 <b-button size="sm" v-b-modal="'server-edit'" @click="setActive(row.item)"><icon label="Edit Server" name="pencil-square-o" /></b-button>
-                <b-button variant="danger" size="sm" @click="remove(row.item.id)"><icon name="trash" label="Remove Server" /></b-button>
+                <b-button variant="danger" size="sm" @click="remove(row.item)"><icon name="trash" label="Remove Server" /></b-button>
             </b-button-toolbar>
         </template>
     </b-table>
@@ -32,11 +32,13 @@ import 'vue-awesome/icons/trash';
 import 'vue-awesome/icons/pencil-square-o'
 
 import Edit from './edit.vue';
-
-import { servers } from 'store/index';
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'server-list',
+    computed: mapGetters({
+        servers: 'getServers'
+    }),
     data: function () {
         return {
             fields: {
@@ -54,27 +56,18 @@ export default {
                 },
                 actions: {}
             },
-            servers,
             activeItem: { isNew: true }
         };
     },
     methods: {
         refresh: function () {
-            Promise.all(this.servers.map(s => fetch(`/servers/${s.id}`).then(res => res.json())))
-            .then(() => fetch('/servers').then(res => res.json()))
-            .then((data) => {
-                this.servers = data;
-            });
+            this.$store.dispatch('getServers');
         },
         add: function () {
 
         },
-        remove: function (id) {
-            fetch(`/servers/${id}`, { method: 'DELETE' }).then((res) => {
-                if (!res.ok) throw new Error('Failed to delete', res);
-            }).then(() => {
-                this.servers = this.servers.filter(s => s.id !== id);
-            });
+        remove: function (server) {
+            this.$store.dispatch('deleteServer', server);
         },
         setActive: function (server) {
             this.activeItem = server;

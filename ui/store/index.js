@@ -1,9 +1,18 @@
 
-let servers = [];
-fetch('/servers', { 'Content-Type': 'json' }).then((response) => response.json()).then((data) => {
-    servers.push.apply(servers, data);
-});
+import Vue from 'vue';
+import Vuex from 'vuex';
+import * as actions from './actions';
+import * as getters from './getters';
+import servers from './modules/servers';
 
-module.exports = {
-    servers
-};
+Vue.use(Vuex);
+
+export default new Vuex.Store({
+    actions,
+    getters,
+    modules: {
+        servers
+    },
+    strict: false,
+    plugins: []
+});
