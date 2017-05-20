@@ -3,6 +3,8 @@ version: "2"
 services:
   pdns:
     image: johnyb/pdns-minimal
+    ports:
+      - "53:53/udp"
   pdnsui:
     build: .
     image: johnyb/yapdnsui
