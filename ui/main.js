@@ -1,16 +1,46 @@
-'use strict';
-
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import About from 'templates/about.vue';
-import { ServerList } from './server';
-import { ZonesList, ZonesMenu, ZonesEdit } from './zones';
-import { RecordsList } from './records';
 import Bootstrap from 'bootstrap-vue';
-import './icons';
 
 Vue.use(VueRouter);
 Vue.use(Bootstrap);
+
+import About from 'components/about.vue';
+
+import MenuList from 'components/server/menu-list.vue';
+Vue.component('menu-server-list', {
+    render: function (h) {
+        return h(MenuList);
+    }
+});
+
+import ServerListTemplate from 'components/server/list.vue';
+const ServerList = Vue.component('server-list', {
+    render: h => h(ServerListTemplate)
+});
+
+import ZonesListView from 'components/zones/list.vue';
+const ZonesList = Vue.component('zones-list', {
+    render: (h) => h(ZonesListView)
+});
+
+import ZonesMenuView from 'components/zones/menu.vue';
+const ZonesMenu = Vue.component('zones-menu', {
+    render: (h) => h(ZonesMenuView)
+});
+
+import ZonesEditView from 'components/zones/edit.vue';
+const ZonesEdit = Vue.component('zones-edit', {
+    render: (h) => h(ZonesEditView)
+});
+
+import RecordsListView from 'components/records/list.vue';
+const RecordsList = Vue.component('records-list', {
+    render: h => h(RecordsListView)
+});
+
+import Icon from 'vue-awesome/components/Icon';
+Vue.component('icon', Icon);
 
 const routes = [
     { path: '/', component: About },
@@ -57,7 +87,7 @@ const router = new VueRouter({
     routes
 });
 
-import App from 'templates/app.vue';
+import App from 'components/app.vue';
 
 new Vue({
     el: 'app',

@@ -33,7 +33,7 @@ import 'vue-awesome/icons/pencil-square-o'
 
 import Edit from './edit.vue';
 
-import { servers } from 'javascripts/data';
+import { servers } from 'store/index';
 
 export default {
     name: 'server-list',

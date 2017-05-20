@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { servers } from 'javascripts/data';
+import { servers } from 'store/index';
 
 export default {
     name: 'menu-server-list',
