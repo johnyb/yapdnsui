@@ -11,7 +11,7 @@
         <div class="jumbotron">
             <h2>License</h2>
             <p>
-                Copyright &copy; 2014-2015 Francois Lacroix, 2016 Julian Bäume. All Rights Reserved.<br />
+                Copyright &copy; 2014-2015 Francois Lacroix, 2016-2017 Julian Bäume. All Rights Reserved.<br />
                 This program is free software; you can redistribute it and/or modify it under the terms of the
                 <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>
                 as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -26,7 +26,7 @@
             <p>
                 Middleware is built using <a href="http://nodejs.org">NodeJS</a> and <a href="http://expressjs.com">Express</a>.
             <p>
-                yaPDNSui powered by <a href="http://backbonejs.org">Backbone</a> and <a href="http://marionettejs.com">Backbone Marionette</a> - Layout and CSS from <a href="http://twitter.github.com">Twitter Bootstrap</a>.
+                yaPDNSui powered by <a href="http://vuejs.org">Vue.js</a> - Layout and CSS from <a href="https://v4-alpha.getbootstrap.com">Twitter Bootstrap 4</a>.
             </p>
         </div>
     </div>
