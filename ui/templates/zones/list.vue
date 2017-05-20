@@ -93,7 +93,7 @@ export default {
             this.activeZone = zone;
         },
         remove: function (zone) {
-            fetch(`/servers/${this.activeZone}/zones/${zone}`, { method: 'DELETE' }).then((res) => {
+            fetch(`/servers/${this.serverId}/zones/${zone}`, { method: 'DELETE' }).then((res) => {
                 if (!res.ok) throw new Error('Failed to delete', res);
             }).then(() => {
                 this.zones = this.zones.filter(s => s.id !== zone);

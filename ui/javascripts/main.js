@@ -5,6 +5,7 @@ import VueRouter from 'vue-router';
 import About from 'templates/about.vue';
 import { ServerList } from './server';
 import { ZonesList, ZonesMenu, ZonesEdit } from './zones';
+import { RecordsList, RecordsMenu, RecordEdit } from './records';
 import Bootstrap from 'bootstrap-vue';
 import './icons';
 
@@ -41,6 +42,20 @@ const routes = [
         components: {
             default: ZonesEdit,
             mainMenu: ZonesMenu
+        }
+    },
+    {
+        path: '/servers/:serverId/zones/:zoneId',
+        components: {
+            default: RecordsList,
+            mainMenu: RecordsMenu
+        }
+    },
+    {
+        path: '/servers/:serverId/zones/:zoneId/edit/:recordId?',
+        components: {
+            default: RecordEdit,
+            mainMenu: RecordsMenu
         }
     }
 ];
