@@ -7,7 +7,7 @@
         </h2>
         <b-button-toolbar>
             <b-button-group>
-                <b-button default class="add-record" :to="`${zoneId}/records/edit/`">
+                <b-button default class="add-record" v-b-modal="'record-edit'" @click="setActive({ isNew: true })">
                     <icon name="plus" />
                     Create record
                 </b-button>
@@ -38,13 +38,14 @@
             </b-button-group>
         </b-button-toolbar>
     </div>
-    <b-modal fade id="del-record" title="Delete Record" ok-title="Delete record" @ok="remove(this.activeRecord)">
+    <b-modal fade id="del-record" title="Delete Record" ok-title="Delete record" @ok="remove(activeRecord)">
         <slot>
             <strong>Warning!</strong>
-            This operation will delete the <strong>{{ activeRecord }}</strong> record.
+            This operation will delete the <strong>{{ activeRecord.name }} {{ activeRecord.type }}</strong> record.
             <br> Are you sure you want to do this?
         </slot>
     </b-modal>
+    <record-edit-modal :zoneId="zoneId" :serverId="serverId" :record="activeRecord" />
     <b-table striped condensed hover id="records-table" width="100%" name="records-table" :fields="fields" :items="records">
         <template slot="content" scope="row">
             {{ row.item.records[0].content }}
@@ -55,8 +56,8 @@
         <template slot="actions" scope="row">
             <b-button-toolbar key-nav>
                 <b-button v-if="row.item.type === 'A' || row.item.type === 'AAAA'" size="sm" default><icon label="Create PTR record from this" name="retweet" /></b-button>
-                <b-button size="sm"><icon label="Edit record" name="pencil-square-o" /></b-button>
-                <b-button variant="danger" size="sm" v-b-modal="'del-record'" @click="setActive(row.item.name)"><icon name="trash" label="Remove Record" /></b-button>
+                <b-button size="sm" v-b-modal="'record-edit'" @click="setActive(row.item)"><icon label="Edit record" name="pencil-square-o" /></b-button>
+                <b-button variant="danger" size="sm" v-b-modal="'del-record'" @click="setActive(row.item)"><icon name="trash" label="Remove Record" /></b-button>
             </b-button-toolbar>
         </template>
     </b-table>
@@ -71,6 +72,8 @@ import 'vue-awesome/icons/download';
 import 'vue-awesome/icons/check-square-o';
 import 'vue-awesome/icons/eye';
 import 'vue-awesome/icons/lock';
+
+import RecordEditView from './edit.vue';
 
 export default {
     name: 'records-list',
@@ -105,7 +108,7 @@ export default {
             serverId: this.$route.params.serverId,
             zoneId: this.$route.params.zoneId,
             records: [],
-            activeRecord: null
+            activeRecord: { isNew: true }
         }
     },
     methods: {
@@ -113,13 +116,16 @@ export default {
             this.activeRecord = record;
         },
         remove: function (record) {
-            fetch(`/servers/${this.serverId}/zones/${this.zoneId}/records/${record}`, { method: 'DELETE' }).then((res) => {
+            fetch(`/servers/${this.serverId}/zones/${this.zoneId}/records/${record.name}/${record.type}`, { method: 'DELETE' }).then((res) => {
                 if (!res.ok) throw new Error('Failed to delete', res);
             }).then(() => {
-                this.records = this.records.filter(s => s.name !== record);
+                this.records = this.records.filter(s => s.name !== record.name && s.type !== record.type);
             });
 
         }
+    },
+    components: {
+        'record-edit-modal': RecordEditView
     }
 }
 </script>
