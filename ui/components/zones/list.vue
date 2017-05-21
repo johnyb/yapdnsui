@@ -55,15 +55,17 @@ import 'vue-awesome/icons/check-square-o';
 import 'vue-awesome/icons/random';
 import 'vue-awesome/icons/retweet';
 
+import { mapGetters } from 'vuex';
+
 export default {
     name: 'zones-list',
+    computed: mapGetters({
+        zones: 'getZones'
+    }),
+    created() {
+        this.$store.dispatch('getZones', this.$route.params.serverId);
+    },
     data: function () {
-        const zones = [];
-        fetch(`/servers/${this.$route.params.serverId}/zones`)
-            .then(res => res.json())
-            .then(function (data) {
-                zones.push.apply(zones, data);
-            });
         return {
             fields: {
                 name: {
@@ -83,7 +85,6 @@ export default {
                 },
                 actions: {}
             },
-            zones,
             serverId: this.$route.params.serverId,
             activeZone: null
         };
@@ -92,13 +93,9 @@ export default {
         setActive: function (zone) {
             this.activeZone = zone;
         },
-        remove: function (zone) {
-            fetch(`/servers/${this.serverId}/zones/${zone}`, { method: 'DELETE' }).then((res) => {
-                if (!res.ok) throw new Error('Failed to delete', res);
-            }).then(() => {
-                this.zones = this.zones.filter(s => s.id !== zone);
-            });
-
+        remove: function (zoneId) {
+            const serverId = this.serverId;
+            this.$store.dispatch('deleteZone', { serverId, zoneId });
         },
         verify: function (zone) {
             console.warn('TODO: implement me');
