@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
 export default {
     name: 'menu-server-list',
@@ -17,7 +17,7 @@ export default {
     created () {
         this.$store.dispatch('getServers');
     }
-}
+};
 </script>
 
 <style>

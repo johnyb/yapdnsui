@@ -84,7 +84,6 @@ exports.add = function (serverId, zoneId, data) {
             if (data.master) json.masters.push(data.master);
             delete json.id;
             delete json.url;
-            console.log(json);
             request({
                 dataType: 'json',
                 method: zoneId === null ? 'POST' : 'PUT',

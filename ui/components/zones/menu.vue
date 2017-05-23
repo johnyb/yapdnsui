@@ -18,7 +18,7 @@ export default {
             server: {}
         };
     }
-}
+};
 </script>
 
 <style>

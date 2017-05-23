@@ -6,7 +6,6 @@ const sqlite3 = require('sqlite3').verbose();
 const url = require('url');
 
 if (!exists) {
-    console.log('Creating DB File');
     fs.openSync(file, 'w');
 }
 
@@ -18,9 +17,7 @@ exports.create = function () {
         if (!exists) {
             db.run('CREATE TABLE servers (id integer primary key asc, name TEXT, url TEXT, password TEXT, pdns_type TEXT, pdns_id TEXT, pdns_url TEXT, pdns_daemon_type TEXT, pdns_version TEXT, pdns_config_url TEXT, pdns_zones_url TEXT)');
             db.run('INSERT INTO servers VALUES (?,?,?,?,?,?,?,?,?,?,?)', [null, 'pdns', 'http://pdns:8081/api/v1', 'mimimi', null, null, null, null, null, null, null]);
-            db.each('SELECT * FROM servers', function (err, row) {
-                console.log('init db.js', row);
-            });
+            db.each('SELECT * FROM servers');
         }
     });
     return db;

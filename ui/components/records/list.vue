@@ -82,7 +82,7 @@ export default {
             .then(res => res.json())
             .then(data => {
                 this.records = data;
-            })
+            });
         return {
             fields: {
                 name: {
@@ -109,7 +109,7 @@ export default {
             zoneId: this.$route.params.zoneId,
             records: [],
             activeRecord: { isNew: true }
-        }
+        };
     },
     methods: {
         setActive: function (record) {
@@ -127,7 +127,7 @@ export default {
     components: {
         'record-edit-modal': RecordEditView
     }
-}
+};
 </script>
 
 <style <style lang="scss">

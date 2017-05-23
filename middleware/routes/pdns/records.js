@@ -51,7 +51,6 @@ router.get('/servers/:id/zones/:id/:file', function (req, res, next) {
 
 /* Delete a record */
 router['delete']('/servers/:id/zones/:zone_id/records/:record_name/:record_type', function (req, res) {
-    console.log(req.params, req.body);
     const record = { 'name': req.params.record_name, 'type': req.params.record_type };
     req.api.records['delete'](req.params.id, req.params.zone_id, record).then((body) => {
         res.send(body);

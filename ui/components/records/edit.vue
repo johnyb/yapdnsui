@@ -46,7 +46,7 @@ export default {
         return {
             editedRecord: defaultData,
             dnstypes
-        }
+        };
     },
     methods: {
         updateData: function () {
@@ -64,7 +64,7 @@ export default {
             if (this.editedRecord.isNew) {
                 delete this.editedRecord.isNew;
                 id = '';
-                method = "POST"
+                method = "POST";
             }
 
             fetch(`/servers/${this.serverId}/zones/${this.zoneId}/records${id}`, {
@@ -83,13 +83,10 @@ export default {
                 if (res.ok) return res.json();
 
                 throw new Error('Failed to add server', res);
-            })
-            .then(server => {
-                console.log(server);
             });
         }
     }
-}
+};
 </script>
 
 <style>

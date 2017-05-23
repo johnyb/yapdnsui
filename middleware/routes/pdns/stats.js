@@ -32,7 +32,6 @@ router.get('/servers/:id/statistics', function (req, res, next) {
 router.get('/servers/:id/statistics/dump', function (req, res) {
     req.api.stats.statistics(req, res, function (error, response, body) {
         if (!body) {
-            console.log(error);
             res.send(error, { 'Content-type': 'text/json' }, 200);
         } else {
             // Do more stuff with 'body' here

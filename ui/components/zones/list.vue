@@ -97,11 +97,10 @@ export default {
             const serverId = this.serverId;
             this.$store.dispatch('deleteZone', { serverId, zoneId });
         },
-        verify: function (zone) {
-            console.warn('TODO: implement me');
+        verify: function () {
         }
     }
-}
+};
 </script>
 
 <style lang="scss">

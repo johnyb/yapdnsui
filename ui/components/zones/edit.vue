@@ -56,7 +56,7 @@ export default {
                 kind: 'Master'
             },
             serverId: this.$route.params.serverId
-        }
+        };
     },
     methods: {
         submit: function (e) {
@@ -72,7 +72,7 @@ export default {
             });
         }
     }
-}
+};
 </script>
 
 <style>

@@ -21,7 +21,7 @@
 <script>
 export default {
     name: 'app'
-}
+};
 </script>
 
 <style src="bootstrap/dist/css/bootstrap.css" />

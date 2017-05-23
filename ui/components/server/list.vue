@@ -29,10 +29,10 @@
 <script>
 import 'vue-awesome/icons/refresh';
 import 'vue-awesome/icons/trash';
-import 'vue-awesome/icons/pencil-square-o'
+import 'vue-awesome/icons/pencil-square-o';
 
 import Edit from './edit.vue';
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
 export default {
     name: 'server-list',
@@ -76,7 +76,7 @@ export default {
     components: {
         'server-edit-modal': Edit
     }
-}
+};
 </script>
 
 <style lang="scss">

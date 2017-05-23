@@ -97,19 +97,11 @@ router.put('/servers/:id/zones/:zone_id', function (req, res) {
 
 /* Import a domain */
 router.post('/servers/:id/import', function (req, res) {
-    console.log('Add a domain');
-    console.log(req.db);
-    console.log(req.params.id);
-    console.log(req.body.name);
-    console.log(req.body.type);
-    console.log(req.body.master);
-    console.log(req.body.zone);
     // If missing value redirect to index or to an error page!!!
     if (!req.db && !req.server) { res.redirect('/'); }
     req.api.zones['import'](req, res, function (error, response) {
         // If any error redirect to index
         if (error && response.statusCode !== 204) {
-            console.log(error);
             res.redirect('/servers');
         } else {
             res.redirect('/servers/' + req.server.id + '/domains');
@@ -119,17 +111,11 @@ router.post('/servers/:id/import', function (req, res) {
 
 /* Export a domain */
 router.get('/servers/:id/export/:zone_id', function (req, res) {
-    console.log('Export a domain');
-    console.log(req.db);
-    console.log(req.params.id);
-    console.log(req.params.zone_id);
     // If missing value redirect to index or to an error page!!!
     if (!req.db && !req.server) { res.redirect('/'); }
     req.api.zones['export'](req, res, function (error, response, body) {
-        console.log(body);
         // If any error redirect to index
         if (error && response.statusCode !== 200) {
-            console.log(error);
             res.redirect('/servers');
         } else {
             res.setHeader('Content-disposition', 'attachment; filename=' + req.params.zone_id + 'axfr');
@@ -150,18 +136,13 @@ router.get('/servers/:id/notify/:zone_id', function (req, res) {
 });
 
 /* Retrieve a domain */
-router.get('/retrieve/:zone_id', function (req, res) {
-    console.log('Retrieve a domain');
-    console.log(req.db);
-    console.log(req.params.id);
-    console.log(req.params.zone_id);
+router.get('/retrieve/:zone_id', function (req, res, next) {
     // If missing value redirect to index or to an error page!!!
     if (!req.db && !req.server) { res.redirect('/'); }
     req.api.zones.retrieve(req, res, function (error, response, body) {
-        console.log(body);
         // If any error redirect to index
         if (error && response.statusCode !== 200) {
-            console.log(error); res.send(error);
+            next();
         } else {
             res.send(body);
         }

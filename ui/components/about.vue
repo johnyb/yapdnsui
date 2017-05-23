@@ -36,7 +36,7 @@
 <script>
 export default {
   name: 'about'
-}
+};
 </script>
 
 <style src="../stylesheets/main.scss" />

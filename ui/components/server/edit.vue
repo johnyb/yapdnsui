@@ -13,8 +13,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
     name: 'server-edit-modal',
     props: ['server'],
@@ -27,7 +25,7 @@ export default {
             this.$store.dispatch('storeServer', this.server);
         }
     }
-}
+};
 </script>
 
 <style>
