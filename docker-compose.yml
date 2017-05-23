@@ -8,18 +8,6 @@ services:
   pdnsui:
     build: .
     image: johnyb/yapdnsui
-    environment:
-      - "PORT=8080"
-      - "DEBUG=yapdnsui"
-    links:
-      - "pdns:pdns"
-    ports:
-      - "8080:8080"
-    command: "nodemon"
-    volumes:
-      - ".:/app/yapdnsui"
-  pdnsui_dev:
-    image: johnyb/yapdnsui
     command: "yarn dev"
     links:
       - "pdns:pdns"
