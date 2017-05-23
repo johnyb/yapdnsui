@@ -1,7 +1,7 @@
-var express = require('express');
-var path = require('path');
+const express = require('express');
+const path = require('path');
 const PDNSAPI = require('../../libs/pdnsapi');
-var router = express.Router();
+const router = express.Router();
 
 // Route middleware to validate :id
 // Execute for all request
@@ -38,12 +38,12 @@ router.get('/servers/:id/statistics/dump', function (req, res) {
             // Do more stuff with 'body' here
             //console.log(req);
             //console.log(body);
-            var json = JSON.parse(body);
-            var timestamp = new Date().getTime(); // current time
-            //var timestamp = req.query._;
-            var arr = {};
+            const json = JSON.parse(body);
+            const timestamp = new Date().getTime(); // current time
+            //const timestamp = req.query._;
+            const arr = {};
             //console.log(json);
-            for (var i in json) {
+            for (const i in json) {
                 arr[json[i].name] = [timestamp, parseInt(json[i].value, 10)];
             }
             res.send(arr, { 'Content-type': 'text/json' }, 200);

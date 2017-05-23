@@ -1,7 +1,7 @@
-var express = require('express');
-var path = require('path');
+const express = require('express');
+const path = require('path');
 const PDNSAPI = require('../../libs/pdnsapi');
-var router = express.Router();
+const router = express.Router();
 
 // Route middleware to validate :id
 // Execute for all request
@@ -30,7 +30,7 @@ router.get('/servers/:id/zones/:zone_id/records', function (req, res) {
         if (response.statusCode !== 200) {
             res.send(response.body);
         } else {
-            var json = JSON.parse(response.body);
+            const json = JSON.parse(response.body);
             res.send(json.rrsets);
         }
     }, (error) => {
@@ -38,7 +38,7 @@ router.get('/servers/:id/zones/:zone_id/records', function (req, res) {
     });
 });
 
-var fs = require('fs');
+const fs = require('fs');
 router.get('/servers/:id/zones/:id/:file', function (req, res, next) {
     fs.stat(path.join(__dirname, '../../../public/', req.params.file), (err, stats) => {
         if (err || !stats.isFile()) return next();
@@ -52,7 +52,7 @@ router.get('/servers/:id/zones/:id/:file', function (req, res, next) {
 /* Delete a record */
 router['delete']('/servers/:id/zones/:zone_id/records/:record_name/:record_type', function (req, res) {
     console.log(req.params, req.body);
-    var record = { 'name': req.params.record_name, 'type': req.params.record_type };
+    const record = { 'name': req.params.record_name, 'type': req.params.record_type };
     req.api.records['delete'](req.params.id, req.params.zone_id, record).then((body) => {
         res.send(body);
     }, (error) => {

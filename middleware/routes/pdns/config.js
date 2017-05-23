@@ -1,7 +1,7 @@
-var express = require('express');
-var path = require('path');
+const express = require('express');
+const path = require('path');
 const PDNSAPI = require('../../libs/pdnsapi');
-var router = express.Router();
+const router = express.Router();
 
 // Route middleware to validate :id
 // Execute for all request

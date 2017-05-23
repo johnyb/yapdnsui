@@ -1,5 +1,5 @@
-var request = require('request');
-var db = require('../db.js');
+const request = require('request');
+const db = require('../db.js');
 
 /* --------------------------------------------------------
 *
@@ -57,7 +57,7 @@ exports['delete'] = function (serverId, zoneId, record) {
 exports.update = function (serverId, zoneId, record) {
     return db.getServer(serverId).then((server) => {
         return new Promise((resolve, reject) => {
-            var json = {
+            const json = {
                 'rrsets': [{
                     name: record.name,
                     type: record.type,

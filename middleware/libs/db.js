@@ -1,9 +1,9 @@
-var fs = require('fs');
-var file = 'yapdnsui.sqlite3';
-var exists = fs.existsSync(file);
+const fs = require('fs');
+const file = 'yapdnsui.sqlite3';
+const exists = fs.existsSync(file);
 
-var sqlite3 = require('sqlite3').verbose();
-var url = require('url');
+const sqlite3 = require('sqlite3').verbose();
+const url = require('url');
 
 if (!exists) {
     console.log('Creating DB File');
@@ -12,7 +12,7 @@ if (!exists) {
 
 // Create internal DB for the server list in memory
 exports.create = function () {
-    var db = new sqlite3.Database(file);
+    const db = new sqlite3.Database(file);
     // Initiliaze the db
     db.serialize(function () {
         if (!exists) {
@@ -27,7 +27,7 @@ exports.create = function () {
 };
 
 // Initiliaze the db
-var db = exports.create();
+const db = exports.create();
 
 exports.list = function () {
     return new Promise((resolve, reject) => {

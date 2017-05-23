@@ -1,6 +1,6 @@
-var request = require('request');
-var db = require('../db.js');
-var _ = require('underscore');
+const request = require('request');
+const db = require('../db.js');
+const _ = require('underscore');
 
 /* --------------------------------------------------------
 *

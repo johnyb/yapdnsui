@@ -1,7 +1,7 @@
-var express = require('express');
-var path = require('path');
+const express = require('express');
+const path = require('path');
 const PDNSAPI = require('../../libs/pdnsapi');
-var router = express.Router();
+const router = express.Router();
 
 // Route middleware to validate :id
 // Execute for all request
@@ -27,7 +27,7 @@ router.get('/servers/:id/zones', function (req, res) {
     }
     // If missing value redirect to index or to an error page!!!
     req.api.zones.list(req.params.id).then((response) => {
-        var json = JSON.parse(response.body);
+        const json = JSON.parse(response.body);
         res.send(json);
     }, (err) => { res.send(err); });
 });
@@ -48,7 +48,7 @@ router.get('/servers/:id/zones/:zone_id', function (req, res) {
     });
 });
 
-var fs = require('fs');
+const fs = require('fs');
 router.get('/servers/:id/:file', function (req, res, next) {
     fs.stat(path.join(__dirname, '../../../public/', req.params.file), (err, stats) => {
         if (err || !stats.isFile()) return next();

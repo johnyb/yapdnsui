@@ -1,8 +1,8 @@
-var express = require('express');
-var database = require('../libs/db');
-var pdnsapi = require('../libs/pdnsapi');
-var path = require('path');
-var router = express.Router();
+const express = require('express');
+const database = require('../libs/db');
+const pdnsapi = require('../libs/pdnsapi');
+const path = require('path');
+const router = express.Router();
 
 // Route middleware to validate :id
 // Execute for all request
