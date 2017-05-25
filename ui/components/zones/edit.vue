@@ -13,14 +13,14 @@
             <label for="kind">Zone Type:</label>
             <b-form-radio :options="options" name="kind" v-model="kind" stacked/>
         </div>
-        <div class="form-group" v-if="zone.kind == 'Master'">
-            <label for="master">Nameservers:</label>
-            <b-form-input name="master" type="text" placeholder='1.2.3.4,::123:b00' v-model="nameservers" />
+        <div class="form-group" v-if="kind == 'Master'">
+            <label for="nameservers">Nameservers:</label>
+            <b-form-input name="nameservers" type="text" placeholder='ns.example.com.,ns2.example.com.' v-model="nameservers" />
             <small>List of nameservers responsible for this zone.</small>
         </div>
-        <div class="form-group" v-if="zone.kind == 'Slave'">
-            <label for="master">Zone master:</label>
-            <b-form-input name="master" type="text" placeholder='1.2.3.4,::123:b00' v-model="master" />
+        <div class="form-group" v-if="kind == 'Slave'">
+            <label for="masters">Zone master:</label>
+            <b-form-input name="masters" type="text" placeholder='1.2.3.4,::123:b00' v-model="masters" />
             <small>IP Address of the master host, which PDNS should replicate with.</small>
         </div>
         </b-form-fieldset>
@@ -37,20 +37,20 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
     name: 'zones-edit',
     computed: Object.assign({
-        master: {
+        masters: {
             get() {
-                return this.$store.getters.activeZone.master;
+                return this.$store.getters.activeZone.masters;
             },
             set(value) {
-                this.$store.commit('updateZone', { master: value });
+                this.$store.commit('updateZone', { masters: value });
             }
         },
         nameservers: {
             get() {
-                return this.$store.getters.activeZone.nameservers;
+                return this.$store.getters.activeZone.nameservers.join(', ');
             },
             set(value) {
-                this.$store.commit('updateZone', { nameservers: value });
+                this.$store.commit('updateZone', { nameservers: value.split(',').map(v => v.trim()) });
             }
         },
         kind: {
@@ -74,7 +74,7 @@ export default {
         zone: 'activeZone'
     })),
     created() {
-        this.$store.dispatch('setActiveZone', this.$route.params.zoneId);
+        this.$store.dispatch('setActiveZone', this.$route.params.zoneId || this.defaultZone);
     },
     data: function () {
         return {
@@ -91,7 +91,13 @@ export default {
                     text: `Native<small class="form-text text-muted">"Rely on database replication, don't replicate via DNS.</small>`,
                     value: 'Native'
                 }
-            ]
+            ],
+            defaultZone: {
+                name: '',
+                kind: '',
+                nameservers: [],
+                masters: []
+            }
         };
     },
     methods: mapActions({
