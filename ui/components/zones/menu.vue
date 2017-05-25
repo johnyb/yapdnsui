@@ -8,15 +8,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     name: 'zones-menu',
-    data: function () {
-        fetch(`/servers/${this.$route.params.serverId}`)
-            .then(res => res.json())
-            .then(data => this.server = data);
-        return {
-            server: {}
-        };
+    computed: mapGetters({
+        server: 'activeServer'
+    }),
+    created() {
+        this.$store.dispatch('setActiveServer', this.$route.params.serverId);
     }
 };
 </script>

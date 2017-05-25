@@ -2,12 +2,12 @@
 <div class="container-fluid">
     <div class="page-header">
         <h2>
-            Zone <span class="zone-name">{{ zoneId }}</span>
+            Zone <span class="zone-name">{{ activeZone.id }}</span>
             <small>{{ records.length }} records</small>
         </h2>
         <b-button-toolbar>
             <b-button-group>
-                <b-button default class="add-record" v-b-modal="'record-edit'" @click="setActive({ isNew: true })">
+                <b-button default class="add-record" v-b-modal="'record-edit'" @click="setActiveRecord(defaultRecord)">
                     <icon name="plus" />
                     Create record
                 </b-button>
@@ -38,14 +38,14 @@
             </b-button-group>
         </b-button-toolbar>
     </div>
-    <b-modal fade id="del-record" title="Delete Record" ok-title="Delete record" @ok="remove(activeRecord)">
+    <b-modal fade id="del-record" title="Delete Record" ok-title="Delete record" @ok="deleteRecord()">
         <slot>
             <strong>Warning!</strong>
             This operation will delete the <strong>{{ activeRecord.name }} {{ activeRecord.type }}</strong> record.
             <br> Are you sure you want to do this?
         </slot>
     </b-modal>
-    <record-edit-modal :zoneId="zoneId" :serverId="serverId" :record="activeRecord" />
+    <record-edit-modal :zoneId="activeZone.id" :serverId="activeServer.id" :record="activeRecord" />
     <b-table striped condensed hover id="records-table" width="100%" name="records-table" :fields="fields" :items="records">
         <template slot="content" scope="row">
             {{ row.item.records[0].content }}
@@ -56,8 +56,8 @@
         <template slot="actions" scope="row">
             <b-button-toolbar key-nav>
                 <b-button v-if="row.item.type === 'A' || row.item.type === 'AAAA'" size="sm" default><icon label="Create PTR record from this" name="retweet" /></b-button>
-                <b-button size="sm" v-b-modal="'record-edit'" @click="setActive(row.item)"><icon label="Edit record" name="pencil-square-o" /></b-button>
-                <b-button variant="danger" size="sm" v-b-modal="'del-record'" @click="setActive(row.item)"><icon name="trash" label="Remove Record" /></b-button>
+                <b-button size="sm" v-b-modal="'record-edit'" @click="setActiveRecord(row.item)"><icon label="Edit record" name="pencil-square-o" /></b-button>
+                <b-button variant="danger" size="sm" v-b-modal="'del-record'" @click="setActiveRecord(row.item)"><icon name="trash" label="Remove Record" /></b-button>
             </b-button-toolbar>
         </template>
     </b-table>
@@ -74,15 +74,35 @@ import 'vue-awesome/icons/eye';
 import 'vue-awesome/icons/lock';
 
 import RecordEditView from './edit.vue';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
     name: 'records-list',
-    data: function () {
-        fetch(`/servers/${this.$route.params.serverId}/zones/${this.$route.params.zoneId}/records`)
-            .then(res => res.json())
-            .then(data => {
-                this.records = data;
+    computed: mapGetters([
+        'records',
+        'activeZone',
+        'activeServer',
+        'activeRecord'
+    ]),
+    created() {
+        if (!this.$store.getters.activeServer.id || !this.$store.getters.activeZone.url) {
+            this.$store.dispatch('setActiveServer', this.$route.params.serverId);
+            this.$store.dispatch('setActiveZone', this.$route.params.zoneId);
+            const handler = this.$store.watch(() => {
+                return {
+                    server: this.$store.getters.activeServer,
+                    zone: this.$store.getters.activeZone
+                };
+            }, ({ server, zone }) => {
+                if (!server.id || !zone.url) return this.$store.dispatch('getZones');
+                this.$store.dispatch('getRecords');
+                handler();
             });
+        } else {
+            this.$store.dispatch('getRecords');
+        }
+    },
+    data: function () {
         return {
             fields: {
                 name: {
@@ -105,25 +125,16 @@ export default {
                 },
                 actions: {}
             },
-            serverId: this.$route.params.serverId,
-            zoneId: this.$route.params.zoneId,
-            records: [],
-            activeRecord: { isNew: true }
+            defaultRecord: {
+                isNew: true,
+                records: [{ disabled: false, content: '' }]
+            }
         };
     },
-    methods: {
-        setActive: function (record) {
-            this.activeRecord = record;
-        },
-        remove: function (record) {
-            fetch(`/servers/${this.serverId}/zones/${this.zoneId}/records/${record.name}/${record.type}`, { method: 'DELETE' }).then((res) => {
-                if (!res.ok) throw new Error('Failed to delete', res);
-            }).then(() => {
-                this.records = this.records.filter(s => s.name !== record.name && s.type !== record.type);
-            });
-
-        }
-    },
+    methods: mapActions([
+        'setActiveRecord',
+        'deleteRecord'
+    ]),
     components: {
         'record-edit-modal': RecordEditView
     }

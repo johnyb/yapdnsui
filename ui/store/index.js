@@ -5,6 +5,7 @@ import * as actions from './actions';
 import * as getters from './getters';
 import servers from './modules/servers';
 import zones from './modules/zones';
+import records from './modules/records';
 
 Vue.use(Vuex);
 
@@ -13,7 +14,8 @@ export default new Vuex.Store({
     getters,
     modules: {
         servers,
-        zones
+        zones,
+        records
     },
     strict: false,
     plugins: []

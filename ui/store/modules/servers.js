@@ -1,23 +1,34 @@
 import { ServerAPI } from '../../api/yapdns';
 
 const state = {
-    servers: []
+    servers: [],
+    activeServer: {}
 };
 
 const getters = {
-    getServers: s => s.servers
+    getServers: state => state.servers,
+    activeServer: state => state.activeServer
 };
 
 const actions = {
-    getServers({ commit }) {
-        ServerAPI
+    setActiveServer({ commit }, serverId) {
+        commit('ACTIVATED_SERVER', { serverId });
+    },
+    getServers({ state, commit }) {
+        return ServerAPI
             .getServers()
-            .then(servers => commit('RECEIVED_SERVERS', { servers }));
+            .then(servers => commit('RECEIVED_SERVERS', { servers }))
+            .then(() => {
+                if (typeof state.activeServer === 'number') {
+                    commit('ACTIVATED_SERVER', { serverId: state.activeServer });
+                }
+                return state.servers;
+            });
     },
     storeServer({ commit }, server) {
         ServerAPI
             .storeServer(server)
-            .then((response) => server.isNew ? fetch(`/servers/${response.id}`) : response)
+            .then((response) => server.isNew ? fetch(`/endpoints/${response.id}`) : response)
             .then(() => commit('SERVER_STORED', { server }), () => commit('SERVER_STORE_FAILURE'));
     },
     deleteServer({ commit }, server) {
@@ -29,15 +40,19 @@ const actions = {
 };
 
 const mutations = {
-    RECEIVED_SERVERS(st, { servers }) {
-        st.servers = servers;
+    RECEIVED_SERVERS(state, { servers }) {
+        state.servers = servers;
+
     },
-    SERVER_STORED(st, { server }) {
-        st.servers.push(server);
+    SERVER_STORED(state, { server }) {
+        state.servers.push(server);
     },
     SERVER_STORE_FAILURE() {},
-    SERVER_REMOVED(st, { server }) {
-        st.servers = st.servers.filter(s => s.id !== server.id);
+    SERVER_REMOVED(state, { server }) {
+        state.servers = state.servers.filter(s => s.id !== server.id);
+    },
+    ACTIVATED_SERVER(state, { serverId }) {
+        state.activeServer = state.servers.filter(s => s.id === Number(serverId))[0] || Number(serverId);
     }
 };
 

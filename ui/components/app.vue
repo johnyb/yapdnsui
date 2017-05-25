@@ -20,7 +20,13 @@
 
 <script>
 export default {
-    name: 'app'
+    name: 'app',
+    watch: {
+        '$route' (to) {
+            if (to.params.serverId) this.$store.dispatch('setActiveServer', to.params.serverId);
+            if (to.params.zoneId) this.$store.dispatch('setActiveZone', to.params.zoneId);
+        }
+    }
 };
 </script>
 

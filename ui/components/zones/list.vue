@@ -4,7 +4,7 @@
         <h2>
             Zones
             <small>
-                <span class="zone-counter">{{ zones.length }} zones in backend</span>
+                <span class="zone-counter">{{ zones.length }} zones in {{ server.name }}</span>
             </small>
         </h2>
         <b-button-toolbar>
@@ -36,7 +36,7 @@
                 <b-button-toolbar key-nav>
                     <b-button size="sm" v-if="row.item.kind === 'Slave'"><icon label="Retrieves the zone from the master" name="random" /></b-button>
                     <b-button size="sm" v-if="row.item.kind === 'Master'"><icon label="Send a DNS NOTIFY to all slaves" name="retweet" /></b-button>
-                    <b-button size="sm" :href="`/server/${serverId}/zones/${row.item.id}.axfr`"><icon label="Returns the zone in AXFR format" name="download" /></b-button>
+                    <b-button size="sm" :href="`/server/${server.id}/zones/${row.item.id}.axfr`"><icon label="Returns the zone in AXFR format" name="download" /></b-button>
                     <b-button size="sm" @click="verify(row.item.id)"><icon label="Verify zone contents/configuration" name="check-square-o" /></b-button>
                     <b-button size="sm" :to="`zones/edit/${row.item.id}`"><icon label="Edit Zone" name="pencil-square-o" /></b-button>
                     <b-button variant="danger" size="sm" v-b-modal="'del-zone'" @click="setActive(row.item.id)"><icon name="trash" label="Remove Zone" /></b-button>
@@ -60,10 +60,18 @@ import { mapGetters } from 'vuex';
 export default {
     name: 'zones-list',
     computed: mapGetters({
-        zones: 'getZones'
+        zones: 'getZones',
+        server: 'activeServer'
     }),
     created() {
-        this.$store.dispatch('getZones', this.$route.params.serverId);
+        if (!this.$store.getters.activeServer.id) {
+            const handler = this.$store.watch(() => this.$store.getters.activeServer, () => {
+                this.$store.dispatch('getZones');
+                handler();
+            });
+        } else {
+            this.$store.dispatch('getZones');
+        }
     },
     data: function () {
         return {
@@ -85,7 +93,6 @@ export default {
                 },
                 actions: {}
             },
-            serverId: this.$route.params.serverId,
             activeZone: null
         };
     },
@@ -94,8 +101,7 @@ export default {
             this.activeZone = zone;
         },
         remove: function (zoneId) {
-            const serverId = this.serverId;
-            this.$store.dispatch('deleteZone', { serverId, zoneId });
+            this.$store.dispatch('deleteZone', { zoneId });
         },
         verify: function () {
         }

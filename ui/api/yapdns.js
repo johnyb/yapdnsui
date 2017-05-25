@@ -1,12 +1,12 @@
 export const ServerAPI = {
-    getServers: () => fetch('/servers', {
+    getServers: () => fetch('/endpoints', {
         headers: {
             'Accept': 'application/json'
         }
     }).then((response) => response.json()),
 
     storeServer: function storeServer(server) {
-        let url = '/servers',
+        let url = '/endpoints',
             method = 'POST';
         if (server.id) {
             url += `/${server.id}`;
@@ -22,8 +22,11 @@ export const ServerAPI = {
         }).then(response => response.json());
     },
 
-    deleteServer: (server) => fetch(`/servers/${server.id}`, {
-        method: 'DELETE'
+    deleteServer: (server) => fetch(`/endpoints/${server.id}`, {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json'
+        }
     })
 };
 

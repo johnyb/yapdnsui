@@ -26,11 +26,8 @@ app.use(cookieParser());
 // Add my own public content
 app.use(express['static'](path.join(__dirname, '../static')));
 
-app.use('/servers', servers);
-app.use('/', pdns.config);
-app.use('/', pdns.zones);
-app.use('/', pdns.records);
-app.use('/', pdns.stats);
+app.use('/endpoints', servers);
+app.use('/endpoints', pdns.api);
 
 if (process.env.NODE_ENV === 'production') {
     /// catch 404 and forward to error handler
