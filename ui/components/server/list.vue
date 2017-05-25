@@ -6,9 +6,6 @@
             <b-button v-b-modal="'server-edit'" @click="setActive({ isNew: true })">
                 Add server
             </b-button>
-            <b-button v-on:click="refresh">
-                <icon label="Refresh list" name="refresh" />
-            </b-button>
         </b-button-toolbar>
     </div>
     <server-edit-modal :server="activeItem" />
@@ -27,7 +24,6 @@
 </template>
 
 <script>
-import 'vue-awesome/icons/refresh';
 import 'vue-awesome/icons/trash';
 import 'vue-awesome/icons/pencil-square-o';
 
@@ -48,10 +44,10 @@ export default {
                 url: {
                     label: 'URL'
                 },
-                pdns_daemon_type: {
+                daemon_type: {
                     label: 'Daemon Type'
                 },
-                pdns_version: {
+                version: {
                     label: 'Version'
                 },
                 actions: {}
@@ -60,9 +56,6 @@ export default {
         };
     },
     methods: {
-        refresh: function () {
-            this.$store.dispatch('getServers');
-        },
         add: function () {
 
         },

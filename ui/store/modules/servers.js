@@ -28,7 +28,6 @@ const actions = {
     storeServer({ commit }, server) {
         ServerAPI
             .storeServer(server)
-            .then((response) => server.isNew ? fetch(`/endpoints/${response.id}`) : response)
             .then(() => commit('SERVER_STORED', { server }), () => commit('SERVER_STORE_FAILURE'));
     },
     deleteServer({ commit }, server) {

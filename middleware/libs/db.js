@@ -4,6 +4,7 @@ const exists = fs.existsSync(file);
 
 const sqlite3 = require('sqlite3').verbose();
 const url = require('url');
+const request = require('request');
 
 if (!exists) {
     fs.openSync(file, 'w');
@@ -15,8 +16,8 @@ exports.create = function () {
     // Initiliaze the db
     db.serialize(function () {
         if (!exists) {
-            db.run('CREATE TABLE servers (id integer primary key asc, name TEXT, url TEXT, password TEXT, pdns_type TEXT, pdns_id TEXT, pdns_url TEXT, pdns_daemon_type TEXT, pdns_version TEXT, pdns_config_url TEXT, pdns_zones_url TEXT)');
-            db.run('INSERT INTO servers VALUES (?,?,?,?,?,?,?,?,?,?,?)', [null, 'pdns', 'http://pdns:8081/api/v1', 'mimimi', null, null, null, null, null, null, null]);
+            db.run('CREATE TABLE servers (id integer primary key asc, name TEXT, url TEXT, password TEXT)');
+            db.run('INSERT INTO servers VALUES (?,?,?,?)', [null, 'pdns', 'http://pdns:8081/', 'mimimi']);
             db.each('SELECT * FROM servers');
         }
     });
@@ -32,13 +33,28 @@ exports.list = function () {
             if (err) return reject(err);
             resolve(rows);
         });
+    }).then(function (rows) {
+        return Promise.all(rows.map(function (server) {
+            return new Promise((resolve, reject) => {
+                request({
+                    url: `${server.url}api/v1/servers/localhost`,
+                    headers: {
+                        'X-API-Key': server.password,
+                        accept: 'application/json'
+                    }
+                }, function (err, res) {
+                    if (err) return reject(err);
+                    resolve(Object.assign(JSON.parse(res.body), server));
+                });
+            });
+        }));
     });
 };
 
 exports.add = function (obj) {
     return new Promise((resolve, reject) => {
         let parsedUrl = url.parse(obj.url);
-        db.run('INSERT INTO servers VALUES (?,?,?,?,?,?,?,?,?,?,?)', [null, parsedUrl.host, obj.url, obj.password, null, null, null, null, null, null, null], function (err) {
+        db.run('INSERT INTO servers VALUES (?,?,?,?)', [null, parsedUrl.host, obj.url, obj.password], function (err) {
             if (err) return reject(err);
             return resolve(this.lastID);
         });
@@ -49,15 +65,6 @@ exports.update = function (id, body) {
     return new Promise((resolve, reject) => {
         let obj = url.parse(body.url);
         db.run('UPDATE servers SET name=?,url=?,password=? WHERE id=?', [obj.host, body.url, body.password, id], (err, row) => {
-            if (err) return reject(err);
-            resolve(row);
-        });
-    });
-};
-
-exports.refresh = function (id, pdns) {
-    return new Promise((resolve, reject) => {
-        db.run('UPDATE servers SET pdns_type=?, pdns_id=?, pdns_url=?, pdns_daemon_type=?, pdns_version=?, pdns_config_url=?, pdns_zones_url=? WHERE id=?', [pdns.type, pdns.id, pdns.url, pdns.daemon_type, pdns.version, pdns.config_url, pdns.zones_url, id], (err, row) => {
             if (err) return reject(err);
             resolve(row);
         });

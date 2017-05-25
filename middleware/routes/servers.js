@@ -1,6 +1,5 @@
 const express = require('express');
 const database = require('../libs/db');
-const pdnsapi = require('../libs/pdnsapi');
 const path = require('path');
 const router = express.Router();
 
@@ -47,41 +46,6 @@ router.post('/', function (req, res) {
 
 /* Now we have the servers set up, let use it as a middleware */
 /* All page below require a valid server and DB */
-
-/* GET servers page. */
-router.get('/:id', function (req, res) {
-    if (!parseInt(req.params.id, 10)) {
-        res.location('/');
-        res.sendFile(req.params.id, {
-            root: path.join(__dirname, '../../public/')
-        });
-        return;
-    } else if (/text\/html/.test(req.headers.accept)) {
-        res.location('/');
-        res.sendFile('index.html', {
-            root: path.join(__dirname, '../../public/')
-        });
-        return;
-    }
-    let api = new pdnsapi(req.params.id);
-    api.config.servers(req.params.id).then((response) => {
-        // If any error redirect to index
-        if (response.statusCode !== 200) {
-            res.status(response.statusCode).send({
-                title: 'Error!',
-                msg: 'Connection failed to ' + req.param.id
-            });
-        } else {
-            return Promise.all([
-                database.getServer(req.params.id),
-                database.refresh(req.params.id, response.servers[0])
-            ]).then((servers) => {
-                servers[0].pdns = response.servers[0];
-                res.send(servers[0]);
-            });
-        }
-    }).then(null, (err) => res.send(err));
-});
 
 router['delete']('/:id', function (req, res) {
     database['delete'](req.params.id).then(() => {

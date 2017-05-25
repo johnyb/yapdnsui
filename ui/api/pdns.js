@@ -1,16 +1,16 @@
 export const ZonesAPI = {
-    getZones: (server) => fetch(`/endpoints/${server.id}${server.pdns_zones_url.replace(/{.*}$/, '')}`, {
+    getZones: (server) => fetch(`/endpoints/${server.id}${server.zones_url.replace(/{.*}$/, '')}`, {
         headers: {
             'Accept': 'application/json'
         }
     }).then(res => res.json()),
-    deleteZone: (server, zoneId) => fetch(`/endpoints/${server.id}${server.pdns_zones_url.replace(/{.*}$/, '/' + zoneId)}`, {
+    deleteZone: (server, zoneId) => fetch(`/endpoints/${server.id}${server.zones_url.replace(/{.*}$/, '/' + zoneId)}`, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json'
         }
     }),
-    update: (server, zone) => fetch(`/endpoints/${server.id}${server.pdns_zones_url.replace(/{.*}$/, '/' + zone.id)}`, {
+    update: (server, zone) => fetch(`/endpoints/${server.id}${server.zones_url.replace(/{.*}$/, '/' + zone.id)}`, {
         method: 'PUT',
         headers: {
             'Accept': 'application/json',
@@ -18,7 +18,7 @@ export const ZonesAPI = {
         },
         body: JSON.stringify(zone)
     }).then(res => res.json()),
-    create: (server, zone) => fetch(`/endpoints/${server.id}${server.pdns_zones_url.replace(/{.*}$/, '')}`, {
+    create: (server, zone) => fetch(`/endpoints/${server.id}${server.zones_url.replace(/{.*}$/, '')}`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
