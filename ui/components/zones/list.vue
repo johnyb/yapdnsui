@@ -30,7 +30,7 @@
         </b-modal>
         <b-table striped condensed hover id="zones-table" width="100%" name="zones-table" :fields="fields" :items="zones">
             <template slot="name" scope="row">
-                <b-link :to="`zones/${row.item.name}`">{{ row.item.name }}</b-link>
+                <b-link :to="`/servers/${server.id}/zones/${row.item.name}`">{{ row.item.name }}</b-link>
             </template>
             <template slot="actions" scope="row">
                 <b-button-toolbar key-nav>

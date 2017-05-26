@@ -7,9 +7,6 @@ const host = process.env.OPENSHIFT_NODEJS_IP || process.env.HOST;
 
 app.set('port', port);
 
-// Allow self sign SSL Certs
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
 const server = app.listen(app.get('port'), host, function() {
   debug('Express server listening on port ' + server.address().port);
 });

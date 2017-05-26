@@ -11,7 +11,7 @@
     <server-edit-modal :server="activeItem" />
     <b-table striped condensed hover id="servers-table" width="100%" name="servers-table" :items="servers" :fields="fields">
         <template slot="name" scope="row">
-            <b-link :to="`servers/${row.item.id}/zones`">{{row.item.name}}</b-link>
+            <b-link :to="`/servers/${row.item.id}/zones`">{{row.item.name}}</b-link>
         </template>
         <template slot="actions" scope="row">
             <b-button-toolbar key-nav>

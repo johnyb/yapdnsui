@@ -23,13 +23,18 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-// Add my own public content
-app.use(express['static'](path.join(__dirname, '../static')));
 
 app.use('/endpoints', servers);
 app.use('/endpoints', pdns.api);
 
 if (process.env.NODE_ENV === 'production') {
+    // Add my own public content
+    // TODO: is this really needed? leaving as is, since SSR might be used in the future, anyway
+    app.use('/static', express['static'](path.join(__dirname, '../dist/static/'), {
+        redirect: false
+    }));
+    app.use('*', express['static'](path.join(__dirname, '../dist')));
+
     /// catch 404 and forward to error handler
     app.use(function (req, res, next) {
         const err = new Error('Not Found');
