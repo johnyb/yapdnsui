@@ -1,8 +1,14 @@
 import { RecordsAPI } from '../../api/pdns';
 
+const defaultRecord = {
+    isNew: true,
+    record: { content: '', disabled: false },
+    records: [{ content: '', disabled: false }]
+};
+
 const state = {
     records: [],
-    activeRecord: {}
+    activeRecord: JSON.parse(JSON.stringify(defaultRecord))
 };
 
 const getters = {
@@ -22,6 +28,8 @@ const actions = {
     },
     updateRecord({ rootGetters, getters, commit }) {
         const record = getters.activeRecord;
+        if (record.isNew) commit('INSERT_RECORD');
+        commit('SYNC_ACTIVE_RECORD');
         RecordsAPI
             .update(rootGetters.activeServer, rootGetters.activeZone, record)
             .then(() => commit('RECORD_STORED', { record }), () => commit('RECORD_STORE_FAILURE'));
@@ -34,35 +42,54 @@ const actions = {
 
 };
 
+function flattenRRsets(rrsets) {
+    if (!rrsets.map) return rrsets;
+    return rrsets
+        .map(set => set.records.map((record, recordIndex) => Object.assign({ record, recordIndex }, set)))
+        .reduce((acc, arr) => acc.concat(arr), []);
+}
+
 const mutations = {
     RECEIVED_ZONE(state, { zone }) {
-        state.records = zone.rrsets;
+        state.records = flattenRRsets(zone.rrsets);
     },
-    RECORD_STORED(state, { record }) {
-        let index = state.records.length;
-        state.records.forEach((r, i) => {
-            if (r.name === record.name && r.type === record.type) index = i;
-        });
-        state.records[index] = record;
-    },
+    RECORD_STORED() {},
     RECORD_STORE_FAILURE() {},
     RECORD_REMOVED(state, { record }) {
-        state.records = state.records.filter(r => r.name !== record.name || r.type !== record.type);
+        state.records = state.records.filter(r => (
+            r.name !== record.name ||
+            r.type !== record.type ||
+            r.recordIndex !== record.recordIndex
+        ));
     },
     ACTIVATED_RECORD(state, { record }) {
-        state.activeRecord = state.records.filter(r => r.name === record.name && r.type === record.type)[0] || record;
+        state.activeRecord = JSON.parse(JSON.stringify(record || defaultRecord));
     },
-    updateRecord(state, record) {
-        for (const key in record) {
-            let obj = state.activeRecord;
-            key.split('.').forEach((k, i, ks) => {
-                if (i === ks.length - 1) {
-                    obj[k] = record[key];
-                } else {
-                    obj = obj[k];
-                }
-            });
-        }
+    SYNC_ACTIVE_RECORD(state) {
+        const active = state.activeRecord;
+        active.records.splice(active.recordIndex, 1, active.record);
+        state.records.forEach((r, i) => {
+            if (r.name !== active.name ||
+                r.type !== active.type) return;
+
+            if (r.recordIndex === active.recordIndex) {
+                // do not directly assign new value (https://vuejs.org/v2/guide/list.html#Caveats)
+                state.records.splice(i, 1, active);
+            }
+        });
+    },
+    INSERT_RECORD(state) {
+        const active = state.activeRecord;
+        let index = state.records.length;
+        state.records.forEach((r, i) => {
+            if (r.name !== active.name ||
+                r.type !== active.type) return;
+
+            index = i + 1;
+            active.recordIndex = r.recordIndex + 1;
+            active.records = r.records;
+        });
+        state.records.splice(index, 0, active);
     }
 };
 

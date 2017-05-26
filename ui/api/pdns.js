@@ -61,8 +61,9 @@ export const RecordsAPI = {
             rrsets: [{
                 name: record.name,
                 type: record.type,
-                changetype: 'delete',
-                records: []
+                ttl: record.ttl,
+                changetype: record.records.length === 1 ? 'delete' : 'replace',
+                records: record.records.filter((r, i) => i !== record.recordIndex)
             }]
         })
     })

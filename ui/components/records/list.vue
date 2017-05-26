@@ -7,7 +7,7 @@
         </h2>
         <b-button-toolbar>
             <b-button-group>
-                <b-button default class="add-record" v-b-modal="'record-edit'" @click="setActiveRecord(defaultRecord)">
+                <b-button default class="add-record" v-b-modal="'record-edit'" @click="setActiveRecord()">
                     <icon name="plus" />
                     Create record
                 </b-button>
@@ -46,12 +46,12 @@
         </slot>
     </b-modal>
     <record-edit-modal :zoneId="activeZone.id" :serverId="activeServer.id" :record="activeRecord" />
-    <b-table striped condensed hover id="records-table" width="100%" name="records-table" :fields="fields" :items="records">
+    <b-table striped condensed hover id="records-table" name="records-table" :fields="fields" :items="records">
         <template slot="content" scope="row">
-            {{ row.item.records[0].content }}
+            {{ row.item.record.content }}
         </template>
         <template slot="state" scope="row">
-            {{ row.item.records[0].disabled ? 'disabled' : 'active' }}
+            {{ row.item.record.disabled ? 'disabled' : 'active' }}
         </template>
         <template slot="actions" scope="row">
             <b-button-toolbar key-nav>
@@ -124,10 +124,6 @@ export default {
                     label: 'State'
                 },
                 actions: {}
-            },
-            defaultRecord: {
-                isNew: true,
-                records: [{ disabled: false, content: '' }]
             }
         };
     },
