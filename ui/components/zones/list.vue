@@ -9,14 +9,12 @@
         </h2>
         <b-button-toolbar>
             <b-button-group>
-                <b-button default class="add-zone" :to="'zones/edit/'">
-                    <icon name="plus" />
-                    Create zone
-                </b-button>
-                <b-button default class="import-zone" disabled id="import-zone">
-                    <icon label="Import zone" name="upload" />
-                    Import zone
-                </b-button>
+                <icon-button class="add-zone" :to="'zones/edit/'" icon="plus">
+                    &nbsp;Create zone
+                </icon-button>
+                <icon-button class="import-zone" disabled id="import-zone" iconLabel="Import zone" icon="upload">
+                    &nbsp;Import zone
+                </icon-button>
             </b-button-group>
         </b-button-toolbar>
     </div>
@@ -34,12 +32,12 @@
             </template>
             <template slot="actions" scope="row">
                 <b-button-toolbar key-nav>
-                    <b-button size="sm" v-if="row.item.kind === 'Slave'"><icon label="Retrieves the zone from the master" name="random" /></b-button>
-                    <b-button size="sm" v-if="row.item.kind === 'Master'"><icon label="Send a DNS NOTIFY to all slaves" name="retweet" /></b-button>
-                    <b-button size="sm" :href="`/server/${server.id}/zones/${row.item.id}.axfr`"><icon label="Returns the zone in AXFR format" name="download" /></b-button>
-                    <b-button size="sm" @click="verify(row.item.id)"><icon label="Verify zone contents/configuration" name="check-square-o" /></b-button>
-                    <b-button size="sm" :to="`zones/edit/${row.item.id}`"><icon label="Edit Zone" name="pencil-square-o" /></b-button>
-                    <b-button variant="danger" size="sm" v-b-modal="'del-zone'" @click="setActive(row.item.id)"><icon name="trash" label="Remove Zone" /></b-button>
+                    <icon-button size="sm" v-if="row.item.kind === 'Slave'" 2iconLabel="Retrieves the zone from the master" icon="random" />
+                    <icon-button size="sm" v-if="row.item.kind === 'Master'" iconLabel="Send a DNS NOTIFY to all slaves" icon="retweet" />
+                    <icon-button size="sm" :href="`/server/${server.id}/zones/${row.item.id}.axfr`" iconLabel="Returns the zone in AXFR format" icon="download" />
+                    <icon-button size="sm" @click="verify(row.item.id)" iconLabel="Verify zone contents/configuration" icon="check-square-o" />
+                    <icon-button size="sm" :to="`zones/edit/${row.item.id}`" iconLabel="Edit Zone" icon="pencil-square-o" />
+                    <icon-button variant="danger" size="sm" v-b-modal="'del-zone'" @click="setActive(row.item.id)" icon="trash" iconLabel="Remove Zone" />
                 </b-button-toolbar>
             </template>
         </b-table>
@@ -54,6 +52,8 @@ import 'vue-awesome/icons/plus';
 import 'vue-awesome/icons/check-square-o';
 import 'vue-awesome/icons/random';
 import 'vue-awesome/icons/retweet';
+
+import IconButton from '../icon-button.vue';
 
 import { mapGetters } from 'vuex';
 
@@ -105,6 +105,9 @@ export default {
         },
         verify: function () {
         }
+    },
+    components: {
+        'icon-button': IconButton
     }
 };
 </script>

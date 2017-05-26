@@ -3,9 +3,9 @@
     <div class="page-header">
         <h2>Servers</h2>
         <b-button-toolbar key-nav class="pull-right">
-            <b-button v-b-modal="'server-edit'" @click="setActive({ isNew: true })">
-                Add server
-            </b-button>
+            <icon-button v-b-modal="'server-edit'" @click="setActive({ isNew: true })" icon="plus">
+                &nbsp;Add server
+            </icon-button>
         </b-button-toolbar>
     </div>
     <server-edit-modal :server="activeItem" />
@@ -15,8 +15,8 @@
         </template>
         <template slot="actions" scope="row">
             <b-button-toolbar key-nav>
-                <b-button size="sm" v-b-modal="'server-edit'" @click="setActive(row.item)"><icon label="Edit Server" name="pencil-square-o" /></b-button>
-                <b-button variant="danger" size="sm" @click="remove(row.item)"><icon name="trash" label="Remove Server" /></b-button>
+                <icon-button size="sm" v-b-modal="'server-edit'" @click="setActive(row.item)" iconLabel="Edit Server" icon="pencil-square-o" />
+                <icon-button variant="danger" size="sm" @click="remove(row.item)" icon="trash" iconLabel="Remove Server" />
             </b-button-toolbar>
         </template>
     </b-table>
@@ -26,6 +26,8 @@
 <script>
 import 'vue-awesome/icons/trash';
 import 'vue-awesome/icons/pencil-square-o';
+
+import IconButton from '../icon-button.vue';
 
 import Edit from './edit.vue';
 import { mapGetters } from 'vuex';
@@ -67,7 +69,8 @@ export default {
         }
     },
     components: {
-        'server-edit-modal': Edit
+        'server-edit-modal': Edit,
+        'icon-button': IconButton
     }
 };
 </script>

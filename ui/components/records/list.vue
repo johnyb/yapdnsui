@@ -7,32 +7,31 @@
         </h2>
         <b-button-toolbar>
             <b-button-group>
-                <b-button default class="add-record" v-b-modal="'record-edit'" @click="setActiveRecord()">
-                    <icon name="plus" />
-                    Create record
-                </b-button>
+                <icon-button default class="add-record" v-b-modal="'record-edit'" @click="setActiveRecord()" icon="plus">
+                    &nbsp;Create record
+                </icon-button>
                 <b-dropdown id="zone-actions" text="Zone actions">
-                    <b-dropdown-item>
-                        <icon label="Delete zone" name="trash" />Delete
+                    <b-dropdown-item class="d-flex align-items-center">
+                        <icon label="Delete zone" name="trash" />&nbsp;Delete
                     </b-dropdown-item>
-                    <b-dropdown-item>
-                        <icon label="Send a DNS NOTIFY to all slaves" name="retweet" />Notify
+                    <b-dropdown-item class="d-flex align-items-center">
+                        <icon label="Send a DNS NOTIFY to all slaves" name="retweet" />&nbsp;Notify
                     </b-dropdown-item>
-                    <b-dropdown-item>
-                        <icon label="Retrieves the zone from the master" name="random" />Import
+                    <b-dropdown-item class="d-flex align-items-center">
+                        <icon label="Retrieves the zone from the master" name="random" />&nbsp;Import
                     </b-dropdown-item>
-                    <b-dropdown-item>
-                        <icon label="Download the zone in AXFR format" name="download" />Export
+                    <b-dropdown-item class="d-flex align-items-center">
+                        <icon label="Download the zone in AXFR format" name="download" />&nbsp;Export
                     </b-dropdown-item>
-                    <b-dropdown-item>
-                        <icon label="Verify zone contents/configuration" name="check-square-o" />Verify
+                    <b-dropdown-item class="d-flex align-items-center">
+                        <icon label="Verify zone contents/configuration" name="check-square-o" />&nbsp;Verify
                     </b-dropdown-item>
                     <b-dropdown-divider />
-                    <b-dropdown-item>
-                        <icon label="View Metadata" name="eye" />Zone Metadata
+                    <b-dropdown-item class="d-flex align-items-center">
+                        <icon label="View Metadata" name="eye" />&nbsp;Zone Metadata
                     </b-dropdown-item>
-                    <b-dropdown-item>
-                        <icon label="Manage Keys" name="lock" />CryptoKeys
+                    <b-dropdown-item class="d-flex align-items-center">
+                        <icon label="Manage Keys" name="lock" />&nbsp;CryptoKeys
                     </b-dropdown-item>
                 </b-dropdown>
             </b-button-group>
@@ -58,9 +57,9 @@
         </template>
         <template slot="actions" scope="row">
             <b-button-toolbar key-nav>
-                <b-button v-if="row.item.type === 'A' || row.item.type === 'AAAA'" size="sm" default><icon label="Create PTR record from this" name="retweet" /></b-button>
-                <b-button size="sm" v-b-modal="'record-edit'" @click="setActiveRecord(row.item)"><icon label="Edit record" name="pencil-square-o" /></b-button>
-                <b-button variant="danger" size="sm" v-b-modal="'del-record'" @click="setActiveRecord(row.item)"><icon name="trash" label="Remove Record" /></b-button>
+                <icon-button v-if="row.item.type === 'A' || row.item.type === 'AAAA'" size="sm" default iconLabel="Create PTR record from this" icon="retweet"></icon-button>
+                <icon-button size="sm" v-b-modal="'record-edit'" @click="setActiveRecord(row.item)" iconLabel="Edit record" icon="pencil-square-o"></icon-button>
+                <icon-button variant="danger" size="sm" v-b-modal="'del-record'" @click="setActiveRecord(row.item)" icon="trash" iconLabel="Remove Record" /></icon-button>
             </b-button-toolbar>
         </template>
     </b-table>
@@ -75,6 +74,8 @@ import 'vue-awesome/icons/download';
 import 'vue-awesome/icons/check-square-o';
 import 'vue-awesome/icons/eye';
 import 'vue-awesome/icons/lock';
+
+import IconButton from '../icon-button.vue';
 
 import RecordEditView from './edit.vue';
 import { mapGetters, mapActions } from 'vuex';
@@ -139,7 +140,8 @@ export default {
         'deleteRecord'
     ])),
     components: {
-        'record-edit-modal': RecordEditView
+        'record-edit-modal': RecordEditView,
+        'icon-button': IconButton
     }
 };
 </script>
