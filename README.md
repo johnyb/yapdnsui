@@ -104,10 +104,8 @@ Credits
 
 * PowerDNS [http://www.powerdns.com/](http://www.powerdns.com/)
 
-* Layout & CSS: [http://twitter.github.com/bootstrap/](http://twitter.github.com/bootstrap/)
+* Layout & CSS: [Bootstrap 4](https://v4-alpha.getbootstrap.com/)
 
-* [BackboneJS](http://backbonejs.org/)
-
-* [MarionetteJS](http://marionettejs.com/)
+* [Vue.js](http://vuejs.org/)
 
 * Thanks to [yaPDNSui](https://github.com/xbgmsharp/yapdnsui/)
