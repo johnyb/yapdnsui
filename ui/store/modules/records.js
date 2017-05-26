@@ -60,7 +60,11 @@ const mutations = {
             r.name !== record.name ||
             r.type !== record.type ||
             r.recordIndex !== record.recordIndex
-        ));
+        )).map(function (r) {
+            if (r.name !== record.name || r.type !== record.type) return r;
+            r.records.splice(record.recordIndex, 1);
+            return r;
+        });
     },
     ACTIVATED_RECORD(state, { record }) {
         state.activeRecord = JSON.parse(JSON.stringify(record || defaultRecord));
