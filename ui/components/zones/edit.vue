@@ -13,7 +13,7 @@
             <label for="kind">Zone Type:</label>
             <b-form-radio :options="options" name="kind" v-model="kind" stacked/>
         </div>
-        <div class="form-group" v-if="kind == 'Master'">
+        <div class="form-group" v-if="kind == 'Master' && !zone.id">
             <label for="nameservers">Nameservers:</label>
             <b-form-input name="nameservers" type="text" placeholder='ns.example.com.,ns2.example.com.' v-model="nameservers" />
             <small>List of nameservers responsible for this zone.</small>
