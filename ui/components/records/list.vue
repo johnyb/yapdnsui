@@ -47,6 +47,9 @@
     </b-modal>
     <record-edit-modal :zoneId="activeZone.id" :serverId="activeServer.id" :record="activeRecord" />
     <b-table striped condensed hover id="records-table" name="records-table" :fields="fields" :items="records">
+        <template slot="name" scope="row">
+            {{ simplifyName(row.item.name) }}
+        </template>
         <template slot="content" scope="row">
             {{ row.item.record.content }}
         </template>
@@ -127,10 +130,14 @@ export default {
             }
         };
     },
-    methods: mapActions([
+    methods: Object.assign({
+        simplifyName: function (name) {
+            return name === this.activeZone.name ? '@' : name.replace(new RegExp(`.${this.activeZone.name}$`), '');
+        }
+    }, mapActions([
         'setActiveRecord',
         'deleteRecord'
-    ]),
+    ])),
     components: {
         'record-edit-modal': RecordEditView
     }
