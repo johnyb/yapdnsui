@@ -35,7 +35,7 @@
                     <icon-button size="sm" v-if="row.item.kind === 'Slave'" iconLabel="Retrieves the zone from the master" icon="random" />
                     <icon-button size="sm" v-if="row.item.kind === 'Master'" iconLabel="Send a DNS NOTIFY to all slaves" icon="retweet" />
                     <icon-button size="sm" :href="`/endpoints/${server.id}${server.zones_url.replace(/\{.*}$/, '/' + row.item.id)}/export`" :download="`${row.item.name}axfr`" iconLabel="Returns the zone in AXFR format" icon="download" />
-                    <icon-button size="sm" @click="verify(row.item.id)" iconLabel="Verify zone contents/configuration" icon="check-square-o" />
+                    <icon-button size="sm" @click="verify(row.item)" iconLabel="Verify zone contents/configuration" icon="check-square-o" />
                     <icon-button size="sm" :to="`/servers/${server.id}/zones/edit/${row.item.id}`" iconLabel="Edit Zone" icon="pencil-square-o" />
                     <icon-button variant="danger" size="sm" v-b-modal="'del-zone'" @click="setActive(row.item.id)" icon="trash" iconLabel="Remove Zone" />
                 </b-button-toolbar>
@@ -103,7 +103,9 @@ export default {
         remove: function (zoneId) {
             this.$store.dispatch('deleteZone', { zoneId });
         },
-        verify: function () {
+        verify: function (zone) {
+            this.$store.dispatch('setActiveZone', zone.id);
+            this.$store.dispatch('verifyZone');
         }
     },
     components: {

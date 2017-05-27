@@ -37,8 +37,11 @@ const actions = {
         ZonesAPI
             .deleteZone(rootGetters.activeServer, zoneId)
             .then(() => commit('ZONE_REMOVED', { zoneId }), () => commit('ZONE_DELETE_FAILURE'));
+    },
+    verifyZone({ rootGetters, getters, commit }) {
+        ZonesAPI.check(rootGetters.activeServer, getters.activeZone)
+            .then(checkResults => commit('ZONE_CHECK', checkResults), error => commit('ZONE_CHECK_ERROR', { error }));
     }
-
 };
 
 const mutations = {
@@ -54,6 +57,13 @@ const mutations = {
     },
     ACTIVATED_ZONE(state, { zoneId }) {
         state.activeZone = state.zones.filter(z => z.id === zoneId)[0] || zoneId;
+    },
+    ZONE_CHECK(state, { checkResults }) {
+        state.activeZone.check = checkResults;
+    },
+    ZONE_CHECK_ERROR(state, { error }) {
+        // will always land here, since /check is not implemented, yet
+        state.lastError = error;
     },
     updateZone(state, update) {
         for (const key in update) {

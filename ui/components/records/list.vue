@@ -23,11 +23,11 @@
                     <b-dropdown-item class="d-flex align-items-center" :href="`/endpoints/${activeServer.id}/${activeZone.url}/export`" :download="`${activeZone.id}axfr`">
                         <icon label="Download the zone in AXFR format" name="download" />&nbsp;Export
                     </b-dropdown-item>
-                    <b-dropdown-item class="d-flex align-items-center">
+                    <b-dropdown-item class="d-flex align-items-center" @click="verifyZone">
                         <icon label="Verify zone contents/configuration" name="check-square-o" />&nbsp;Verify
                     </b-dropdown-item>
                     <b-dropdown-divider />
-                    <b-dropdown-item class="d-flex align-items-center">
+                    <b-dropdown-item class="d-flex align-items-center">,
                         <icon label="View Metadata" name="eye" />&nbsp;Zone Metadata
                     </b-dropdown-item>
                     <b-dropdown-item class="d-flex align-items-center">
@@ -136,6 +136,7 @@ export default {
             return name === this.activeZone.name ? '@' : name.replace(new RegExp(`.${this.activeZone.name}$`), '');
         }
     }, mapActions([
+        'verifyZone',
         'setActiveRecord',
         'deleteRecord'
     ])),
