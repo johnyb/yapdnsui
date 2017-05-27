@@ -9,7 +9,7 @@
         </h2>
         <b-button-toolbar>
             <b-button-group>
-                <icon-button class="add-zone" :to="'zones/edit/'" icon="plus">
+                <icon-button class="add-zone" :to="`/servers/${server.id}/zones/edit/`" icon="plus">
                     &nbsp;Create zone
                 </icon-button>
                 <icon-button class="import-zone" disabled id="import-zone" iconLabel="Import zone" icon="upload">
@@ -26,17 +26,17 @@
                 <br>Are you sure you want to do this?
             </slot>
         </b-modal>
-        <b-table striped condensed hover id="zones-table" width="100%" name="zones-table" :fields="fields" :items="zones">
+        <b-table striped condensed hover id="zones-table" name="zones-table" :fields="fields" :items="zones">
             <template slot="name" scope="row">
                 <b-link :to="`/servers/${server.id}/zones/${row.item.name}`">{{ row.item.name }}</b-link>
             </template>
             <template slot="actions" scope="row">
                 <b-button-toolbar key-nav>
-                    <icon-button size="sm" v-if="row.item.kind === 'Slave'" 2iconLabel="Retrieves the zone from the master" icon="random" />
+                    <icon-button size="sm" v-if="row.item.kind === 'Slave'" iconLabel="Retrieves the zone from the master" icon="random" />
                     <icon-button size="sm" v-if="row.item.kind === 'Master'" iconLabel="Send a DNS NOTIFY to all slaves" icon="retweet" />
-                    <icon-button size="sm" :href="`/server/${server.id}/zones/${row.item.id}.axfr`" iconLabel="Returns the zone in AXFR format" icon="download" />
+                    <icon-button size="sm" :href="`/endpoints/${server.id}${server.zones_url.replace(/\{.*}$/, '/' + row.item.id)}/export`" :download="`${row.item.name}axfr`" iconLabel="Returns the zone in AXFR format" icon="download" />
                     <icon-button size="sm" @click="verify(row.item.id)" iconLabel="Verify zone contents/configuration" icon="check-square-o" />
-                    <icon-button size="sm" :to="`zones/edit/${row.item.id}`" iconLabel="Edit Zone" icon="pencil-square-o" />
+                    <icon-button size="sm" :to="`/servers/${server.id}/zones/edit/${row.item.id}`" iconLabel="Edit Zone" icon="pencil-square-o" />
                     <icon-button variant="danger" size="sm" v-b-modal="'del-zone'" @click="setActive(row.item.id)" icon="trash" iconLabel="Remove Zone" />
                 </b-button-toolbar>
             </template>

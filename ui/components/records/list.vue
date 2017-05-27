@@ -20,7 +20,7 @@
                     <b-dropdown-item class="d-flex align-items-center">
                         <icon label="Retrieves the zone from the master" name="random" />&nbsp;Import
                     </b-dropdown-item>
-                    <b-dropdown-item class="d-flex align-items-center">
+                    <b-dropdown-item class="d-flex align-items-center" :href="`/endpoints/${activeServer.id}/${activeZone.url}/export`" :download="`${activeZone.id}axfr`">
                         <icon label="Download the zone in AXFR format" name="download" />&nbsp;Export
                     </b-dropdown-item>
                     <b-dropdown-item class="d-flex align-items-center">
