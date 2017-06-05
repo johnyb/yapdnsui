@@ -14,7 +14,7 @@ export const ZonesAPI = {
         method: 'PUT',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': ''
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(zone)
     }).then(res => res.json()),
