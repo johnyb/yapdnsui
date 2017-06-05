@@ -9,6 +9,7 @@ services:
           - pdns
     ports:
       - "53:53/udp"
+    command: "--allow-axfr-ips=0.0.0.0/0,::/0"
   pdns_slave:
     image: johnyb/pdns-minimal
     networks:
