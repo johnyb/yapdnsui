@@ -39,10 +39,10 @@ export default {
     computed: Object.assign({
         masters: {
             get() {
-                return this.$store.getters.activeZone.masters;
+                return this.$store.getters.activeZone.masters.join(', ');
             },
             set(value) {
-                this.$store.commit('updateZone', { masters: value });
+                this.$store.commit('updateZone', { masters: value.split(',').map(v => v.trim()) });
             }
         },
         nameservers: {
