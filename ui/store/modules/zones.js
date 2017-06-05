@@ -41,6 +41,14 @@ const actions = {
     verifyZone({ rootGetters, getters, commit }) {
         ZonesAPI.check(rootGetters.activeServer, getters.activeZone)
             .then(checkResults => commit('ZONE_CHECK', checkResults), error => commit('ZONE_CHECK_ERROR', { error }));
+    },
+    retrieveZone({ rootGetters, getters, commit }) {
+        ZonesAPI.retrieve(rootGetters.activeServer, getters.activeZone)
+            .then(retrieveResults => commit('ZONE_RETRIEVED', retrieveResults), error => commit('ZONE_RETRIEVE_ERROR', { error }));
+    },
+    notifyZone({ rootGetters, getters, commit }) {
+        ZonesAPI.notify(rootGetters.activeServer, getters.activeZone)
+            .then(notifyResults => commit('ZONE_NOTIFIED', notifyResults), error => commit('ZONE_NOTIFY_ERROR', { error }));
     }
 };
 
@@ -64,6 +72,12 @@ const mutations = {
     ZONE_CHECK_ERROR(state, { error }) {
         // will always land here, since /check is not implemented, yet
         state.lastError = error;
+    },
+    ZONE_NOTIFIED(state) {
+        state.activeZone.notified = true;
+    },
+    ZONE_RETRIEVED(state) {
+        state.activeZone.retrieved = true;
     },
     updateZone(state, update) {
         for (const key in update) {

@@ -32,8 +32,8 @@
             </template>
             <template slot="actions" scope="row">
                 <b-button-toolbar key-nav>
-                    <icon-button size="sm" v-if="row.item.kind === 'Slave'" iconLabel="Retrieves the zone from the master" icon="random" />
-                    <icon-button size="sm" v-if="row.item.kind === 'Master'" iconLabel="Send a DNS NOTIFY to all slaves" icon="retweet" />
+                    <icon-button size="sm" v-if="row.item.kind === 'Slave'" iconLabel="Retrieves the zone from the master" icon="random" @click="retrieve(row.item)" />
+                    <icon-button size="sm" v-if="row.item.kind === 'Master'" iconLabel="Send a DNS NOTIFY to all slaves" icon="retweet" @click="notify(row.item)" />
                     <icon-button size="sm" :href="`/endpoints/${server.id}${server.zones_url.replace(/\{.*}$/, '/' + row.item.id)}/export`" :download="`${row.item.name}axfr`" iconLabel="Returns the zone in AXFR format" icon="download" />
                     <icon-button size="sm" @click="verify(row.item)" iconLabel="Verify zone contents/configuration" icon="check-square-o" />
                     <icon-button size="sm" :to="`/servers/${server.id}/zones/edit/${row.item.id}`" iconLabel="Edit Zone" icon="pencil-square-o" />
@@ -106,6 +106,14 @@ export default {
         verify: function (zone) {
             this.$store.dispatch('setActiveZone', zone.id);
             this.$store.dispatch('verifyZone');
+        },
+        retrieve: function (zone) {
+            this.$store.dispatch('setActiveZone', zone.id);
+            this.$store.dispatch('retrieveZone');
+        },
+        notify: function (zone) {
+            this.$store.dispatch('setActiveZone', zone.id);
+            this.$store.dispatch('notifyZone');
         }
     },
     components: {

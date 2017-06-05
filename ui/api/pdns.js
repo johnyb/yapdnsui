@@ -32,7 +32,19 @@ export const ZonesAPI = {
         }
     }).then(r => new Promise((resolve, reject) => {
         r.status >= 400 ? r.json().then(reject) : r.json().then(resolve);
-    }))
+    })),
+    retrieve: (server, zone) => fetch(`/endpoints/${server.id}${server.zones_url.replace(/{.*}$/, '/' + zone.id)}/axfr-retrieve`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json'
+        }
+    }).then(res => res.json()),
+    notify: (server, zone) => fetch(`/endpoints/${server.id}${server.zones_url.replace(/{.*}$/, '/' + zone.id)}/notify`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json'
+        }
+    }).then(res => res.json())
 };
 
 export const RecordsAPI = {

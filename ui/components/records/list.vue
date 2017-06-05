@@ -14,11 +14,11 @@
                     <b-dropdown-item class="d-flex align-items-center">
                         <icon label="Delete zone" name="trash" />&nbsp;Delete
                     </b-dropdown-item>
-                    <b-dropdown-item class="d-flex align-items-center">
+                    <b-dropdown-item class="d-flex align-items-center" v-if="activeZone.kind === 'Master'" @click="notifyZone">
                         <icon label="Send a DNS NOTIFY to all slaves" name="retweet" />&nbsp;Notify
                     </b-dropdown-item>
-                    <b-dropdown-item class="d-flex align-items-center">
-                        <icon label="Retrieves the zone from the master" name="random" />&nbsp;Import
+                    <b-dropdown-item class="d-flex align-items-center" v-if="activeZone.kind === 'Slave'" @click="retrieveZone">
+                        <icon label="Retrieves the zone from the master" name="random" />&nbsp;Retrieve
                     </b-dropdown-item>
                     <b-dropdown-item class="d-flex align-items-center" :href="`/endpoints/${activeServer.id}/${activeZone.url}/export`" :download="`${activeZone.id}axfr`">
                         <icon label="Download the zone in AXFR format" name="download" />&nbsp;Export
@@ -137,6 +137,8 @@ export default {
         }
     }, mapActions([
         'verifyZone',
+        'retrieveZone',
+        'notifyZone',
         'setActiveRecord',
         'deleteRecord'
     ])),
