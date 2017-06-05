@@ -3,14 +3,26 @@ version: "2"
 services:
   pdns:
     image: johnyb/pdns-minimal
+    networks:
+      default:
+        aliases:
+          - pdns
     ports:
       - "53:53/udp"
+  pdns_slave:
+    image: johnyb/pdns-minimal
+    networks:
+      default:
+        aliases:
+          - pdns_slave
+    command: "--slave"
   pdnsui:
     build: .
     image: johnyb/yapdnsui
-    command: "yarn dev"
     links:
-      - "pdns:pdns"
+      - pdns
+      - pdns_slave
+    command: "yarn dev"
     ports:
       - "8080:8080"
     volumes:
