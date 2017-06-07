@@ -2,14 +2,16 @@ import { ZonesAPI } from '../../api/pdns';
 
 const state = {
     zones: [],
-    activeZone: {}
+    activeZone: {},
+    lastError: ''
 };
 
 const getters = {
     getZones: function (s) {
         return s.zones;
     },
-    activeZone: state => state.activeZone
+    activeZone: state => state.activeZone,
+    lastError: state => state.lastError
 };
 
 const actions = {
@@ -31,7 +33,10 @@ const actions = {
         const zone = getters.activeZone;
         const request = zone.id ? ZonesAPI.update : ZonesAPI.create;
         return request(rootGetters.activeServer, zone)
-            .then((newZone) => commit('ZONE_UPDATED', { zone, newZone }));
+            .then(
+                (newZone) => commit('ZONE_UPDATED', { zone, newZone }) || true,
+                (result) => commit('ZONE_UPDATE_ERROR', { zone, result })
+            );
     },
     deleteZone({ rootGetters, commit }, { zoneId }) {
         return ZonesAPI
@@ -66,6 +71,9 @@ const mutations = {
         state.zones = state.zones.filter(z => z.id !== zone.id);
         state.zones.push(newZone);
     },
+    ZONE_UPDATE_ERROR(state, { result }) {
+        state.lastError = result.error;
+    },
     ACTIVATED_ZONE(state, { zoneId }) {
         state.activeZone = state.zones.filter(z => z.id === zoneId)[0] || zoneId;
     },
@@ -86,6 +94,9 @@ const mutations = {
         for (const key in update) {
             state.activeZone[key] = update[key];
         }
+    },
+    clearError(state) {
+        state.lastError = '';
     }
 };
 

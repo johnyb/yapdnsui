@@ -17,7 +17,9 @@ export const ZonesAPI = {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(zone)
-    }).then(res => res.json()),
+    }).then(r => new Promise((resolve, reject) => {
+        r.status >= 400 ? r.json().then(reject) : r.json().then(resolve);
+    })),
     create: (server, zone) => fetch(`/endpoints/${server.id}${server.zones_url.replace(/{.*}$/, '')}`, {
         method: 'POST',
         headers: {
@@ -25,7 +27,9 @@ export const ZonesAPI = {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(zone)
-    }).then(res => res.json()),
+    }).then(r => new Promise((resolve, reject) => {
+        r.status >= 400 ? r.json().then(reject) : r.json().then(resolve);
+    })),
     check: (server, zone) => fetch(`/endpoints/${server.id}/${zone.url}/check`, {
         headers: {
             'accept': 'application/json'

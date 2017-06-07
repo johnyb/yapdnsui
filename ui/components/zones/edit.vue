@@ -3,6 +3,7 @@
     <div class="page-header">
         <h2>{{ zone.id ? `Edit zone` : 'Add zone' }}</h2>
     </div>
+    <b-alert class="error" v-if="error" show variant="danger">{{ error }}</b-alert>
     <form id="form-add-domain" @submit="submit">
         <b-form-fieldset>
         <div class="form-group">
@@ -71,10 +72,12 @@ export default {
         }
     },
     mapGetters({
-        zone: 'activeZone'
+        zone: 'activeZone',
+        error: 'lastError'
     })),
     created() {
         this.$store.dispatch('setActiveZone', this.$route.params.zoneId || this.defaultZone);
+        this.$store.commit('clearError');
     },
     data: function () {
         return {
@@ -103,7 +106,7 @@ export default {
     methods: {
         submit: function (ev) {
             this.$store.dispatch('updateZone', ev)
-                .then(() => this.$router.replace(`../`));
+                .then((success) => success ? this.$router.replace(`../`) : '');
         }
     }
 };
