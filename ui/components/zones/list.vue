@@ -64,12 +64,12 @@ export default {
         server: 'activeServer'
     }),
     created() {
-        if (!this.$store.getters.activeServer.id) {
-            const handler = this.$store.watch(() => this.$store.getters.activeServer, () => {
-                this.$store.dispatch('getZones');
-                handler();
-            });
-        } else {
+        if (this.$store.getters.activeServer.id) {
+            this.$store.dispatch('getZones');
+        }
+    },
+    watch: {
+        server: function () {
             this.$store.dispatch('getZones');
         }
     },
