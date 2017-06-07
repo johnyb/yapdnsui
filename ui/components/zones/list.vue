@@ -19,7 +19,7 @@
         </b-button-toolbar>
     </div>
     <div>
-        <b-modal fade id="del-zone" title="Delete Zone" ok-title="Delete zone" @ok="remove(activeZone)">
+        <b-modal fade id="del-zone" title="Delete Zone" ok-title="Delete zone" @ok="remove(activeZone)" close-title="Cancel">
             <slot>
                 Warning! This operation will delete the zone and all associated records for
                 <strong>{{ activeZone }}</strong>

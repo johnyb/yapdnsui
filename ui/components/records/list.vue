@@ -37,7 +37,7 @@
             </b-button-group>
         </b-button-toolbar>
     </div>
-    <b-modal fade id="del-record" title="Delete Record" ok-title="Delete record" @ok="deleteRecord()">
+    <b-modal fade id="del-record" title="Delete Record" ok-title="Delete record" @ok="deleteRecord()" close-title="Cancel">
         <slot>
             <strong>Warning!</strong>
             This operation will delete the <strong>{{ activeRecord.name }} {{ activeRecord.type }}</strong> record.
