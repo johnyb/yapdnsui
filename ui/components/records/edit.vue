@@ -1,5 +1,5 @@
 <template>
-<b-modal id="record-edit" fade :title="record.isNew ? 'Add record' : 'Edit record'" :ok-title="record.isNew ? 'Add record' : 'Update'" @ok="updateRecord">
+<b-modal id="record-edit" fade :title="record.isNew ? 'Create record' : 'Edit record'" :ok-title="record.isNew ? 'Create record' : 'Update'" @ok="updateRecord">
     <form class="modal-form" method="POST" enctype="application/json">
         <b-form-fieldset>
             <label for="name">Name</label>
