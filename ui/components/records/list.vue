@@ -10,7 +10,7 @@
                 <icon-button default class="add-record" v-b-modal="'record-edit'" @click="setActiveRecord()" icon="plus">
                     &nbsp;Create record
                 </icon-button>
-                <b-dropdown id="zone-actions" text="Zone actions">
+                <b-dropdown id="zone-actions" text="Zone actions" right>
                     <b-dropdown-item class="d-flex align-items-center">
                         <icon label="Delete zone" name="trash" />&nbsp;Delete
                     </b-dropdown-item>
@@ -27,7 +27,7 @@
                         <icon label="Verify zone contents/configuration" name="check-square-o" />&nbsp;Verify
                     </b-dropdown-item>
                     <b-dropdown-divider />
-                    <b-dropdown-item class="d-flex align-items-center">,
+                    <b-dropdown-item class="d-flex align-items-center">
                         <icon label="View Metadata" name="eye" />&nbsp;Zone Metadata
                     </b-dropdown-item>
                     <b-dropdown-item class="d-flex align-items-center">
