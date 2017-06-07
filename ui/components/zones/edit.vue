@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
     name: 'zones-edit',
@@ -100,9 +100,12 @@ export default {
             }
         };
     },
-    methods: mapActions({
-        submit: 'updateZone'
-    })
+    methods: {
+        submit: function (ev) {
+            this.$store.dispatch('updateZone', ev)
+                .then(() => this.$router.replace(`../`));
+        }
+    }
 };
 </script>
 

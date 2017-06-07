@@ -30,25 +30,28 @@ const actions = {
         event.preventDefault();
         const zone = getters.activeZone;
         const request = zone.id ? ZonesAPI.update : ZonesAPI.create;
-        request(rootGetters.activeServer, zone)
+        return request(rootGetters.activeServer, zone)
             .then((newZone) => commit('ZONE_UPDATED', { zone, newZone }));
     },
     deleteZone({ rootGetters, commit }, { zoneId }) {
-        ZonesAPI
+        return ZonesAPI
             .deleteZone(rootGetters.activeServer, zoneId)
             .then(() => commit('ZONE_REMOVED', { zoneId }), () => commit('ZONE_DELETE_FAILURE'));
     },
     verifyZone({ rootGetters, getters, commit }) {
-        ZonesAPI.check(rootGetters.activeServer, getters.activeZone)
+        return ZonesAPI.check(rootGetters.activeServer, getters.activeZone)
             .then(checkResults => commit('ZONE_CHECK', checkResults), error => commit('ZONE_CHECK_ERROR', { error }));
     },
     retrieveZone({ rootGetters, getters, commit }) {
-        ZonesAPI.retrieve(rootGetters.activeServer, getters.activeZone)
+        return ZonesAPI.retrieve(rootGetters.activeServer, getters.activeZone)
             .then(retrieveResults => commit('ZONE_RETRIEVED', retrieveResults), error => commit('ZONE_RETRIEVE_ERROR', { error }));
     },
     notifyZone({ rootGetters, getters, commit }) {
-        ZonesAPI.notify(rootGetters.activeServer, getters.activeZone)
-            .then(notifyResults => commit('ZONE_NOTIFIED', notifyResults), error => commit('ZONE_NOTIFY_ERROR', { error }));
+        return ZonesAPI.notify(rootGetters.activeServer, getters.activeZone)
+            .then(
+                notifyResults => commit('ZONE_NOTIFIED', notifyResults),
+                error => commit('ZONE_NOTIFY_ERROR', { error })
+            );
     }
 };
 
