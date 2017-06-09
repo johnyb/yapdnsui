@@ -30,7 +30,7 @@ export const ZonesAPI = {
     }).then(r => new Promise((resolve, reject) => {
         r.status >= 400 ? r.json().then(reject) : r.json().then(resolve);
     })),
-    check: (server, zone) => fetch(`/endpoints/${server.id}/${zone.url}/check`, {
+    check: (server, zone) => fetch(`/endpoints/${server.id}${zone.url}/check`, {
         headers: {
             'accept': 'application/json'
         }
@@ -52,12 +52,12 @@ export const ZonesAPI = {
 };
 
 export const RecordsAPI = {
-    getRecords: (server, zone) => fetch(`/endpoints/${server.id}/${zone.url}`, {
+    getRecords: (server, zone) => fetch(`/endpoints/${server.id}${zone.url}`, {
         headers: {
             'Accept': 'application/json'
         }
     }).then(res => res.json()),
-    update: (server, zone, record) => fetch(`/endpoints/${server.id}/${zone.url}`, {
+    update: (server, zone, record) => fetch(`/endpoints/${server.id}${zone.url}`, {
         method: 'PATCH',
         headers: {
             'Accept': 'application/json',
@@ -74,7 +74,7 @@ export const RecordsAPI = {
         })
     }).then(res => res.json())
     .catch(() => record),
-    deleteRecord: (server, zone, record) => fetch(`/endpoints/${server.id}/${zone.url}`, {
+    deleteRecord: (server, zone, record) => fetch(`/endpoints/${server.id}${zone.url}`, {
         method: 'PATCH',
         headers: {
             'Accept': 'application/json',
