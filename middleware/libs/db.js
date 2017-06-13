@@ -35,7 +35,7 @@ exports.list = function () {
         });
     }).then(function (rows) {
         return Promise.all(rows.map(function (server) {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 request({
                     url: `${server.url}api/v1/servers/localhost`,
                     headers: {
@@ -43,11 +43,14 @@ exports.list = function () {
                         accept: 'application/json'
                     }
                 }, function (err, res) {
-                    if (err) return reject(err);
+                    if (err) return resolve({});
                     resolve(Object.assign(JSON.parse(res.body), server));
                 });
             });
-        }));
+        })).then(ress => ress.reduce(
+            (acc, res) => Object.keys(res).length ? acc.concat(res) : acc,
+            []
+        ));
     });
 };
 
