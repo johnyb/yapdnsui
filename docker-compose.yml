@@ -7,8 +7,6 @@ services:
       default:
         aliases:
           - pdns
-    ports:
-      - "53:53/udp"
     command: "--allow-axfr-ips=0.0.0.0/0,::/0"
   pdns_slave:
     image: johnyb/pdns-minimal
@@ -17,6 +15,17 @@ services:
         aliases:
           - pdns_slave
     command: "--slave"
+  pdns_rec:
+    image: johnyb/pdns-minimal
+    networks:
+      default:
+        aliases:
+          - pdns_rec
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
+    entrypoint: pdns_recursor
+    command: ""
   pdnsui:
     build: .
     image: johnyb/yapdnsui
