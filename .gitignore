@@ -27,5 +27,5 @@ dist/
 node_modules
 
 # the databases
-*.sqlite3
+data/*.sqlite3
 

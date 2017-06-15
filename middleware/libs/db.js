@@ -1,31 +1,35 @@
 const fs = require('fs');
-const file = 'yapdnsui.sqlite3';
+const path = require('path');
+const file = path.join('data', 'yapdnsui.sqlite3');
 
 const sqlite3 = require('sqlite3').verbose();
 const url = require('url');
 const request = require('request');
 
-if (!fs.existsSync(file)) {
-    fs.openSync(file, 'w');
-}
+let db;
 
 // Create internal DB for the server list in memory
-exports.create = function () {
-    const db = new sqlite3.Database(file);
+function create () {
+    db = new sqlite3.Database(file, err => {
+        if (!err) {
+            // Initiliaze the db
+            db.serialize(function () {
+                db.run('CREATE TABLE servers (id integer primary key asc, name TEXT, url TEXT, password TEXT)', err => {
+                    if (err) return;
 
-    // Initiliaze the db
-    db.serialize(function () {
-        db.run('CREATE TABLE servers (id integer primary key asc, name TEXT, url TEXT, password TEXT)', err => {
-            if (err) return;
-
-            db.run('INSERT INTO servers VALUES (?,?,?,?)', [null, 'pdns', 'http://pdns:8081/', 'mimimi']);
-        });
+                    db.run('INSERT INTO servers VALUES (?,?,?,?)', [null, 'pdns', 'http://pdns:8081/', 'mimimi']);
+                });
+            });
+        } else {
+            fs.open(file, 'w', function (err) {
+                if (!err) create();
+            });
+        }
     });
-    return db;
-};
+}
 
 // Initiliaze the db
-const db = exports.create();
+create();
 
 exports.list = function () {
     return new Promise((resolve, reject) => {

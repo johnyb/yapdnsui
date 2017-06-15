@@ -7,7 +7,7 @@ ENTRYPOINT ["/app/yapdnsui/startup.sh"]
 CMD ["start"]
 
 EXPOSE 3000
-VOLUME ["/app/yapdnsui/yapdnsui.sqlite3"]
+VOLUME ["/app/yapdnsui/data"]
 
 COPY . /tmp
 
