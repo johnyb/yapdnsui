@@ -1,6 +1,14 @@
 FROM node:6
 MAINTAINER Julian Bäume <julian@svg4all.de>
 
+WORKDIR /app/yapdnsui
+
+ENTRYPOINT ["/app/yapdnsui/startup.sh"]
+CMD ["start"]
+
+EXPOSE 3000
+VOLUME ["/app/yapdnsui/yapdnsui.sqlite3"]
+
 COPY . /tmp
 
 RUN cd /tmp && yarn --cache-folder=/tmp/yarn-cache &&\
@@ -11,14 +19,3 @@ RUN cd /tmp && yarn --cache-folder=/tmp/yarn-cache &&\
   cd /app/yapdnsui &&\
   yarn --production --cache-folder=/tmp/yarn-cache &&\
   rm -rf /tmp/*
-
-# Define working directory.
-WORKDIR /app/yapdnsui
-
-# Define default command.
-# Start ssh and other services.
-ENTRYPOINT ["/app/yapdnsui/startup.sh"]
-CMD ["start"]
-
-# Expose ports.
-EXPOSE 8080
