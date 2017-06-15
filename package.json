@@ -18,7 +18,7 @@
   "license": "GPL-3.0+",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "[ -d dist ] || yarn build && cross-env NODE_ENV=production node ./bin/www",
     "dev": "cross-env NODE_ENV=development nodemon -w middleware/ build/dev-server.js",
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
