@@ -1,14 +1,11 @@
-#!/bin/bash
-LANG=C #needed for perl locale
-
-set -eu
+#!/bin/sh
 
 case "$1" in
     "nodemon")
         yarn dev
         ;;
     "start")
-        yarn start
+        NODE_ENV=production node ./bin/www
         ;;
     *)
         exec "$@"
