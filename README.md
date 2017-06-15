@@ -49,7 +49,7 @@ $ yarn start
 
 Or manually, you can define an IP and the PORT by using environment variables.
 ```bash
-$ HOST=127.0.0.1 PORT=8080 DEBUG=yapdnsui node ./bin/www
+$ HOST=127.0.0.1 PORT=8080 DEBUG=yapdnsui NODE_ENV=production node ./bin/www
 ```
 
 * Point your browser to: [http://localhost:8080/](http://localhost:8080/)
@@ -66,21 +66,14 @@ For more details regarding docker, please refer to [Docker.md](Docker.md)
 Development
 -----------
 
-Currently, I have two commands running in two different terminal sessions.
-One is to start the docker environment as described above:
+Start the docker environment as described above:
 
 ```
 docker-compose up
 ```
 
-This also logs debug messages of the middleware.
-Then I track changes in the frontend code, running webpack if needed:
-
-```
-$ grunt watch
-```
-
-I promise to simplify this a little more, soon :D
+This will start a development setup.
+It has PDNS instances running in different configurations.
 
 Contributing to yapdnsui
 ------------------------
