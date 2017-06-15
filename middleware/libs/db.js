@@ -1,25 +1,25 @@
 const fs = require('fs');
 const file = 'yapdnsui.sqlite3';
-const exists = fs.existsSync(file);
 
 const sqlite3 = require('sqlite3').verbose();
 const url = require('url');
 const request = require('request');
 
-if (!exists) {
+if (!fs.existsSync(file)) {
     fs.openSync(file, 'w');
 }
 
 // Create internal DB for the server list in memory
 exports.create = function () {
     const db = new sqlite3.Database(file);
+
     // Initiliaze the db
     db.serialize(function () {
-        if (!exists) {
-            db.run('CREATE TABLE servers (id integer primary key asc, name TEXT, url TEXT, password TEXT)');
+        db.run('CREATE TABLE servers (id integer primary key asc, name TEXT, url TEXT, password TEXT)', err => {
+            if (err) return;
+
             db.run('INSERT INTO servers VALUES (?,?,?,?)', [null, 'pdns', 'http://pdns:8081/', 'mimimi']);
-            db.each('SELECT * FROM servers');
-        }
+        });
     });
     return db;
 };
