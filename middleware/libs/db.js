@@ -8,18 +8,22 @@ const request = require('request');
 
 let db;
 
+function tryInit() {
+    // Initiliaze the db
+    db.serialize(function () {
+        db.run('CREATE TABLE servers (id integer primary key asc, name TEXT, url TEXT, password TEXT)', err => {
+            if (err) return;
+
+            db.run('INSERT INTO servers VALUES (?,?,?,?)', [null, 'pdns', 'http://pdns:8081/', 'mimimi']);
+        });
+    });
+}
+
 // Create internal DB for the server list in memory
-function create () {
+function create() {
     db = new sqlite3.Database(file, err => {
         if (!err) {
-            // Initiliaze the db
-            db.serialize(function () {
-                db.run('CREATE TABLE servers (id integer primary key asc, name TEXT, url TEXT, password TEXT)', err => {
-                    if (err) return;
-
-                    db.run('INSERT INTO servers VALUES (?,?,?,?)', [null, 'pdns', 'http://pdns:8081/', 'mimimi']);
-                });
-            });
+            tryInit();
         } else {
             fs.open(file, 'w', function (err) {
                 if (!err) create();
