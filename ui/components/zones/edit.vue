@@ -7,22 +7,33 @@
     <form id="form-add-domain" @submit="submit">
         <b-form-fieldset>
         <div class="form-group">
-            <label for="name">Zone/Domain name:</label>
-            <b-form-input name="name" type="text" placeholder="eg: example.com." v-model="name" />
+            <label for="zone-name">Zone/Domain name:</label>
+            <b-form-input id="zone-name" name="name" type="text" placeholder="eg: example.com." v-model="name" />
         </div>
         <div class="form-group">
             <label for="kind">Zone Type:</label>
-            <b-form-radio :options="options" name="kind" v-model="kind" stacked/>
+            <b-form-radio id="kind" :options="options" name="kind" v-model="kind" stacked/>
         </div>
         <div class="form-group" v-if="kind == 'Master' && !zone.id">
             <label for="nameservers">Nameservers:</label>
-            <b-form-input name="nameservers" type="text" placeholder='ns.example.com.,ns2.example.com.' v-model="nameservers" />
+            <b-form-input id="nameservers" name="nameservers" type="text" placeholder='ns.example.com.,ns2.example.com.' v-model="nameservers" />
             <small>List of nameservers responsible for this zone.</small>
         </div>
         <div class="form-group" v-if="kind == 'Slave'">
             <label for="masters">Zone master:</label>
-            <b-form-input name="masters" type="text" placeholder='1.2.3.4,::123:b00' v-model="masters" />
+            <b-form-input id="masters" name="masters" type="text" placeholder='1.2.3.4,::123:b00' v-model="masters" />
             <small>IP Address of the master host, which PDNS should replicate with.</small>
+        </div>
+        <div class="form-group" v-if="kind == 'Forwarded'">
+            <label for="servers">Forwarded to:</label>
+            <b-form-input id="servers" name="servers" type="text" placeholder='1.2.3.4:53,[::123:b00]:5300' v-model="servers" />
+            <small>IP Addresses and ports of the servers, this zone is forwarded to.</small>
+        </div>
+        <div class="form-group" v-if="kind == 'Forwarded'">
+            <b-form-checkbox id="recursion-desired" name="recursion_desired" v-model="recursion_desired">
+                Recursion desired
+            </b-form-checkbox>
+            <small class="form-text text-muted">Set the "recursion desired" flag when forwarding requests accordingly.</small>
         </div>
         </b-form-fieldset>
         <div class="form-group">
@@ -34,6 +45,10 @@
 
 <script>
 import { mapGetters } from 'vuex';
+
+function mkServersList(value) {
+    return value.split(',').map(v => v.trim());
+}
 
 export default {
     name: 'zones-edit',
@@ -51,7 +66,15 @@ export default {
                 return this.$store.getters.activeZone.nameservers.join(', ');
             },
             set(value) {
-                this.$store.commit('updateZone', { nameservers: value.split(',').map(v => v.trim()) });
+                this.$store.commit('updateZone', { nameservers: mkServersList(value) });
+            }
+        },
+        servers: {
+            get() {
+                return this.$store.getters.activeZone.servers.join(', ');
+            },
+            set(value) {
+                this.$store.commit('updateZone', { servers: mkServersList(value) });
             }
         },
         kind: {
@@ -69,6 +92,44 @@ export default {
             set(value) {
                 this.$store.commit('updateZone', { name: value });
             }
+        },
+        recursion_desired: {
+            get() {
+                return this.$store.getters.activeZone.recursion_desired;
+            },
+            set(value) {
+                this.$store.commit('updateZone', { recursion_desired: value });
+            }
+        },
+        options: {
+            get() {
+                if (this.$store.getters.activeServer.daemon_type === 'recursor') {
+                    return [
+                        {
+                            text: `Forwarded<small class="form-text text-muted">Zone forwarded to an authoritive server.</small>`,
+                            value: 'Forwarded'
+                        },
+                        {
+                            text: `Native<small class="form-text text-muted">"Rely on database replication, don't replicate via DNS.</small>`,
+                            value: 'Native'
+                        }
+                    ];
+                }
+                return [
+                    {
+                        text: `Master<small class="form-text text-muted">Send out notifications about zone changes to slaves.</small>`,
+                        value: 'Master'
+                    },
+                    {
+                        text: `Slave<small class="form-text text-muted">Retrieve records from master, store in database.</small>`,
+                        value: 'Slave'
+                    },
+                    {
+                        text: `Native<small class="form-text text-muted">"Rely on database replication, don't replicate via DNS.</small>`,
+                        value: 'Native'
+                    }
+                ];
+            }
         }
     },
     mapGetters({
@@ -81,25 +142,13 @@ export default {
     },
     data: function () {
         return {
-            options: [
-                {
-                    text: `Master<small class="form-text text-muted">Send out notifications about zone changes to slaves.</small>`,
-                    value: 'Master'
-                },
-                {
-                    text: `Slave<small class="form-text text-muted">Retrieve records from master, store in database.</small>`,
-                    value: 'Slave'
-                },
-                {
-                    text: `Native<small class="form-text text-muted">"Rely on database replication, don't replicate via DNS.</small>`,
-                    value: 'Native'
-                }
-            ],
             defaultZone: {
                 name: '',
                 kind: '',
                 nameservers: [],
-                masters: []
+                masters: [],
+                servers: [],
+                recursion_desired: false
             }
         };
     },
