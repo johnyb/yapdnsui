@@ -106,6 +106,9 @@ export default {
             this.$store.dispatch('getRecords');
         }
     },
+    destroyed() {
+        this.$store.dispatch('setActiveZone', null);
+    },
     data: function () {
         return {
             fields: {

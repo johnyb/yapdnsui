@@ -17,7 +17,7 @@ router.use('/:id/**', function (req, res) {
     const data = {
         dataType: 'json',
         method: req.method,
-        url: `${req.server.url}${req.params[0]}`,
+        url: `${req.server.url}/${req.params[0]}`,
         headers: {
             'X-API-Key': req.server.password
         }

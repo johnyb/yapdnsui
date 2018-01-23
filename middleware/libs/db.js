@@ -45,7 +45,7 @@ exports.list = function () {
         return Promise.all(rows.map(function (server) {
             return new Promise((resolve) => {
                 request({
-                    url: `${server.url}api/v1/servers/localhost`,
+                    url: `${server.url}/api/v1/servers/localhost`,
                     headers: {
                         'X-API-Key': server.password,
                         accept: 'application/json'

@@ -51,7 +51,7 @@ function flattenRRsets(rrsets) {
 
 const mutations = {
     RECEIVED_ZONE(state, { zone }) {
-        state.records = flattenRRsets(zone.rrsets);
+        state.records = flattenRRsets(zone.rrsets || zone);
     },
     RECORD_STORED() {},
     RECORD_STORE_FAILURE() {},
