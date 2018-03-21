@@ -59,7 +59,7 @@
             <b-button-toolbar key-nav>
                 <icon-button v-if="row.item.type === 'A' || row.item.type === 'AAAA'" size="sm" default iconLabel="Create PTR record from this" icon="retweet"></icon-button>
                 <icon-button size="sm" v-b-modal="'record-edit'" @click="setActiveRecord(row.item)" iconLabel="Edit record" icon="pencil-square-o"></icon-button>
-                <icon-button variant="danger" size="sm" v-b-modal="'del-record'" @click="setActiveRecord(row.item)" icon="trash" iconLabel="Remove Record" /></icon-button>
+                <icon-button variant="danger" size="sm" v-b-modal="'del-record'" @click="setActiveRecord(row.item)" icon="trash" iconLabel="Remove Record"></icon-button>
             </b-button-toolbar>
         </template>
     </b-table>
