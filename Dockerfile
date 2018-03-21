@@ -1,12 +1,12 @@
-FROM node:6
-MAINTAINER Julian Bäume <julian@svg4all.de>
+FROM node:8-alpine
+LABEL maintainer="Julian Bäume <julian@svg4all.de>"
 
 WORKDIR /app/yapdnsui
 
 ENTRYPOINT ["/app/yapdnsui/startup.sh"]
 CMD ["start"]
 
-EXPOSE 3000
+EXPOSE 8080
 VOLUME ["/app/yapdnsui/data"]
 
 COPY . /tmp

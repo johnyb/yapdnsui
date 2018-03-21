@@ -10,10 +10,10 @@
     </div>
     <server-edit-modal :server="activeItem" />
     <b-table striped condensed hover id="servers-table" width="100%" name="servers-table" :items="servers" :fields="fields">
-        <template slot="name" scope="row">
+        <template slot="name" slot-scope="row">
             <b-link :to="`/servers/${row.item.id}/zones`">{{row.item.name}}</b-link>
         </template>
-        <template slot="actions" scope="row">
+        <template slot="actions" slot-scope="row">
             <b-button-toolbar key-nav>
                 <icon-button size="sm" v-b-modal="'server-edit'" @click="setActive(row.item)" iconLabel="Edit Server" icon="pencil-square-o" />
                 <icon-button variant="danger" size="sm" @click="remove(row.item)" icon="trash" iconLabel="Remove Server" />

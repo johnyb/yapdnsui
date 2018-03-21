@@ -27,10 +27,10 @@
             </slot>
         </b-modal>
         <b-table striped condensed hover id="zones-table" name="zones-table" :fields="fields" :items="zones">
-            <template slot="name" scope="row">
+            <template slot="name" slot-scope="row">
                 <b-link :to="`/servers/${server.id}/zones/${row.item.name}`">{{ row.item.name }}</b-link>
             </template>
-            <template slot="actions" scope="row">
+            <template slot="actions" slot-scope="row">
                 <b-button-toolbar key-nav>
                     <icon-button size="sm" v-if="row.item.kind === 'Slave'" iconLabel="Retrieves the zone from the master" icon="random" @click="retrieve(row.item)" />
                     <icon-button size="sm" v-if="row.item.kind === 'Master'" iconLabel="Send a DNS NOTIFY to all slaves" icon="retweet" @click="notify(row.item)" />

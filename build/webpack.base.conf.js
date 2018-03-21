@@ -23,7 +23,6 @@ module.exports = {
         extensions: ['.js', '.vue', '.json'],
         modules: [
             path.resolve('./ui/'),
-            path.resolve('./node_modules/jquery/dist/'),
             path.resolve('./node_modules')
         ],
         alias: {
@@ -32,7 +31,6 @@ module.exports = {
     },
     plugins: [
         new webpack.ProvidePlugin({
-            jQuery: 'jquery'
         })
     ],
     module: {

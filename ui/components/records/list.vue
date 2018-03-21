@@ -46,16 +46,16 @@
     </b-modal>
     <record-edit-modal :zoneId="activeZone.id" :serverId="activeServer.id" :record="activeRecord" />
     <b-table striped condensed hover id="records-table" name="records-table" :fields="fields" :items="records">
-        <template slot="name" scope="row">
+        <template slot="name" slot-scope="row">
             {{ simplifyName(row.item.name) }}
         </template>
-        <template slot="content" scope="row">
+        <template slot="content" slot-scope="row">
             {{ row.item.record.content }}
         </template>
-        <template slot="state" scope="row">
+        <template slot="state" slot-scope="row">
             {{ row.item.record.disabled ? 'disabled' : 'active' }}
         </template>
-        <template slot="actions" scope="row">
+        <template slot="actions" slot-scope="row">
             <b-button-toolbar key-nav>
                 <icon-button v-if="row.item.type === 'A' || row.item.type === 'AAAA'" size="sm" default iconLabel="Create PTR record from this" icon="retweet"></icon-button>
                 <icon-button size="sm" v-b-modal="'record-edit'" @click="setActiveRecord(row.item)" iconLabel="Edit record" icon="pencil-square-o"></icon-button>
