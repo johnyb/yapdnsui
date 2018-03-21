@@ -1,15 +1,15 @@
 <template>
 <div id="app-hook">
-    <b-navbar toggleable sticky="top" type="inverse" variant="inverse">
+    <b-navbar toggleable sticky fixed="top" type="dark" variant="dark">
         <b-nav-toggle target="nav_collapse" position="left"></b-nav-toggle>
         <b-link class="navbar-brand" to='/' exact>Yet Another PDNS UI</b-link>
         <b-collapse is-nav id="nav_collapse">
-            <b-nav class="main" is-nav-bar>
+            <b-navbar-nav class="main">
                 <router-view name="mainMenu" />
-            </b-nav>
-            <b-nav is-nav-bar class="ml-auto">
+            </b-navbar-nav>
+            <b-navbar-nav class="ml-auto">
                 <menu-server-list />
-            </b-nav>
+            </b-navbar-nav>
         </b-collapse>
     </b-navbar>
     <section class="content">
