@@ -1,0 +1,19 @@
+{
+  "tests": "./**/*_spec.js",
+  "timeout": 10000,
+  "output": "./output",
+  "helpers": {
+    "Puppeteer": {
+      "url": "http://pdnsui:8080/",
+      "chrome": {
+        "args": ["--no-sandbox"]
+      }
+    }
+  },
+  "include": {
+    "I": "./steps_file.js"
+  },
+  "bootstrap": false,
+  "mocha": {},
+  "name": "tests"
+}

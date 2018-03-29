@@ -29,3 +29,4 @@ node_modules
 # the databases
 data/*.sqlite3
 
+e2e/output

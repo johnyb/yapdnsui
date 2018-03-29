@@ -1,6 +1,12 @@
 version: "2"
 
 services:
+  codeceptjs:
+    image: codeception/codeceptjs
+    depends_on:
+      - pdnsui
+    volumes:
+      - ./e2e:/tests
   pdns:
     image: johnyb/pdns-minimal
     networks:

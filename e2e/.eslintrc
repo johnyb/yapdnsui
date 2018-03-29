@@ -1,0 +1,15 @@
+{
+    "extends": [
+        "../.eslintrc"
+    ],
+
+    "plugins": [
+        "codeceptjs"
+    ],
+
+    "env": {
+        "mocha": true,
+        "es6": true,
+        "codeceptjs/codeceptjs": true
+    }
+}
