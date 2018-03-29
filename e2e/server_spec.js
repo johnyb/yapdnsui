@@ -14,7 +14,7 @@ Scenario('add a server', (I) => {
 
     I.waitForText('pdns:8081');
 
-    I.see('pdns:8081', '#servers-table');
+    I.see('pdns:8081', '#servers-table tr td:nth-child(1)');
 });
 
 Scenario('remove a server', (I) => {

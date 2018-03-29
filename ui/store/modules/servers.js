@@ -25,10 +25,11 @@ const actions = {
                 return state.servers;
             });
     },
-    storeServer({ commit }, server) {
-        ServerAPI
+    storeServer({ commit, dispatch }, server) {
+        return ServerAPI
             .storeServer(server)
-            .then(() => commit('SERVER_STORED', { server }), () => commit('SERVER_STORE_FAILURE'));
+            .then((server) => commit('SERVER_STORED', { server }), () => commit('SERVER_STORE_FAILURE'))
+            .then(() => dispatch('getServers'));
     },
     deleteServer({ commit }, server) {
         ServerAPI
