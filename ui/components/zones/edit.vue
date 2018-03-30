@@ -6,39 +6,39 @@
     <b-alert class="error" v-if="error" show variant="danger">{{ error }}</b-alert>
     <form id="form-add-domain" @submit="submit">
         <b-form-fieldset>
-        <div class="form-group">
-            <label for="zone-name">Zone/Domain name:</label>
+        <b-form-group>
+            <label for="zone-name">Zone/Domain name</label>
             <b-form-input id="zone-name" name="name" type="text" placeholder="eg: example.com." v-model="name" />
-        </div>
-        <div class="form-group">
-            <label for="kind">Zone Type:</label>
-            <b-form-radio id="kind" :options="options" name="kind" v-model="kind" stacked/>
-        </div>
-        <div class="form-group" v-if="kind == 'Master' && !zone.id">
-            <label for="nameservers">Nameservers:</label>
+        </b-form-group>
+        <b-form-group>
+            <label for="kind">Zone Type</label>
+            <b-form-radio-group id="kind" :options="options" name="kind" v-model="kind" stacked/>
+        </b-form-group>
+        <b-form-group v-if="kind == 'Master' && !zone.id">
+            <label for="nameservers">Nameservers</label>
             <b-form-input id="nameservers" name="nameservers" type="text" placeholder='ns.example.com.,ns2.example.com.' v-model="nameservers" />
             <small>List of nameservers responsible for this zone.</small>
-        </div>
-        <div class="form-group" v-if="kind == 'Slave'">
-            <label for="masters">Zone master:</label>
+        </b-form-group>
+        <b-form-group v-if="kind == 'Slave'">
+            <label for="masters">Zone master</label>
             <b-form-input id="masters" name="masters" type="text" placeholder='1.2.3.4,::123:b00' v-model="masters" />
             <small>IP Address of the master host, which PDNS should replicate with.</small>
-        </div>
-        <div class="form-group" v-if="kind == 'Forwarded'">
-            <label for="servers">Forwarded to:</label>
+        </b-form-group>
+        <b-form-group v-if="kind == 'Forwarded'">
+            <label for="servers">Forwarded to</label>
             <b-form-input id="servers" name="servers" type="text" placeholder='1.2.3.4:53,[::123:b00]:5300' v-model="servers" />
             <small>IP Addresses and ports of the servers, this zone is forwarded to.</small>
-        </div>
-        <div class="form-group" v-if="kind == 'Forwarded'">
+        </b-form-group>
+        <b-form-group v-if="kind == 'Forwarded'">
             <b-form-checkbox id="recursion-desired" name="recursion_desired" v-model="recursion_desired">
                 Recursion desired
             </b-form-checkbox>
             <small class="form-text text-muted">Set the "recursion desired" flag when forwarding requests accordingly.</small>
-        </div>
+        </b-form-group>
         </b-form-fieldset>
-        <div class="form-group">
+        <b-form-group>
             <b-button variant="primary" type="submit">{{ zone.id ? 'Save' : 'Add zone' }}</b-button>
-        </div>
+        </b-form-group>
     </form>
 </div>
 </template>
