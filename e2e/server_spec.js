@@ -2,7 +2,7 @@
 
 Feature('API endpoints');
 
-Scenario('add a server', (I) => {
+Scenario('add a primary server', (I) => {
     I.amOnPage('/');
     I.click('PDNS Servers');
     I.click('Configure …');
@@ -17,11 +17,26 @@ Scenario('add a server', (I) => {
     I.see('pdns:8081', '#servers-table tr td:nth-child(1)');
 });
 
-Scenario('remove a server', (I) => {
-    I.amOnPage('/');
-    I.click('PDNS Servers');
-    I.click('Configure …');
-    I.see('pdns:8081', '#servers-table');
-    I.click('#servers-table tr:nth-child(1) button > [aria-label="Remove Server"]');
-    I.dontSee('pdns:8081', '#servers-table');
+Scenario('add a secondary server', (I) => {
+    I.addServer({
+        url: 'http://pdns_slave:8081',
+        password: 'mimimi'
+    });
+});
+
+Scenario('add a recursor server', (I) => {
+    I.addServer({
+        url: 'http://pdns_rec:8082',
+        password: 'mimimi'
+    });
+});
+
+Scenario('remove all servers', async (I) => {
+    I.amOnPage('/#/servers');
+
+    const servers = await I.grabNumberOfVisibleElements('#servers-table tbody tr');
+    for (let i = 0; i < servers; i++) {
+        I.click('#servers-table tr:nth-child(1) button > [aria-label="Remove Server"]');
+    }
+    I.dontSeeElementInDOM('#servers-table tbody tr');
 });

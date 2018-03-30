@@ -3,10 +3,20 @@
 // in this file you can append custom step methods to 'I' object
 
 module.exports = function() {
-  return actor({
+    return actor({
+        addServer({ url, password }) {
+            const I = this;
+            I.amOnPage('/#/servers');
+            I.click('Add server');
 
-    // Define custom steps here, use 'this' to access default methods of I.
-    // It is recommended to place a general 'login' function here.
+            I.fillField('URL', url);
+            I.fillField('API-Key', password);
+            I.click('Add Server');
 
-  });
-}
+            const name = url.replace(/^http:\/\//, '');
+            I.waitForText(name);
+
+            I.see(name, '#servers-table tr td:nth-child(1)');
+        }
+    });
+};
