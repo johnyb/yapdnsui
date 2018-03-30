@@ -24,7 +24,7 @@
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",
     "test": "yarn unit && yarn e2e",
-    "lint": "eslint --ext .js,.vue middleware ui build conf bin/www"
+    "lint": "eslint --ext .js,.vue middleware ui build conf bin/www e2e"
   },
   "main": "bin/www",
   "engines": {
