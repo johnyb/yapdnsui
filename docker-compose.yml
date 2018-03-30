@@ -35,9 +35,8 @@ services:
   pdnsui:
     build: .
     image: johnyb/yapdnsui
-    links:
-      - pdns
-      - pdns_slave
+  pdnsui_dev:
+    image: johnyb/yapdnsui
     command: "yarn dev"
     ports:
       - "3000:8080"

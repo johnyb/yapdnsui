@@ -4,7 +4,7 @@
   "output": "./output",
   "helpers": {
     "Puppeteer": {
-      "url": "http://pdnsui:8080/",
+      "url": "http://pdnsui:3000/",
       "chrome": {
         "args": ["--no-sandbox"]
       }
