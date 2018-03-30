@@ -26,7 +26,7 @@
                 <br>Are you sure you want to do this?
             </slot>
         </b-modal>
-        <b-table striped condensed hover id="zones-table" name="zones-table" :fields="fields" :items="zones">
+        <b-table striped hover id="zones-table" name="zones-table" :fields="fields" :items="zones">
             <template slot="name" slot-scope="row">
                 <b-link :to="`/servers/${server.id}/zones/${row.item.name}`">{{ row.item.name }}</b-link>
             </template>
