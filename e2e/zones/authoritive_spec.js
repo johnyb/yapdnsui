@@ -3,7 +3,7 @@
 Feature('Zones on authoritive servers');
 
 Scenario('add a master zone', (I) => {
-    I.addServer({
+    I.have('server', {
         url: 'http://pdns:8081',
         password: 'mimimi'
     });
@@ -40,7 +40,7 @@ const dns = require('dns');
 const lookup = util.promisify(dns.lookup);
 
 Scenario('add slave zone', async (I) => {
-    I.addServer({
+    I.have('server', {
         url: 'http://pdns_slave:8081',
         password: 'mimimi'
     });
