@@ -4,7 +4,6 @@ Feature('API endpoints');
 
 function addServerFn({ url, password }) {
     const I = this;
-    I.amOnPage('/');
     I.click('PDNS Servers');
     I.click('Configure …');
     I.click('Add server');
@@ -29,6 +28,9 @@ function removeSelectorFor() {
 Scenario('add and remove 3 API endpoints of different types', (I) => {
     const addServer = addServerFn.bind(I);
     let name;
+
+    I.amOnPage('/');
+
     name = addServer({
         url: 'http://pdns:8081',
         password: 'mimimi'
