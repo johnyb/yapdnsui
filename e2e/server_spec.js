@@ -38,5 +38,6 @@ Scenario('remove all servers', async (I) => {
     for (let i = 0; i < servers; i++) {
         I.click('#servers-table tr:nth-child(1) button > [aria-label="Remove Server"]');
     }
+    I.wait(0.1);
     I.dontSeeElementInDOM('#servers-table tbody tr');
 });
