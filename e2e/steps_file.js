@@ -1,28 +1,44 @@
-
-'use strict';
-// in this file you can append custom step methods to 'I' object
-
-const lib = {
+async function getEndpoint(I, endpoint) {
+    const { body } = await I.sendGetRequest('endpoints');
+    const { id } = body.filter(e => e.name === endpoint)[0];
+    return `endpoints/${id}`;
+}
+const createLib = {
     server({ url, password }) {
-        const I = this;
-        I.amOnPage('/');
-        I.click('PDNS Servers');
-        I.click('Configure …');
-        I.click('Add server');
+        return this.sendPostRequest('endpoints', { url, password }, { 'Content-Type': 'application/json' });
+    },
+    async zone({ endpoint, zone }) {
+        return this.sendPostRequest(
+            `${await getEndpoint(this, endpoint)}/api/v1/servers/localhost/zones`,
+            zone,
+            { 'Content-Type': 'application/json' }
+        );
+    },
+    async record({ endpoint, zone, rrsets }) {
+        return this.sendPatchRequest(
+            `${await getEndpoint(this, endpoint)}/api/v1/servers/localhost/zones/${zone}`,
+            { rrsets },
+            { 'Content-Type': 'application/json' }
+        );
+    }
+};
 
-        I.fillField('URL', url);
-        I.fillField('API-Key', password);
-        I.click('Add Server');
-
-        const name = url.replace(/^http:\/\//, '');
-        I.waitForText(name);
+const cleanupLib = {
+    async server({ endpoint }) {
+        return this.sendDeleteRequest(`${await getEndpoint(this, endpoint)}`);
+    },
+    async zone({ endpoint, zone }) {
+        return this.sendDeleteRequest(`${ await getEndpoint(this, endpoint) }/api/v1/servers/localhost/zones/${ zone }`);
     }
 };
 
 module.exports = function() {
     return actor({
         have(type, options) {
-            lib[type].call(this, options);
+            return createLib[type].call(this, options);
+        },
+        cleanup(type, options) {
+            return cleanupLib[type].call(this, options);
         }
     });
 };

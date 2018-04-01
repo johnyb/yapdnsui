@@ -23,7 +23,9 @@ module.exports.config = {
     tests: './**/*_spec.js',
     timeout: 10000,
     output: './output',
-    helpers: {},
+    helpers: {
+        REST: {}
+    },
     include: {
         I: './steps_file.js'
     },
@@ -36,3 +38,6 @@ let backend = process.env.CODECEPT_BACKEND || 'Puppeteer';
 if (!helpers[backend]) backend = 'Puppeteer';
 
 module.exports.config.helpers[backend] = helpers[backend];
+module.exports.config.helpers.REST.endpoint =
+    /localhost/.test(helpers[backend].url) ?
+        'http://pdnsui_dev:8080/' : helpers[backend].url;
