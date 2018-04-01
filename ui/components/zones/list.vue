@@ -32,7 +32,7 @@
             </template>
             <template slot="actions" slot-scope="row">
                 <b-button-toolbar key-nav :data-zone="row.item.name">
-                    <icon-button size="sm" v-if="row.item.kind === 'Slave'" iconLabel="Retrieves the zone from the master" icon="random" @click="retrieve(row.item)" />
+                    <icon-button size="sm" v-if="row.item.kind === 'Slave'" iconLabel="Retrieve zone from master" icon="random" @click="retrieve(row.item)" />
                     <icon-button size="sm" v-if="row.item.kind === 'Master'" iconLabel="Send a DNS NOTIFY to all slaves" icon="retweet" @click="notify(row.item)" />
                     <icon-button size="sm" :href="`/endpoints/${server.id}${server.zones_url.replace(/\{.*}$/, '/' + row.item.id)}/export`" :download="`${row.item.name}axfr`" iconLabel="Returns the zone in AXFR format" icon="download" />
                     <icon-button size="sm" @click="verify(row.item)" iconLabel="Verify zone contents/configuration" icon="check-square-o" />
