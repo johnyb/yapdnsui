@@ -12,6 +12,18 @@ declare const within: (selector: string, callback: Function) => void;
 
 declare namespace CodeceptJS {
   export interface I {
+    amFollowingRequestRedirects: () => any; 
+    amNotFollowingRequestRedirects: () => any; 
+    setRequestTimeout: (newTimeout) => any; 
+    haveRequestHeaders: (customHeaders) => any; 
+    resetRequestHeaders: () => any; 
+    sendGetRequest: (url, headers=[object Object]) => any; 
+    sendPostRequest: (url, payload=[object Object], headers=[object Object]) => any; 
+    sendPatchRequest: (url, payload=[object Object], headers=[object Object]) => any; 
+    sendPutRequest: (url, payload=[object Object], headers=[object Object]) => any; 
+    sendDeleteRequest: (url, headers=[object Object]) => any; 
+    debug: (msg) => any; 
+    debugSection: (section, msg) => any; 
     amAcceptingPopups: () => any; 
     acceptPopup: () => any; 
     amCancellingPopups: () => any; 
@@ -20,7 +32,6 @@ declare namespace CodeceptJS {
     grabPopupText: (grabPopupText() => any; 
     amOnPage: (amOnPage(url) => any; 
     resizeWindow: (resizeWindow(width, height) => any; 
-    haveRequestHeaders: (haveRequestHeaders(customHeaders) => any; 
     moveCursorTo: (moveCursorTo(locator, offsetX=0, offsetY=0) => any; 
     dragAndDrop: (dragAndDrop(source, destination) => any; 
     refreshPage: (refreshPage() => any; 
@@ -101,8 +112,8 @@ declare namespace CodeceptJS {
     waitUntil: (waitUntil(fn, sec=null) => any; 
     waitUntilExists: (waitUntilExists(locator, sec) => any; 
     waitForDetached: (async) => any; 
-    debug: (msg) => any; 
-    debugSection: (section, msg) => any; 
+    have: (type, options) => any; 
+    cleanup: (type, options) => any; 
     say: (msg) => any; 
     retry: (function) => any; 
 
