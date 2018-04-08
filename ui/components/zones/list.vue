@@ -32,11 +32,11 @@
             </template>
             <template slot="actions" slot-scope="row">
                 <b-button-toolbar key-nav :data-zone="row.item.name">
-                    <icon-button size="sm" v-if="row.item.kind === 'Slave'" iconLabel="Retrieve zone from master" icon="random" @click="retrieve(row.item)" />
-                    <icon-button size="sm" v-if="row.item.kind === 'Master'" iconLabel="Send a DNS NOTIFY to all slaves" icon="retweet" @click="notify(row.item)" />
+                    <icon-button size="sm" v-if="row.item.kind === 'Slave'" iconLabel="Retrieve zone from master" icon="sync" @click="retrieve(row.item)" />
+                    <icon-button size="sm" v-if="row.item.kind === 'Master'" iconLabel="Send a DNS NOTIFY to all slaves" icon="sync" @click="notify(row.item)" />
                     <icon-button size="sm" :href="`/endpoints/${server.id}${server.zones_url.replace(/\{.*}$/, '/' + row.item.id)}/export`" :download="`${row.item.name}axfr`" iconLabel="Returns the zone in AXFR format" icon="download" />
-                    <icon-button size="sm" @click="verify(row.item)" iconLabel="Verify zone contents/configuration" icon="check-square-o" />
-                    <icon-button size="sm" :to="`/servers/${server.id}/zones/edit/${row.item.id}`" iconLabel="Edit Zone" icon="pencil-square-o" />
+                    <icon-button size="sm" @click="verify(row.item)" iconLabel="Verify zone contents/configuration" icon="check-square" />
+                    <icon-button size="sm" :to="`/servers/${server.id}/zones/edit/${row.item.id}`" iconLabel="Edit Zone" icon="edit" />
                     <icon-button variant="danger" size="sm" v-b-modal="'del-zone'" @click="setActive(row.item.id)" icon="trash" iconLabel="Remove Zone" />
                 </b-button-toolbar>
             </template>
@@ -49,9 +49,9 @@
 import 'vue-awesome/icons/upload';
 import 'vue-awesome/icons/download';
 import 'vue-awesome/icons/plus';
-import 'vue-awesome/icons/check-square-o';
-import 'vue-awesome/icons/random';
-import 'vue-awesome/icons/retweet';
+import 'vue-awesome/icons/check-square';
+import 'vue-awesome/icons/edit';
+import 'vue-awesome/icons/sync';
 
 import IconButton from '../icon-button.vue';
 

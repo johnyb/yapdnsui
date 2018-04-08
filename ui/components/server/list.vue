@@ -15,7 +15,7 @@
         </template>
         <template slot="actions" slot-scope="row">
             <b-button-toolbar key-nav>
-                <icon-button size="sm" v-b-modal="'server-edit'" @click="setActive(row.item)" iconLabel="Edit Server" icon="pencil-square-o" />
+                <icon-button size="sm" v-b-modal="'server-edit'" @click="setActive(row.item)" iconLabel="Edit Server" icon="edit" />
                 <icon-button variant="danger" size="sm" @click="remove(row.item)" icon="trash" iconLabel="Remove Server" />
             </b-button-toolbar>
         </template>
@@ -25,7 +25,7 @@
 
 <script>
 import 'vue-awesome/icons/trash';
-import 'vue-awesome/icons/pencil-square-o';
+import 'vue-awesome/icons/edit';
 
 import IconButton from '../icon-button.vue';
 

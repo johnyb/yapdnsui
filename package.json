@@ -45,7 +45,6 @@
     "serve-favicon": "^2.4.5",
     "sqlite3": "^3.1.13",
     "underscore": "^1.8.3",
-    "vue-awesome": "^2.3.4",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -85,6 +84,7 @@
     "url-loader": "^0.6.2",
     "vue": "^2.5.13",
     "vue-loader": "^14.1.1",
+    "vue-awesome": "^3.0.0",
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.13",
     "webpack": "^3.11.0",
