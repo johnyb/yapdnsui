@@ -15,8 +15,6 @@ module.exports = {
             path.resolve('./ui/'),
             path.resolve('./node_modules/jquery/dist/'),
             path.resolve('./node_modules/underscore/'),
-            path.resolve('./node_modules/backbone/'),
-            path.resolve('./node_modules/backbone.marionette/lib/'),
             path.resolve('./node_modules')
         ],
         alias: {
