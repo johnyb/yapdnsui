@@ -35,6 +35,8 @@ Scenario('add and remove 3 API endpoints of different types', (I) => {
         url: 'http://pdns:8081',
         password: 'mimimi'
     }).name;
+    I.waitForText('authoritative');
+    I.wait(0.3);
     I.click(removeSelectorFor(name));
     I.dontSee(name, '#servers-table');
 
@@ -42,6 +44,8 @@ Scenario('add and remove 3 API endpoints of different types', (I) => {
         url: 'http://pdns_slave:8081',
         password: 'mimimi'
     }).name;
+    I.waitForText('authoritative');
+    I.wait(0.3);
     I.click(removeSelectorFor(name));
     I.dontSee(name, '#servers-table');
 
@@ -49,6 +53,8 @@ Scenario('add and remove 3 API endpoints of different types', (I) => {
         url: 'http://pdns_rec:8082',
         password: 'mimimi'
     }).name;
+    I.waitForText('recursor');
+    I.wait(0.3);
     I.click(removeSelectorFor(name));
     I.dontSee(name, '#servers-table');
 });
